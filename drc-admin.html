@@ -840,9 +840,7 @@ function saveJob() {
   document.getElementById('jobLocation').value = '';
 }
 
-// Start
-init();
-loadEmployees(); // Load from Supabase
+// Start - moved to end of file after all functions defined
 
 // Navigation
 function setupNav() {
@@ -1134,7 +1132,7 @@ function deleteRecurring(id) {
 // Settings Page
 const settings = {
   oncallDays: ['Saturday', 'Sunday'],
-  oncallEmployees: [1, 2, 3]
+  oncallEmployees: []
 };
 
 function renderSettings() {
@@ -1148,7 +1146,7 @@ function renderSettings() {
   document.getElementById('daySelector').innerHTML = dayHtml;
   
   // On-call pool
-  const eligible = employees.filter(e => e.oncall);
+  const eligible = employees.filter(e => e.oncall_eligible);
   if(!eligible.length) {
     document.getElementById('oncallPool').innerHTML = '<p style="color:var(--gray);font-size:13px;">No on-call eligible employees</p>';
     document.getElementById('rotationPreview').innerHTML = '';
@@ -1158,9 +1156,10 @@ function renderSettings() {
   let poolHtml = '';
   eligible.forEach(emp => {
     const inPool = settings.oncallEmployees.includes(emp.id);
+    const fullName = emp.first_name + ' ' + emp.last_name;
     poolHtml += `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--light);border-radius:6px;margin-bottom:8px;">
-      <input type="checkbox" ${inPool ? 'checked' : ''} onchange="toggleOncallEmployee(${emp.id})" style="width:18px;height:18px;accent-color:var(--orange);">
-      <label>${emp.name}</label>
+      <input type="checkbox" ${inPool ? 'checked' : ''} onchange="toggleOncallEmployee('${emp.id}')" style="width:18px;height:18px;accent-color:var(--orange);">
+      <label>${fullName}</label>
     </div>`;
   });
   document.getElementById('oncallPool').innerHTML = poolHtml;
@@ -1189,7 +1188,7 @@ function renderSettings() {
         
         rotHtml += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;">
           <span style="color:var(--gray);">${weekStart.getDate()}–${weekEnd.getDate()}</span>
-          <span>${emp?.name.split(' ')[0] || '—'}</span>
+          <span>${emp?.first_name || '—'}</span>
         </div>`;
         
         weekStart.setDate(weekStart.getDate() + 7);
@@ -1219,8 +1218,10 @@ function toggleOncallEmployee(id) {
   renderSettings();
 }
 
-// Setup nav on init
+// Initialize everything
+init();
 setupNav();
+loadEmployees();
 </script>
 
 </body>
