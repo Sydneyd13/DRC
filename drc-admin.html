@@ -872,13 +872,13 @@ function setupNav() {
 // Supabase Setup
 const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Team Page - Now using Supabase
 let employees = [];
 
 async function loadEmployees() {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('employees')
     .select('*')
     .eq('is_active', true)
@@ -1030,14 +1030,14 @@ async function saveEmployee() {
   
   if (id) {
     // Update existing
-    const result = await supabase
+    const result = await db
       .from('employees')
       .update(empData)
       .eq('id', id);
     error = result.error;
   } else {
     // Insert new
-    const result = await supabase
+    const result = await db
       .from('employees')
       .insert([empData]);
     error = result.error;
@@ -1060,7 +1060,7 @@ async function saveEmployee() {
 async function deleteEmployee(id) {
   if (!confirm('Delete this employee?')) return;
   
-  const { error } = await supabase
+  const { error } = await db
     .from('employees')
     .update({ is_active: false })
     .eq('id', id);
