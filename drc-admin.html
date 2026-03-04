@@ -13,7 +13,6 @@
   --dark: #1F1F1F;
   --charcoal: #2D2D2D;
   --gray: #6B7280;
-  --gray-light: #9CA3AF;
   --light: #F5F5F5;
   --border: #E5E5E5;
   --white: #FFFFFF;
@@ -22,146 +21,110 @@
   --green: #10B981;
   --purple: #8B5CF6;
 }
-
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; -webkit-tap-highlight-color:transparent; }
 html,body { height:100%; background:var(--light); }
-
-/* Mobile-first layout */
 .app { height:100%; display:flex; flex-direction:column; }
-
-/* Header */
-.header { background:var(--white); padding:16px 20px; border-bottom:1px solid var(--border); }
-.header-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.header { background:var(--white); padding:16px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.header-top { display:flex; justify-content:space-between; align-items:center; }
 .header-title { font-size:20px; font-weight:700; color:var(--dark); }
+.header-subtitle { font-size:12px; color:var(--gray); margin-top:2px; }
 .btn { padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
 .btn-primary { background:var(--orange); color:white; }
+.btn-secondary { background:var(--white); color:var(--dark); border:1px solid var(--border); }
+.btn-danger { background:var(--white); color:var(--red); border:1px solid var(--border); }
 .btn-sm { padding:6px 12px; font-size:12px; }
-
-/* View Toggle */
-.view-toggle { display:flex; background:var(--light); border-radius:8px; padding:3px; margin-bottom:12px; }
+.view-toggle { display:flex; background:var(--light); border-radius:8px; padding:3px; margin:12px 0; }
 .view-btn { flex:1; padding:8px; border:none; background:none; font-size:13px; font-weight:500; color:var(--gray); border-radius:6px; cursor:pointer; }
 .view-btn.active { background:var(--white); color:var(--dark); box-shadow:0 1px 3px rgba(0,0,0,0.1); }
-
-/* Date Nav */
 .date-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .date-nav-arrows { display:flex; gap:6px; }
 .nav-arrow { width:32px; height:32px; border:1px solid var(--border); background:var(--white); border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .date-label { font-size:15px; font-weight:600; color:var(--dark); }
 .today-link { font-size:12px; color:var(--orange); font-weight:500; cursor:pointer; }
-
-/* Filters */
 .filters { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
-.filters::-webkit-scrollbar { display:none; }
 .filter-chip { padding:6px 12px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); background:var(--white); color:var(--gray); white-space:nowrap; cursor:pointer; flex-shrink:0; }
 .filter-chip.active { background:var(--orange-light); border-color:var(--orange); color:var(--orange); }
-
-/* Crews Bar */
-.crews-bar { display:flex; gap:10px; padding:12px 20px; background:var(--white); border-bottom:1px solid var(--border); overflow-x:auto; }
-.crews-bar::-webkit-scrollbar { display:none; }
+.crews-bar { display:flex; gap:10px; padding:12px 20px; background:var(--white); border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
 .crew-chip { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--light); border-radius:8px; cursor:pointer; flex-shrink:0; }
 .crew-chip.active { background:var(--orange-light); outline:2px solid var(--orange); }
 .crew-dot { width:10px; height:10px; border-radius:50%; }
-.crew-dot.a { background:var(--blue); }
-.crew-dot.b { background:var(--purple); }
-.crew-dot.c { background:var(--green); }
 .crew-info { display:flex; flex-direction:column; }
 .crew-name { font-size:12px; font-weight:600; color:var(--dark); }
 .crew-count { font-size:11px; color:var(--gray); }
-
-/* Main Content */
 .content { flex:1; overflow-y:auto; padding:16px 20px; padding-bottom:100px; }
-
-/* On-Call Banner */
 .oncall { background:var(--charcoal); color:white; padding:14px 16px; border-radius:10px; margin-bottom:16px; display:flex; align-items:center; gap:12px; border-left:4px solid var(--orange); }
 .oncall-icon { width:36px; height:36px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .oncall-label { font-size:11px; opacity:0.7; text-transform:uppercase; letter-spacing:0.5px; }
 .oncall-name { font-size:14px; font-weight:600; margin-top:2px; }
-
-/* Agenda */
+.oncall-edit { margin-left:auto; padding:6px 10px; background:rgba(255,255,255,0.15); border:none; border-radius:6px; color:white; font-size:11px; cursor:pointer; }
 .agenda-group { margin-bottom:24px; }
 .agenda-date { font-size:13px; font-weight:600; color:var(--gray); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
 .today-badge { background:var(--orange); color:white; padding:2px 8px; border-radius:10px; font-size:10px; }
-
-/* Job Card */
-.job-card { background:var(--white); border-radius:10px; padding:16px; margin-bottom:10px; border:1px solid var(--border); border-left:4px solid var(--gray); }
+.job-card { background:var(--white); border-radius:10px; padding:16px; margin-bottom:10px; border:1px solid var(--border); border-left:4px solid var(--gray); cursor:pointer; }
+.job-card:hover { box-shadow:0 2px 8px rgba(0,0,0,0.08); }
 .job-card.water { border-left-color:var(--blue); }
 .job-card.fire { border-left-color:var(--red); }
 .job-card.mold { border-left-color:var(--green); }
 .job-card.inspection { border-left-color:var(--purple); }
-
 .job-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px; }
 .job-title { font-size:15px; font-weight:600; color:var(--dark); line-height:1.4; }
 .job-status { padding:4px 8px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase; flex-shrink:0; }
 .job-status.scheduled { background:var(--orange-light); color:var(--orange); }
 .job-status.in-progress { background:rgba(59,130,246,0.1); color:var(--blue); }
 .job-status.completed { background:rgba(16,185,129,0.1); color:var(--green); }
-
 .job-time { font-size:13px; color:var(--gray); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
 .job-meta { display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--gray); }
 .job-meta-item { display:flex; align-items:center; gap:5px; }
 .crew-badge { background:var(--light); padding:3px 8px; border-radius:4px; font-weight:500; display:flex; align-items:center; gap:5px; }
-
-/* Month Grid */
-.month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
-.month-header { background:var(--light); padding:8px 4px; text-align:center; font-size:11px; font-weight:600; color:var(--gray); }
-.month-day { background:var(--white); min-height:70px; padding:4px; cursor:pointer; }
-.month-day:hover { background:var(--light); }
-.month-day.other { opacity:0.4; }
-.month-day.today .day-num { background:var(--orange); color:white; border-radius:50%; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; }
-.day-num { font-size:11px; font-weight:500; margin-bottom:3px; }
-.day-pip { font-size:8px; padding:1px 3px; border-radius:2px; color:white; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.day-pip.water { background:var(--blue); }
-.day-pip.fire { background:var(--red); }
-.day-pip.mold { background:var(--green); }
-.day-pip.inspection { background:var(--purple); }
-.day-more { font-size:9px; color:var(--gray); }
-
-/* Empty State */
+.job-notes { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:12px; color:var(--gray); font-style:italic; }
+.card { background:var(--white); border-radius:10px; padding:16px; margin-bottom:12px; border:1px solid var(--border); }
+.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.card-title { font-weight:600; color:var(--dark); }
+.card-actions { display:flex; gap:8px; }
 .empty { text-align:center; padding:60px 20px; color:var(--gray); }
 .empty h3 { color:var(--dark); margin-bottom:4px; }
-
-/* Bottom Nav */
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0; padding-bottom:calc(8px + env(safe-area-inset-bottom)); }
+.page { display:none; height:100%; flex-direction:column; overflow:hidden; background:var(--light); }
+.page.active { display:flex; }
+.section { background:var(--white); border-radius:10px; padding:16px; margin-bottom:16px; border:1px solid var(--border); }
+.section-title { font-size:15px; font-weight:600; color:var(--dark); margin-bottom:4px; }
+.section-desc { font-size:12px; color:var(--gray); margin-bottom:14px; }
+.list-item { display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--light); border-radius:8px; margin-bottom:8px; }
+.list-item-name { font-weight:500; color:var(--dark); }
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0; padding-bottom:calc(8px + env(safe-area-inset-bottom)); z-index:100; }
 .nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 12px; color:var(--gray); cursor:pointer; }
 .nav-item.active { color:var(--orange); }
 .nav-item svg { width:22px; height:22px; }
 .nav-item span { font-size:10px; font-weight:500; }
-
-/* FAB */
 .fab { position:fixed; bottom:80px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--orange); color:white; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(232,90,36,0.4); z-index:50; }
-
-/* Modal */
-.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:flex-end; justify-content:center; z-index:100; }
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:flex-end; justify-content:center; z-index:200; }
 .modal-bg.active { display:flex; }
 .modal { background:var(--white); border-radius:16px 16px 0 0; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; }
-.modal-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--white); }
+.modal-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--white); z-index:1; }
 .modal-title { font-size:16px; font-weight:600; }
 .modal-close { width:32px; height:32px; border-radius:50%; border:none; background:var(--light); cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .modal-body { padding:20px; }
 .modal-foot { padding:16px 20px; border-top:1px solid var(--border); display:flex; gap:10px; }
 .modal-foot .btn { flex:1; justify-content:center; }
-
 .form-group { margin-bottom:16px; }
-.form-label { display:block; font-size:13px; font-weight:500; margin-bottom:6px; }
-.form-input,.form-select { width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
-.form-input:focus,.form-select:focus { outline:none; border-color:var(--orange); }
+.form-label { display:block; font-size:13px; font-weight:500; margin-bottom:6px; color:var(--dark); }
+.form-input,.form-select,.form-textarea { width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+.form-input:focus,.form-select:focus,.form-textarea:focus { outline:none; border-color:var(--orange); }
+.form-textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .form-check { display:flex; align-items:center; gap:8px; font-size:13px; }
 .form-check input { width:18px; height:18px; accent-color:var(--orange); }
-
-.page { display:none; height:100%; flex-direction:column; overflow:hidden; background:var(--light); }
-.page.active { display:flex; }
-
-/* Desktop */
+.tag { display:inline-block; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:500; }
+.sidebar { display:none; width:220px; background:var(--charcoal); padding:20px 0; flex-direction:column; flex-shrink:0; }
+.logo { color:white; font-size:18px; font-weight:700; padding:0 20px 28px; display:flex; align-items:center; gap:10px; }
+.logo-icon { width:30px; height:30px; background:var(--orange); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; }
+.side-nav { display:flex; flex-direction:column; gap:2px; padding:0 10px; }
+.side-nav-item { color:rgba(255,255,255,0.55); padding:11px 14px; border-radius:6px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:11px; cursor:pointer; }
+.side-nav-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); }
+.side-nav-item.active { background:var(--orange); color:white; }
+.side-nav-item svg { width:18px; height:18px; }
 @media(min-width:769px) {
   .app { flex-direction:row; }
-  .sidebar { width:220px; background:var(--charcoal); padding:20px 0; display:flex; flex-direction:column; flex-shrink:0; }
-  .logo { color:white; font-size:18px; font-weight:700; padding:0 20px 28px; display:flex; align-items:center; gap:10px; }
-  .logo-icon { width:30px; height:30px; background:var(--orange); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:13px; }
-  .side-nav { display:flex; flex-direction:column; gap:2px; padding:0 10px; }
-  .side-nav-item { color:rgba(255,255,255,0.55); padding:11px 14px; border-radius:6px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:11px; cursor:pointer; }
-  .side-nav-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); }
-  .side-nav-item.active { background:var(--orange); color:white; }
-  .side-nav-item svg { width:18px; height:18px; }
+  .sidebar { display:flex; }
   .main-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; }
   .bottom-nav,.fab { display:none; }
   .content { padding-bottom:20px; }
@@ -171,36 +134,27 @@ html,body { height:100%; background:var(--light); }
 </style>
 </head>
 <body>
-
 <div class="app">
-  <!-- Sidebar (Desktop) -->
-  <div class="sidebar" style="display:none;">
+  <div class="sidebar">
     <div class="logo"><div class="logo-icon">D</div>DRC Admin</div>
     <nav class="side-nav">
       <div class="side-nav-item active" data-page="home"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</div>
       <div class="side-nav-item" data-page="team"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</div>
-      <div class="side-nav-item" data-page="recurring"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</div>
       <div class="side-nav-item" data-page="settings"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Settings</div>
     </nav>
   </div>
 
   <div class="main-wrap">
-    <!-- Header -->
     <div class="header">
       <div class="header-top">
         <h1 class="header-title">Schedule</h1>
-        <button class="btn btn-primary btn-sm" onclick="openModal('job')">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Add Job
-        </button>
+        <button class="btn btn-primary btn-sm" onclick="openJobModal()">+ Add Job</button>
       </div>
-      
       <div class="view-toggle">
         <button class="view-btn active" data-view="today">Today</button>
         <button class="view-btn" data-view="week">Week</button>
         <button class="view-btn" data-view="month">Month</button>
       </div>
-      
       <div class="date-nav">
         <div class="date-nav-arrows">
           <button class="nav-arrow" onclick="navPrev()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
@@ -209,7 +163,6 @@ html,body { height:100%; background:var(--light); }
         <span class="date-label" id="dateLabel">Mon, Mar 3</span>
         <span class="today-link" onclick="goToday()">Today</span>
       </div>
-      
       <div class="filters">
         <div class="filter-chip active" data-status="all">All</div>
         <div class="filter-chip" data-status="scheduled">Scheduled</div>
@@ -217,109 +170,130 @@ html,body { height:100%; background:var(--light); }
         <div class="filter-chip" data-status="completed">Completed</div>
       </div>
     </div>
-    
-    <!-- Crews Bar -->
     <div class="crews-bar" id="crewsBar"></div>
-    
-    <!-- Content -->
-    <div class="content" id="content"></div>
+    <div class="content" id="homeContent"></div>
   </div>
-
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <div class="nav-item active" data-page="home"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
-    <div class="nav-item" data-page="team"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
-    <div class="nav-item" data-page="recurring"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Recurring</span></div>
-    <div class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Settings</span></div>
-  </nav>
-
-  <!-- FAB -->
-  <button class="fab" onclick="openModal('job')"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
 
   <!-- Team Page -->
   <div class="page" id="page-team">
     <div class="header">
       <div class="header-top">
-        <h1 class="header-title">Team</h1>
-        <button class="btn btn-primary btn-sm" onclick="openModal('employee')">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Add
-        </button>
+        <div>
+          <h1 class="header-title">Team</h1>
+          <p class="header-subtitle" id="employeeCount">0 members</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openEmployeeModal()">+ Add</button>
       </div>
-      <p style="font-size:12px;color:var(--gray);margin-top:4px;" id="employeeCount">0 members</p>
     </div>
     <div class="content" id="teamContent"></div>
-  </div>
-
-  <!-- Recurring Page -->
-  <div class="page" id="page-recurring">
-    <div class="header">
-      <div class="header-top">
-        <h1 class="header-title">Recurring Jobs</h1>
-        <button class="btn btn-primary btn-sm" onclick="openModal('recurring')">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Add
-        </button>
-      </div>
-      <p style="font-size:12px;color:var(--gray);margin-top:4px;">Auto-scheduled jobs</p>
-    </div>
-    <div class="content" id="recurringContent"></div>
   </div>
 
   <!-- Settings Page -->
   <div class="page" id="page-settings">
     <div class="header">
       <h1 class="header-title">Settings</h1>
-      <p style="font-size:12px;color:var(--gray);margin-top:4px;">On-call configuration</p>
     </div>
-    <div class="content" id="settingsContent">
-      <div style="background:var(--white);border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid var(--border);">
-        <h3 style="font-size:15px;font-weight:600;margin-bottom:4px;">On-Call Days</h3>
-        <p style="font-size:12px;color:var(--gray);margin-bottom:14px;">Select days requiring coverage</p>
-        <div id="daySelector" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    <div class="content" id="settingsContent"></div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-page="home"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
+    <div class="nav-item" data-page="team"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
+    <div class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Settings</span></div>
+  </nav>
+  <button class="fab" onclick="openJobModal()"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
+</div>
+
+<!-- Job Modal -->
+<div class="modal-bg" id="modal-job">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="jobModalTitle">Add Job</span>
+      <button class="modal-close" onclick="closeModal('job')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="jobId">
+      <div class="form-group">
+        <label class="form-label">Job Title *</label>
+        <input class="form-input" id="jobTitle" placeholder="Water Damage - 123 Main St">
       </div>
-      <div style="background:var(--white);border-radius:10px;padding:16px;border:1px solid var(--border);">
-        <h3 style="font-size:15px;font-weight:600;margin-bottom:4px;">Rotation Pool</h3>
-        <p style="font-size:12px;color:var(--gray);margin-bottom:14px;">Employees in on-call rotation</p>
-        <div id="oncallPool"></div>
-        <div id="rotationPreview" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select" id="jobType">
+            <option value="water">Water Damage</option>
+            <option value="fire">Fire Restoration</option>
+            <option value="mold">Mold Remediation</option>
+            <option value="inspection">Inspection</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="jobStatus">
+            <option value="scheduled">Scheduled</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Assign to Team</label>
+        <select class="form-select" id="jobTeam"></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          <input type="date" class="form-input" id="jobDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time</label>
+          <input type="time" class="form-input" id="jobTime" value="08:00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" id="jobLocation" placeholder="Salt Lake City">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="jobNotes" placeholder="Additional details..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('job')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveJob()">Save</button>
     </div>
   </div>
 </div>
 
-<!-- Add/Edit Employee Modal -->
+<!-- Employee Modal -->
 <div class="modal-bg" id="modal-employee">
   <div class="modal">
     <div class="modal-head">
-      <span class="modal-title" id="employeeModalTitle">Add Employee</span>
+      <span class="modal-title" id="empModalTitle">Add Employee</span>
       <button class="modal-close" onclick="closeModal('employee')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="empId">
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-row">
         <div class="form-group">
           <label class="form-label">First Name *</label>
-          <input class="form-input" id="empFirstName" placeholder="John">
+          <input class="form-input" id="empFirst" placeholder="John">
         </div>
         <div class="form-group">
           <label class="form-label">Last Name *</label>
-          <input class="form-input" id="empLastName" placeholder="Smith">
+          <input class="form-input" id="empLast" placeholder="Smith">
         </div>
       </div>
-      
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input class="form-input" id="empEmail" placeholder="john@drc.com" type="email">
+        <input class="form-input" id="empEmail" type="email" placeholder="john@drc.com">
       </div>
-      
       <div class="form-group">
         <label class="form-label">Phone</label>
-        <input class="form-input" id="empPhone" placeholder="(555) 123-4567" type="tel">
+        <input class="form-input" id="empPhone" type="tel" placeholder="(555) 123-4567">
       </div>
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-row">
         <div class="form-group">
           <label class="form-label">Role</label>
           <select class="form-select" id="empRole">
@@ -331,204 +305,168 @@ html,body { height:100%; background:var(--light); }
         </div>
         <div class="form-group">
           <label class="form-label">Team</label>
-          <select class="form-select" id="empTeam">
-            <option>Team A</option>
-            <option>Team B</option>
-            <option>Team C</option>
-          </select>
+          <select class="form-select" id="empTeam"></select>
         </div>
       </div>
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div class="form-group">
-          <label class="form-label">Hourly Rate ($)</label>
-          <input class="form-input" id="empRate" placeholder="25.00" type="number" step="0.01">
-        </div>
+      <div class="form-group">
+        <label class="form-label">3-Digit PIN *</label>
+        <input class="form-input" id="empPin" maxlength="3" placeholder="142" style="font-size:18px;letter-spacing:8px;text-align:center;font-weight:600;max-width:120px;">
+      </div>
+      <div class="form-row">
         <div class="form-group">
           <label class="form-label">Start Date</label>
           <input class="form-input" id="empStartDate" type="date">
         </div>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">3-Digit PIN Code *</label>
-        <input class="form-input" id="empPin" placeholder="Auto-generated" maxlength="3" pattern="[0-9]{3}" style="font-size:18px;letter-spacing:8px;text-align:center;font-weight:600;">
-        <p style="font-size:11px;color:var(--gray);margin-top:4px;">Employees use this to clock in</p>
-      </div>
-      
-      <div style="background:var(--light);padding:12px;border-radius:8px;margin-bottom:16px;">
-        <p style="font-size:12px;font-weight:600;margin-bottom:8px;">Emergency Contact</p>
-        <div class="form-group" style="margin-bottom:8px;">
-          <input class="form-input" id="empEmergencyName" placeholder="Contact name">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <input class="form-input" id="empEmergencyPhone" placeholder="Phone" type="tel">
-          <input class="form-input" id="empEmergencyRelation" placeholder="Relationship">
+        <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:16px;">
+          <label class="form-check"><input type="checkbox" id="empOncall"> On-call eligible</label>
         </div>
       </div>
-      
-      <div class="form-group">
-        <label class="form-check"><input type="checkbox" id="empOncall"> On-call eligible</label>
+      <div class="section" style="margin:0;">
+        <p class="section-title" style="font-size:13px;">Emergency Contact</p>
+        <div class="form-row" style="margin-top:10px;">
+          <input class="form-input" id="empEmergName" placeholder="Name">
+          <input class="form-input" id="empEmergPhone" placeholder="Phone">
+        </div>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn" style="background:var(--light);color:var(--dark);" onclick="closeModal('employee')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveEmployee()" id="empSaveBtn">Save</button>
+      <button class="btn btn-secondary" onclick="closeModal('employee')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEmployee()">Save</button>
     </div>
   </div>
 </div>
 
-<!-- Add Recurring Modal -->
-<div class="modal-bg" id="modal-recurring">
+<!-- Team Modal -->
+<div class="modal-bg" id="modal-team">
   <div class="modal">
     <div class="modal-head">
-      <span class="modal-title">Add Recurring Job</span>
-      <button class="modal-close" onclick="closeModal('recurring')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      <span class="modal-title" id="teamModalTitle">Add Team</span>
+      <button class="modal-close" onclick="closeModal('team')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
+      <input type="hidden" id="teamId">
       <div class="form-group">
-        <label class="form-label">Job Title</label>
-        <input class="form-input" id="recTitle" placeholder="Weekly Equipment Check">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Type</label>
-        <select class="form-select" id="recType">
-          <option value="water">Water Damage</option>
-          <option value="fire">Fire Restoration</option>
-          <option value="mold">Mold Remediation</option>
-          <option value="inspection">Inspection</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Crew</label>
-        <select class="form-select" id="recCrew">
-          <option>Team A</option>
-          <option>Team B</option>
-          <option>Team C</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Frequency</label>
-        <select class="form-select" id="recFreq">
-          <option>Weekly</option>
-          <option>Bi-Weekly</option>
-          <option>Monthly</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Day</label>
-        <select class="form-select" id="recDay">
-          <option>Monday</option>
-          <option>Tuesday</option>
-          <option>Wednesday</option>
-          <option>Thursday</option>
-          <option>Friday</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Location</label>
-        <input class="form-input" id="recLocation" placeholder="Salt Lake City">
+        <label class="form-label">Team Name *</label>
+        <input class="form-input" id="teamName" placeholder="Team D">
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn" style="background:var(--light);color:var(--dark);" onclick="closeModal('recurring')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveRecurring()">Save</button>
+      <button class="btn btn-secondary" onclick="closeModal('team')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTeam()">Save</button>
     </div>
   </div>
 </div>
 
-<!-- Add Job Modal -->
-<div class="modal-bg" id="modal-job">
+<!-- On-Call Override Modal -->
+<div class="modal-bg" id="modal-oncall">
   <div class="modal">
     <div class="modal-head">
-      <span class="modal-title">Add Job</span>
-      <button class="modal-close" onclick="closeModal('job')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      <span class="modal-title">Edit On-Call</span>
+      <button class="modal-close" onclick="closeModal('oncall')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Job Title</label>
-        <input class="form-input" id="jobTitle" placeholder="Water Damage - 123 Main St">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Type</label>
-        <select class="form-select" id="jobType">
-          <option value="water">Water Damage</option>
-          <option value="fire">Fire Restoration</option>
-          <option value="mold">Mold Remediation</option>
-          <option value="inspection">Inspection</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Status</label>
-        <select class="form-select" id="jobStatus">
-          <option value="scheduled">Scheduled</option>
-          <option value="in-progress">In Progress</option>
-          <option value="completed">Completed</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Crew</label>
-        <select class="form-select" id="jobCrew">
-          <option value="Team A">Team A</option>
-          <option value="Team B">Team B</option>
-          <option value="Team C">Team C</option>
-        </select>
-      </div>
+      <input type="hidden" id="oncallDate">
       <div class="form-group">
         <label class="form-label">Date</label>
-        <input type="date" class="form-input" id="jobDate">
+        <input class="form-input" id="oncallDateDisplay" disabled>
       </div>
       <div class="form-group">
-        <label class="form-label">Time</label>
-        <input type="time" class="form-input" id="jobTime" value="08:00">
+        <label class="form-label">Primary On-Call</label>
+        <select class="form-select" id="oncallPrimary"></select>
       </div>
       <div class="form-group">
-        <label class="form-label">Location</label>
-        <input class="form-input" id="jobLocation" placeholder="Salt Lake City">
+        <label class="form-label">Backup (Optional)</label>
+        <select class="form-select" id="oncallBackup"><option value="">None</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="oncallNotes" placeholder="Reason for change..."></textarea>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn" style="background:var(--light);color:var(--dark);" onclick="closeModal('job')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveJob()">Save Job</button>
+      <button class="btn btn-secondary" onclick="closeModal('oncall')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOncallOverride()">Save</button>
     </div>
   </div>
 </div>
 
 <script>
+// Supabase
+const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 // State
 let currentView = 'today';
-let currentDate = new Date(2025, 2, 3); // Mar 3, 2025
+let currentDate = new Date();
 let statusFilter = 'all';
 let crewFilter = null;
+let jobs = [];
+let employees = [];
+let teams = [];
+let oncallOverrides = [];
+let oncallSettings = { oncall_days: ['Saturday', 'Sunday'], rotation_employee_ids: [] };
 
-// Sample Data
-const jobs = [
-  { id:1, title:'Water Damage - 742 Oak Street', type:'water', status:'in-progress', crew:'Team A', date:'2025-03-03', time:'08:00', location:'Salt Lake City' },
-  { id:2, title:'Water Damage - 742 Oak Street', type:'water', status:'scheduled', crew:'Team A', date:'2025-03-04', time:'08:00', location:'Salt Lake City' },
-  { id:3, title:'Water Damage - 742 Oak Street', type:'water', status:'scheduled', crew:'Team A', date:'2025-03-05', time:'08:00', location:'Salt Lake City' },
-  { id:4, title:'Fire Restoration - 156 Elm Avenue', type:'fire', status:'in-progress', crew:'Team B', date:'2025-03-03', time:'07:30', location:'Draper' },
-  { id:5, title:'Fire Restoration - 156 Elm Avenue', type:'fire', status:'scheduled', crew:'Team B', date:'2025-03-04', time:'07:30', location:'Draper' },
-  { id:6, title:'Mold Assessment - 89 Pine Road', type:'mold', status:'scheduled', crew:'Team A', date:'2025-03-06', time:'10:00', location:'Sandy' },
-  { id:7, title:'Insurance Inspection - 234 Maple Dr', type:'inspection', status:'scheduled', crew:'Team B', date:'2025-03-07', time:'14:00', location:'West Valley' },
-  { id:8, title:'Smoke Damage - 890 Birch Blvd', type:'fire', status:'scheduled', crew:'Team B', date:'2025-03-10', time:'08:00', location:'Taylorsville' },
-  { id:9, title:'Emergency Water Extraction', type:'water', status:'completed', crew:'Team A', date:'2025-03-01', time:'06:00', location:'Murray' }
-];
-
-const oncall = { name:'John Smith', phone:'(555) 123-4567' };
-
-// Init
-function init() {
+// Initialize
+async function init() {
+  setupNav();
   setupViewToggle();
   setupFilters();
-  setupCrewFilter();
+  await loadAll();
   render();
-  
-  // Desktop sidebar
-  if(window.innerWidth >= 769) {
-    document.querySelector('.sidebar').style.display = 'flex';
-  }
-  window.addEventListener('resize', () => {
-    document.querySelector('.sidebar').style.display = window.innerWidth >= 769 ? 'flex' : 'none';
+}
+
+async function loadAll() {
+  await Promise.all([loadTeams(), loadEmployees(), loadJobs(), loadOncallSettings(), loadOncallOverrides()]);
+}
+
+async function loadTeams() {
+  const { data } = await db.from('teams').select('*').eq('is_active', true).order('sort_order');
+  teams = data || [];
+  updateTeamDropdowns();
+}
+
+async function loadEmployees() {
+  const { data } = await db.from('employees').select('*').eq('is_active', true).order('first_name');
+  employees = data || [];
+}
+
+async function loadJobs() {
+  const { data } = await db.from('jobs').select('*').eq('is_active', true).order('job_date').order('job_time');
+  jobs = data || [];
+}
+
+async function loadOncallSettings() {
+  const { data } = await db.from('oncall_settings').select('*').limit(1);
+  if (data && data[0]) oncallSettings = data[0];
+}
+
+async function loadOncallOverrides() {
+  const { data } = await db.from('oncall_overrides').select('*');
+  oncallOverrides = data || [];
+}
+
+function updateTeamDropdowns() {
+  const options = teams.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+  document.getElementById('jobTeam').innerHTML = options;
+  document.getElementById('empTeam').innerHTML = options;
+}
+
+// Navigation
+function setupNav() {
+  document.querySelectorAll('.nav-item, .side-nav-item').forEach(item => {
+    item.onclick = () => {
+      const page = item.dataset.page;
+      document.querySelectorAll('.nav-item, .side-nav-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll(`[data-page="${page}"]`).forEach(i => i.classList.add('active'));
+      document.querySelector('.main-wrap').style.display = page === 'home' ? 'flex' : 'none';
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      if (page !== 'home') {
+        document.getElementById('page-' + page).classList.add('active');
+        if (page === 'team') renderTeam();
+        if (page === 'settings') renderSettings();
+      }
+    };
   });
 }
 
@@ -554,55 +492,39 @@ function setupFilters() {
   });
 }
 
-function setupCrewFilter() {
-  document.getElementById('crewsBar').onclick = (e) => {
-    const chip = e.target.closest('.crew-chip');
-    if(!chip) return;
-    const crew = chip.dataset.crew;
-    if(crewFilter === crew) {
-      crewFilter = null;
-    } else {
-      crewFilter = crew;
-    }
-    render();
-  };
-}
-
-// Navigation
 function navPrev() {
-  if(currentView === 'today') currentDate.setDate(currentDate.getDate() - 1);
-  else if(currentView === 'week') currentDate.setDate(currentDate.getDate() - 7);
+  if (currentView === 'today') currentDate.setDate(currentDate.getDate() - 1);
+  else if (currentView === 'week') currentDate.setDate(currentDate.getDate() - 7);
   else currentDate.setMonth(currentDate.getMonth() - 1);
   render();
 }
 
 function navNext() {
-  if(currentView === 'today') currentDate.setDate(currentDate.getDate() + 1);
-  else if(currentView === 'week') currentDate.setDate(currentDate.getDate() + 7);
+  if (currentView === 'today') currentDate.setDate(currentDate.getDate() + 1);
+  else if (currentView === 'week') currentDate.setDate(currentDate.getDate() + 7);
   else currentDate.setMonth(currentDate.getMonth() + 1);
   render();
 }
 
 function goToday() {
-  currentDate = new Date(2025, 2, 3);
+  currentDate = new Date();
   render();
 }
 
-// Render
+// Render Schedule
 function render() {
   renderDateLabel();
   renderCrewsBar();
-  renderContent();
+  renderSchedule();
 }
 
 function renderDateLabel() {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  
   let label = '';
-  if(currentView === 'today') {
+  if (currentView === 'today') {
     label = `${days[currentDate.getDay()]}, ${months[currentDate.getMonth()]} ${currentDate.getDate()}`;
-  } else if(currentView === 'week') {
+  } else if (currentView === 'week') {
     const start = new Date(currentDate);
     start.setDate(currentDate.getDate() - currentDate.getDay() + 1);
     const end = new Date(start);
@@ -615,614 +537,502 @@ function renderDateLabel() {
 }
 
 function renderCrewsBar() {
-  const today = currentDate.toISOString().split('T')[0];
-  const crews = ['Team A', 'Team B', 'Team C'];
-  
-  let html = `<div class="crew-chip ${!crewFilter ? 'active' : ''}" data-crew="">
+  const dateStr = currentDate.toISOString().split('T')[0];
+  let html = `<div class="crew-chip ${!crewFilter ? 'active' : ''}" onclick="setCrewFilter(null)">
     <div class="crew-dot" style="background:var(--gray)"></div>
-    <div class="crew-info"><span class="crew-name">All Crews</span><span class="crew-count">${jobs.filter(j=>j.date===today).length} jobs</span></div>
+    <div class="crew-info"><span class="crew-name">All</span><span class="crew-count">${jobs.filter(j => j.job_date === dateStr).length} jobs</span></div>
   </div>`;
-  
-  crews.forEach(crew => {
-    const count = jobs.filter(j => j.date === today && j.crew === crew).length;
-    const cls = crew.replace('Team ','').toLowerCase();
-    html += `<div class="crew-chip ${crewFilter === crew ? 'active' : ''}" data-crew="${crew}">
-      <div class="crew-dot ${cls}"></div>
-      <div class="crew-info"><span class="crew-name">${crew}</span><span class="crew-count">${count} jobs</span></div>
+  teams.forEach(team => {
+    const count = jobs.filter(j => j.job_date === dateStr && j.team_name === team.name).length;
+    html += `<div class="crew-chip ${crewFilter === team.name ? 'active' : ''}" onclick="setCrewFilter('${team.name}')">
+      <div class="crew-dot" style="background:${team.color}"></div>
+      <div class="crew-info"><span class="crew-name">${team.name}</span><span class="crew-count">${count} jobs</span></div>
     </div>`;
   });
-  
   document.getElementById('crewsBar').innerHTML = html;
 }
 
-function renderContent() {
-  const content = document.getElementById('content');
-  
-  if(currentView === 'month') {
-    content.innerHTML = renderMonthView();
-  } else {
-    content.innerHTML = renderAgendaView();
-  }
-}
-
-function renderAgendaView() {
-  let filtered = [...jobs];
-  
-  // Status filter
-  if(statusFilter !== 'all') {
-    filtered = filtered.filter(j => j.status === statusFilter);
-  }
-  
-  // Crew filter
-  if(crewFilter) {
-    filtered = filtered.filter(j => j.crew === crewFilter);
-  }
-  
-  // Date range
-  let startDate, endDate;
-  if(currentView === 'today') {
-    startDate = endDate = currentDate.toISOString().split('T')[0];
-  } else {
-    const weekStart = new Date(currentDate);
-    weekStart.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    startDate = weekStart.toISOString().split('T')[0];
-    endDate = weekEnd.toISOString().split('T')[0];
-  }
-  
-  filtered = filtered.filter(j => j.date >= startDate && j.date <= endDate);
-  filtered.sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
-  
-  if(!filtered.length) {
-    return `<div class="empty"><h3>No jobs scheduled</h3><p>Nothing for this ${currentView === 'today' ? 'day' : 'week'}</p></div>`;
-  }
-  
-  // On-call banner
-  const dayName = currentDate.toLocaleDateString('en-US',{weekday:'long'});
-  const showOncall = (dayName === 'Saturday' || dayName === 'Sunday');
-  
-  let html = '';
-  if(showOncall && currentView === 'today') {
-    html += `<div class="oncall">
-      <div class="oncall-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
-      <div><div class="oncall-label">On-Call</div><div class="oncall-name">${oncall.name} · ${oncall.phone}</div></div>
-    </div>`;
-  }
-  
-  // Group by date
-  const grouped = {};
-  filtered.forEach(j => {
-    if(!grouped[j.date]) grouped[j.date] = [];
-    grouped[j.date].push(j);
-  });
-  
-  const today = '2025-03-03';
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  
-  Object.keys(grouped).sort().forEach(date => {
-    const d = new Date(date + 'T12:00:00');
-    const isToday = date === today;
-    
-    html += `<div class="agenda-group">
-      <div class="agenda-date">${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()} ${isToday ? '<span class="today-badge">Today</span>' : ''}</div>`;
-    
-    grouped[date].forEach(job => {
-      const crewCls = job.crew.replace('Team ','').toLowerCase();
-      html += `<div class="job-card ${job.type}">
-        <div class="job-header">
-          <div class="job-title">${job.title}</div>
-          <span class="job-status ${job.status}">${job.status.replace('-',' ')}</span>
-        </div>
-        <div class="job-time">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          ${formatTime(job.time)}
-        </div>
-        <div class="job-meta">
-          <span class="job-meta-item crew-badge"><span class="crew-dot ${crewCls}"></span>${job.crew}</span>
-          <span class="job-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>${job.location}</span>
-        </div>
-      </div>`;
-    });
-    
-    html += '</div>';
-  });
-  
-  return html;
-}
-
-function renderMonthView() {
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startPad = (firstDay.getDay() + 6) % 7;
-  const today = '2025-03-03';
-  
-  let html = '<div class="month-grid">';
-  
-  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
-    html += `<div class="month-header">${d}</div>`;
-  });
-  
-  // Pad start
-  for(let i = 0; i < startPad; i++) {
-    const d = new Date(year, month, 1 - startPad + i);
-    html += `<div class="month-day other"><div class="day-num">${d.getDate()}</div></div>`;
-  }
-  
-  // Days
-  for(let d = 1; d <= lastDay.getDate(); d++) {
-    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday = dateStr === today;
-    let dayJobs = jobs.filter(j => j.date === dateStr);
-    if(crewFilter) dayJobs = dayJobs.filter(j => j.crew === crewFilter);
-    if(statusFilter !== 'all') dayJobs = dayJobs.filter(j => j.status === statusFilter);
-    
-    html += `<div class="month-day ${isToday ? 'today' : ''}" onclick="viewDay('${dateStr}')">
-      <div class="day-num">${d}</div>`;
-    
-    dayJobs.slice(0,2).forEach(j => {
-      const shortTitle = j.title.split(' - ')[0].substring(0,12);
-      html += `<div class="day-pip ${j.type}">${shortTitle}</div>`;
-    });
-    
-    if(dayJobs.length > 2) html += `<div class="day-more">+${dayJobs.length - 2} more</div>`;
-    
-    html += '</div>';
-  }
-  
-  // Pad end
-  const totalCells = startPad + lastDay.getDate();
-  const endPad = (7 - totalCells % 7) % 7;
-  for(let i = 1; i <= endPad; i++) {
-    html += `<div class="month-day other"><div class="day-num">${i}</div></div>`;
-  }
-  
-  html += '</div>';
-  return html;
-}
-
-function viewDay(dateStr) {
-  currentDate = new Date(dateStr + 'T12:00:00');
-  currentView = 'today';
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.view-btn[data-view="today"]').classList.add('active');
+function setCrewFilter(crew) {
+  crewFilter = crewFilter === crew ? null : crew;
   render();
 }
 
+function renderSchedule() {
+  const content = document.getElementById('homeContent');
+  let filtered = [...jobs];
+  if (statusFilter !== 'all') filtered = filtered.filter(j => j.status === statusFilter);
+  if (crewFilter) filtered = filtered.filter(j => j.team_name === crewFilter);
+
+  let startDate, endDate;
+  if (currentView === 'today') {
+    startDate = endDate = currentDate.toISOString().split('T')[0];
+  } else if (currentView === 'week') {
+    const ws = new Date(currentDate);
+    ws.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+    const we = new Date(ws);
+    we.setDate(ws.getDate() + 6);
+    startDate = ws.toISOString().split('T')[0];
+    endDate = we.toISOString().split('T')[0];
+  } else {
+    const y = currentDate.getFullYear(), m = currentDate.getMonth();
+    startDate = `${y}-${String(m+1).padStart(2,'0')}-01`;
+    endDate = `${y}-${String(m+1).padStart(2,'0')}-${new Date(y, m+1, 0).getDate()}`;
+  }
+
+  filtered = filtered.filter(j => j.job_date >= startDate && j.job_date <= endDate);
+
+  let html = '';
+
+  // On-call banner for today view
+  if (currentView === 'today') {
+    const dayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    if (oncallSettings.oncall_days?.includes(dayName)) {
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const override = oncallOverrides.find(o => o.override_date === dateStr);
+      let oncallEmp = null;
+      if (override) {
+        oncallEmp = employees.find(e => e.id === override.employee_id);
+      } else if (oncallSettings.rotation_employee_ids?.length) {
+        const weekNum = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / (7*24*60*60*1000));
+        const empId = oncallSettings.rotation_employee_ids[weekNum % oncallSettings.rotation_employee_ids.length];
+        oncallEmp = employees.find(e => e.id === empId);
+      }
+      if (oncallEmp) {
+        html += `<div class="oncall">
+          <div class="oncall-icon"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+          <div><div class="oncall-label">On-Call</div><div class="oncall-name">${oncallEmp.first_name} ${oncallEmp.last_name} · ${oncallEmp.phone || 'No phone'}</div></div>
+          <button class="oncall-edit" onclick="openOncallModal('${dateStr}')">Edit</button>
+        </div>`;
+      }
+    }
+  }
+
+  if (!filtered.length) {
+    html += `<div class="empty"><h3>No jobs</h3><p>Nothing scheduled</p></div>`;
+  } else {
+    const grouped = {};
+    filtered.forEach(j => {
+      if (!grouped[j.job_date]) grouped[j.job_date] = [];
+      grouped[j.job_date].push(j);
+    });
+
+    const today = new Date().toISOString().split('T')[0];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    Object.keys(grouped).sort().forEach(date => {
+      const d = new Date(date + 'T12:00:00');
+      const isToday = date === today;
+      html += `<div class="agenda-group"><div class="agenda-date">${dayNames[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()} ${isToday ? '<span class="today-badge">Today</span>' : ''}</div>`;
+      grouped[date].forEach(job => {
+        const team = teams.find(t => t.name === job.team_name);
+        const color = team?.color || 'var(--gray)';
+        html += `<div class="job-card ${job.job_type}" onclick="openJobModal('${job.id}')">
+          <div class="job-header">
+            <div class="job-title">${job.title}</div>
+            <span class="job-status ${job.status}">${job.status.replace('-', ' ')}</span>
+          </div>
+          <div class="job-time"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${formatTime(job.job_time)}</div>
+          <div class="job-meta">
+            <span class="job-meta-item crew-badge"><span class="crew-dot" style="width:8px;height:8px;background:${color}"></span>${job.team_name || 'Unassigned'}</span>
+            ${job.location ? `<span class="job-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>${job.location}</span>` : ''}
+          </div>
+          ${job.notes ? `<div class="job-notes">${job.notes}</div>` : ''}
+        </div>`;
+      });
+      html += '</div>';
+    });
+  }
+  content.innerHTML = html;
+}
+
 function formatTime(time) {
+  if (!time) return '';
   const [h, m] = time.split(':');
   const hour = parseInt(h);
   return `${hour > 12 ? hour - 12 : hour || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
 }
 
-// Modal
-function openModal(type) {
-  if (type === 'employee') {
-    openEmployeeModal();
-    return;
+// Team Page
+function renderTeam() {
+  document.getElementById('employeeCount').textContent = employees.length + ' members';
+  let html = '';
+
+  // Teams section
+  html += `<div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div class="section-title">Teams</div>
+      <button class="btn btn-sm btn-secondary" onclick="openTeamModal()">+ Add Team</button>
+    </div>`;
+  teams.forEach(team => {
+    html += `<div class="list-item">
+      <span class="list-item-name" style="display:flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:50%;background:${team.color}"></span>${team.name}</span>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-sm btn-secondary" onclick="openTeamModal('${team.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTeam('${team.id}')">Delete</button>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // Employees section
+  html += '<div style="margin-top:8px;">';
+  if (!employees.length) {
+    html += '<div class="empty"><h3>No employees</h3></div>';
+  } else {
+    employees.forEach(emp => {
+      const initials = (emp.first_name[0] + emp.last_name[0]).toUpperCase();
+      const team = teams.find(t => t.name === emp.team);
+      html += `<div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;background:var(--orange-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--orange);font-weight:600;">${initials}</div>
+            <div>
+              <div style="font-weight:600;">${emp.first_name} ${emp.last_name}</div>
+              <div style="font-size:12px;color:var(--gray);">${emp.role}</div>
+            </div>
+          </div>
+          <div style="background:var(--light);padding:6px 10px;border-radius:6px;font-size:16px;font-weight:700;letter-spacing:3px;">${emp.pin_code}</div>
+        </div>
+        <div style="font-size:12px;color:var(--gray);margin:12px 0;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+          <div style="margin-bottom:4px;">${emp.email || 'No email'}</div>
+          <div>${emp.phone || 'No phone'}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag" style="background:${team?.color || 'var(--light)'};color:white;">${emp.team}</span>
+          ${emp.oncall_eligible ? '<span class="tag" style="background:var(--orange-light);color:var(--orange);">On-Call</span>' : ''}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+          <button class="btn btn-sm btn-secondary" style="flex:1;" onclick="openEmployeeModal('${emp.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteEmployee('${emp.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
   }
-  document.getElementById('modal-' + type).classList.add('active');
-  if(type === 'job') {
-    document.getElementById('jobDate').value = currentDate.toISOString().split('T')[0];
-  }
+  html += '</div>';
+  document.getElementById('teamContent').innerHTML = html;
 }
 
+// Settings Page
+function renderSettings() {
+  let html = '';
+
+  // On-Call Days
+  html += `<div class="section">
+    <div class="section-title">On-Call Days</div>
+    <p class="section-desc">Select days requiring coverage</p>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">`;
+  ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].forEach(day => {
+    const active = oncallSettings.oncall_days?.includes(day);
+    html += `<button onclick="toggleOncallDay('${day}')" style="padding:8px 12px;border-radius:6px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${active ? 'var(--orange)' : 'var(--light)'};color:${active ? 'white' : 'var(--charcoal)'};">${day.slice(0,3)}</button>`;
+  });
+  html += '</div></div>';
+
+  // Rotation Pool
+  html += `<div class="section">
+    <div class="section-title">On-Call Rotation</div>
+    <p class="section-desc">Select employees for rotation</p>`;
+  const eligible = employees.filter(e => e.oncall_eligible);
+  if (!eligible.length) {
+    html += '<p style="color:var(--gray);font-size:13px;">No on-call eligible employees. Mark employees as on-call eligible in their profile.</p>';
+  } else {
+    eligible.forEach(emp => {
+      const inPool = oncallSettings.rotation_employee_ids?.includes(emp.id);
+      html += `<div class="list-item">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" ${inPool ? 'checked' : ''} onchange="toggleRotationEmployee('${emp.id}')" style="width:18px;height:18px;accent-color:var(--orange);">
+          ${emp.first_name} ${emp.last_name}
+        </label>
+      </div>`;
+    });
+  }
+  html += '</div>';
+
+  // Upcoming On-Call Schedule
+  html += `<div class="section">
+    <div class="section-title">Upcoming On-Call Schedule</div>
+    <p class="section-desc">Click to edit any week</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">`;
+  
+  const today = new Date();
+  for (let i = 0; i < 8; i++) {
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - today.getDay() + 1 + (i * 7));
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    const dateStr = weekStart.toISOString().split('T')[0];
+    
+    const override = oncallOverrides.find(o => o.override_date >= dateStr && o.override_date <= weekEnd.toISOString().split('T')[0]);
+    let emp = null;
+    if (override) {
+      emp = employees.find(e => e.id === override.employee_id);
+    } else if (oncallSettings.rotation_employee_ids?.length) {
+      const weekNum = Math.floor((weekStart - new Date(weekStart.getFullYear(), 0, 1)) / (7*24*60*60*1000));
+      const empId = oncallSettings.rotation_employee_ids[weekNum % oncallSettings.rotation_employee_ids.length];
+      emp = employees.find(e => e.id === empId);
+    }
+
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    html += `<div class="list-item" style="cursor:pointer;" onclick="openOncallModal('${dateStr}')">
+      <span style="font-size:13px;">${months[weekStart.getMonth()]} ${weekStart.getDate()} – ${months[weekEnd.getMonth()]} ${weekEnd.getDate()}</span>
+      <span style="font-weight:500;color:${emp ? 'var(--dark)' : 'var(--gray)'};">${emp ? emp.first_name + ' ' + emp.last_name : 'Not set'}</span>
+    </div>`;
+  }
+  html += '</div></div>';
+
+  document.getElementById('settingsContent').innerHTML = html;
+}
+
+async function toggleOncallDay(day) {
+  const days = oncallSettings.oncall_days || [];
+  const idx = days.indexOf(day);
+  if (idx > -1) days.splice(idx, 1);
+  else days.push(day);
+  await db.from('oncall_settings').update({ oncall_days: days }).eq('id', oncallSettings.id);
+  oncallSettings.oncall_days = days;
+  renderSettings();
+}
+
+async function toggleRotationEmployee(empId) {
+  const ids = oncallSettings.rotation_employee_ids || [];
+  const idx = ids.indexOf(empId);
+  if (idx > -1) ids.splice(idx, 1);
+  else ids.push(empId);
+  await db.from('oncall_settings').update({ rotation_employee_ids: ids }).eq('id', oncallSettings.id);
+  oncallSettings.rotation_employee_ids = ids;
+  renderSettings();
+}
+
+// Modals
 function closeModal(type) {
   document.getElementById('modal-' + type).classList.remove('active');
 }
 
-function saveJob() {
-  const job = {
-    id: Date.now(),
-    title: document.getElementById('jobTitle').value,
-    type: document.getElementById('jobType').value,
-    status: document.getElementById('jobStatus').value,
-    crew: document.getElementById('jobCrew').value,
-    date: document.getElementById('jobDate').value,
-    time: document.getElementById('jobTime').value,
-    location: document.getElementById('jobLocation').value
-  };
-  
-  if(!job.title || !job.date) {
-    alert('Please fill in title and date');
-    return;
-  }
-  
-  jobs.push(job);
-  closeModal('job');
-  render();
-  
-  // Clear form
+// Job Modal
+function openJobModal(id = null) {
+  document.getElementById('jobId').value = '';
   document.getElementById('jobTitle').value = '';
+  document.getElementById('jobType').value = 'water';
+  document.getElementById('jobStatus').value = 'scheduled';
+  document.getElementById('jobTeam').value = teams[0]?.name || '';
+  document.getElementById('jobDate').value = currentDate.toISOString().split('T')[0];
+  document.getElementById('jobTime').value = '08:00';
   document.getElementById('jobLocation').value = '';
-}
+  document.getElementById('jobNotes').value = '';
+  document.getElementById('jobModalTitle').textContent = 'Add Job';
 
-// Start - moved to end of file after all functions defined
-
-// Navigation
-function setupNav() {
-  document.querySelectorAll('.nav-item, .side-nav-item').forEach(item => {
-    item.onclick = () => {
-      const page = item.dataset.page;
-      
-      // Update nav active states
-      document.querySelectorAll('.nav-item, .side-nav-item').forEach(i => i.classList.remove('active'));
-      document.querySelectorAll(`[data-page="${page}"]`).forEach(i => i.classList.add('active'));
-      
-      // Hide all pages and main-wrap
-      document.querySelector('.main-wrap').style.display = 'none';
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      
-      if(page === 'home') {
-        document.querySelector('.main-wrap').style.display = 'flex';
-      } else {
-        document.getElementById('page-' + page).classList.add('active');
-        // Render page content
-        if(page === 'team') renderTeam();
-        if(page === 'recurring') renderRecurring();
-        if(page === 'settings') renderSettings();
-      }
-    };
-  });
-}
-
-// Supabase Setup
-const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Team Page - Now using Supabase
-let employees = [];
-
-async function loadEmployees() {
-  const { data, error } = await db
-    .from('employees')
-    .select('*')
-    .eq('is_active', true)
-    .order('first_name');
-  
-  if (error) {
-    console.error('Error loading employees:', error);
-    return;
+  if (id) {
+    const job = jobs.find(j => j.id === id);
+    if (job) {
+      document.getElementById('jobModalTitle').textContent = 'Edit Job';
+      document.getElementById('jobId').value = job.id;
+      document.getElementById('jobTitle').value = job.title;
+      document.getElementById('jobType').value = job.job_type;
+      document.getElementById('jobStatus').value = job.status;
+      document.getElementById('jobTeam').value = job.team_name || '';
+      document.getElementById('jobDate').value = job.job_date;
+      document.getElementById('jobTime').value = job.job_time || '08:00';
+      document.getElementById('jobLocation').value = job.location || '';
+      document.getElementById('jobNotes').value = job.notes || '';
+    }
   }
-  
-  employees = data || [];
-  renderTeam();
+  document.getElementById('modal-job').classList.add('active');
 }
 
-function renderTeam() {
-  document.getElementById('employeeCount').textContent = employees.length + ' members';
-  
-  if(!employees.length) {
-    document.getElementById('teamContent').innerHTML = '<div class="empty"><h3>No team members</h3><p>Add your first employee</p></div>';
-    return;
+async function saveJob() {
+  const id = document.getElementById('jobId').value;
+  const data = {
+    title: document.getElementById('jobTitle').value.trim(),
+    job_type: document.getElementById('jobType').value,
+    status: document.getElementById('jobStatus').value,
+    team_name: document.getElementById('jobTeam').value,
+    job_date: document.getElementById('jobDate').value,
+    job_time: document.getElementById('jobTime').value,
+    location: document.getElementById('jobLocation').value.trim(),
+    notes: document.getElementById('jobNotes').value.trim()
+  };
+  if (!data.title || !data.job_date) return alert('Title and date required');
+
+  if (id) {
+    await db.from('jobs').update(data).eq('id', id);
+  } else {
+    await db.from('jobs').insert([data]);
   }
-  
-  let html = '';
-  employees.forEach(emp => {
-    const initials = (emp.first_name[0] + emp.last_name[0]).toUpperCase();
-    const fullName = emp.first_name + ' ' + emp.last_name;
-    html += `<div style="background:var(--white);border-radius:10px;padding:16px;margin-bottom:12px;border:1px solid var(--border);">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:40px;height:40px;background:var(--orange-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--orange);font-weight:600;">${initials}</div>
-        <div style="flex:1;">
-          <div style="font-weight:600;color:var(--dark);">${fullName}</div>
-          <div style="font-size:12px;color:var(--gray);">${emp.role}</div>
-        </div>
-        <div style="background:var(--light);padding:6px 10px;border-radius:6px;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--charcoal);">${emp.pin_code}</div>
-      </div>
-      <div style="font-size:12px;color:var(--gray);padding-top:12px;border-top:1px solid var(--border);">
-        <div style="margin-bottom:6px;display:flex;align-items:center;gap:6px;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          ${emp.email || 'No email'}
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-          ${emp.phone || 'No phone'}
-        </div>
-        ${emp.hourly_rate ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          $${parseFloat(emp.hourly_rate).toFixed(2)}/hr
-        </div>` : ''}
-      </div>
-      <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;">
-        <span style="padding:4px 8px;background:var(--light);border-radius:4px;font-size:11px;font-weight:500;">${emp.team}</span>
-        ${emp.oncall_eligible ? '<span style="padding:4px 8px;background:var(--orange-light);color:var(--orange);border-radius:4px;font-size:11px;font-weight:500;">On-Call</span>' : ''}
-        ${emp.start_date ? `<span style="padding:4px 8px;background:var(--light);border-radius:4px;font-size:11px;font-weight:500;">Started ${new Date(emp.start_date).toLocaleDateString()}</span>` : ''}
-      </div>
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;">
-        <button class="btn btn-sm" style="background:var(--white);color:var(--dark);border:1px solid var(--border);flex:1;" onclick="editEmployee('${emp.id}')">Edit</button>
-        <button class="btn btn-sm" style="background:var(--white);color:#DC2626;border:1px solid var(--border);" onclick="deleteEmployee('${emp.id}')">Delete</button>
-      </div>
-    </div>`;
-  });
-  
-  document.getElementById('teamContent').innerHTML = html;
+  closeModal('job');
+  await loadJobs();
+  render();
 }
 
-function generatePin() {
-  return String(Math.floor(100 + Math.random() * 900));
-}
-
-function openEmployeeModal(editId = null) {
-  // Reset form
+// Employee Modal
+function openEmployeeModal(id = null) {
   document.getElementById('empId').value = '';
-  document.getElementById('empFirstName').value = '';
-  document.getElementById('empLastName').value = '';
+  document.getElementById('empFirst').value = '';
+  document.getElementById('empLast').value = '';
   document.getElementById('empEmail').value = '';
   document.getElementById('empPhone').value = '';
   document.getElementById('empRole').value = 'Technician';
-  document.getElementById('empTeam').value = 'Team A';
-  document.getElementById('empRate').value = '';
+  document.getElementById('empTeam').value = teams[0]?.name || '';
+  document.getElementById('empPin').value = String(Math.floor(100 + Math.random() * 900));
   document.getElementById('empStartDate').value = '';
-  document.getElementById('empPin').value = generatePin();
-  document.getElementById('empEmergencyName').value = '';
-  document.getElementById('empEmergencyPhone').value = '';
-  document.getElementById('empEmergencyRelation').value = '';
   document.getElementById('empOncall').checked = false;
-  
-  if (editId) {
-    const emp = employees.find(e => e.id === editId);
+  document.getElementById('empEmergName').value = '';
+  document.getElementById('empEmergPhone').value = '';
+  document.getElementById('empModalTitle').textContent = 'Add Employee';
+
+  if (id) {
+    const emp = employees.find(e => e.id === id);
     if (emp) {
-      document.getElementById('employeeModalTitle').textContent = 'Edit Employee';
+      document.getElementById('empModalTitle').textContent = 'Edit Employee';
       document.getElementById('empId').value = emp.id;
-      document.getElementById('empFirstName').value = emp.first_name;
-      document.getElementById('empLastName').value = emp.last_name;
+      document.getElementById('empFirst').value = emp.first_name;
+      document.getElementById('empLast').value = emp.last_name;
       document.getElementById('empEmail').value = emp.email || '';
       document.getElementById('empPhone').value = emp.phone || '';
       document.getElementById('empRole').value = emp.role;
       document.getElementById('empTeam').value = emp.team;
-      document.getElementById('empRate').value = emp.hourly_rate || '';
-      document.getElementById('empStartDate').value = emp.start_date || '';
       document.getElementById('empPin').value = emp.pin_code;
-      document.getElementById('empEmergencyName').value = emp.emergency_contact_name || '';
-      document.getElementById('empEmergencyPhone').value = emp.emergency_contact_phone || '';
-      document.getElementById('empEmergencyRelation').value = emp.emergency_contact_relation || '';
+      document.getElementById('empStartDate').value = emp.start_date || '';
       document.getElementById('empOncall').checked = emp.oncall_eligible;
+      document.getElementById('empEmergName').value = emp.emergency_contact_name || '';
+      document.getElementById('empEmergPhone').value = emp.emergency_contact_phone || '';
     }
-  } else {
-    document.getElementById('employeeModalTitle').textContent = 'Add Employee';
   }
-  
   document.getElementById('modal-employee').classList.add('active');
-}
-
-function editEmployee(id) {
-  openEmployeeModal(id);
 }
 
 async function saveEmployee() {
   const id = document.getElementById('empId').value;
-  const firstName = document.getElementById('empFirstName').value.trim();
-  const lastName = document.getElementById('empLastName').value.trim();
   const pin = document.getElementById('empPin').value.trim();
+  if (!/^\d{3}$/.test(pin)) return alert('PIN must be 3 digits');
   
-  if (!firstName || !lastName) {
-    alert('First and last name are required');
-    return;
-  }
-  
-  if (!pin || pin.length !== 3 || !/^\d{3}$/.test(pin)) {
-    alert('PIN must be exactly 3 digits');
-    return;
-  }
-  
-  const empData = {
-    first_name: firstName,
-    last_name: lastName,
+  const data = {
+    first_name: document.getElementById('empFirst').value.trim(),
+    last_name: document.getElementById('empLast').value.trim(),
     email: document.getElementById('empEmail').value.trim() || null,
     phone: document.getElementById('empPhone').value.trim() || null,
     role: document.getElementById('empRole').value,
     team: document.getElementById('empTeam').value,
-    hourly_rate: document.getElementById('empRate').value ? parseFloat(document.getElementById('empRate').value) : null,
-    start_date: document.getElementById('empStartDate').value || null,
     pin_code: pin,
-    emergency_contact_name: document.getElementById('empEmergencyName').value.trim() || null,
-    emergency_contact_phone: document.getElementById('empEmergencyPhone').value.trim() || null,
-    emergency_contact_relation: document.getElementById('empEmergencyRelation').value.trim() || null,
-    oncall_eligible: document.getElementById('empOncall').checked
+    start_date: document.getElementById('empStartDate').value || null,
+    oncall_eligible: document.getElementById('empOncall').checked,
+    emergency_contact_name: document.getElementById('empEmergName').value.trim() || null,
+    emergency_contact_phone: document.getElementById('empEmergPhone').value.trim() || null
   };
-  
-  let error;
-  
-  if (id) {
-    // Update existing
-    const result = await db
-      .from('employees')
-      .update(empData)
-      .eq('id', id);
-    error = result.error;
-  } else {
-    // Insert new
-    const result = await db
-      .from('employees')
-      .insert([empData]);
-    error = result.error;
-  }
+  if (!data.first_name || !data.last_name) return alert('Name required');
+
+  const { error } = id 
+    ? await db.from('employees').update(data).eq('id', id)
+    : await db.from('employees').insert([data]);
   
   if (error) {
-    console.error('Error saving employee:', error);
-    if (error.code === '23505') {
-      alert('This PIN code is already in use. Please choose a different one.');
-    } else {
-      alert('Error saving employee: ' + error.message);
-    }
+    if (error.code === '23505') alert('PIN already in use');
+    else alert('Error: ' + error.message);
     return;
   }
-  
   closeModal('employee');
   await loadEmployees();
+  renderTeam();
 }
 
 async function deleteEmployee(id) {
   if (!confirm('Delete this employee?')) return;
-  
-  const { error } = await db
-    .from('employees')
-    .update({ is_active: false })
-    .eq('id', id);
-  
-  if (error) {
-    console.error('Error deleting employee:', error);
-    alert('Error deleting employee');
-    return;
-  }
-  
+  await db.from('employees').update({ is_active: false }).eq('id', id);
   await loadEmployees();
+  renderTeam();
 }
 
-// Recurring Page
-const recurringJobs = [
-  { id:1, title:'Equipment Inspection', type:'inspection', crew:'Team A', freq:'Weekly', day:'Monday', location:'Main Office' },
-  { id:2, title:'Safety Training', type:'inspection', crew:'Team B', freq:'Monthly', day:'Friday', location:'Training Center' }
-];
+// Team Modal
+function openTeamModal(id = null) {
+  document.getElementById('teamId').value = '';
+  document.getElementById('teamName').value = '';
+  document.getElementById('teamModalTitle').textContent = 'Add Team';
 
-function renderRecurring() {
-  if(!recurringJobs.length) {
-    document.getElementById('recurringContent').innerHTML = '<div class="empty"><h3>No recurring jobs</h3><p>Automate your scheduling</p></div>';
-    return;
-  }
-  
-  let html = '';
-  recurringJobs.forEach(job => {
-    html += `<div style="background:var(--white);border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);">
-      <div style="font-weight:600;color:var(--dark);margin-bottom:4px;">${job.title}</div>
-      <div style="font-size:12px;color:var(--gray);margin-bottom:10px;">${job.crew} · ${job.location}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="padding:4px 8px;background:var(--light);border-radius:4px;font-size:11px;font-weight:500;">${job.freq} on ${job.day}s</span>
-        <button class="btn btn-sm" style="background:var(--white);color:#DC2626;border:1px solid var(--border);" onclick="deleteRecurring(${job.id})">Delete</button>
-      </div>
-    </div>`;
-  });
-  
-  document.getElementById('recurringContent').innerHTML = html;
-}
-
-function saveRecurring() {
-  const job = {
-    id: Date.now(),
-    title: document.getElementById('recTitle').value,
-    type: document.getElementById('recType').value,
-    crew: document.getElementById('recCrew').value,
-    freq: document.getElementById('recFreq').value,
-    day: document.getElementById('recDay').value,
-    location: document.getElementById('recLocation').value
-  };
-  
-  if(!job.title) { alert('Title required'); return; }
-  
-  recurringJobs.push(job);
-  closeModal('recurring');
-  renderRecurring();
-  
-  document.getElementById('recTitle').value = '';
-  document.getElementById('recLocation').value = '';
-}
-
-function deleteRecurring(id) {
-  if(!confirm('Delete this recurring job?')) return;
-  const idx = recurringJobs.findIndex(j => j.id === id);
-  if(idx > -1) recurringJobs.splice(idx, 1);
-  renderRecurring();
-}
-
-// Settings Page
-const settings = {
-  oncallDays: ['Saturday', 'Sunday'],
-  oncallEmployees: []
-};
-
-function renderSettings() {
-  // Day selector
-  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  let dayHtml = '';
-  days.forEach(day => {
-    const active = settings.oncallDays.includes(day);
-    dayHtml += `<button onclick="toggleDay('${day}')" style="padding:8px 12px;border-radius:6px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${active ? 'var(--orange)' : 'var(--light)'};color:${active ? 'white' : 'var(--charcoal)'};">${day.substring(0,3)}</button>`;
-  });
-  document.getElementById('daySelector').innerHTML = dayHtml;
-  
-  // On-call pool
-  const eligible = employees.filter(e => e.oncall_eligible);
-  if(!eligible.length) {
-    document.getElementById('oncallPool').innerHTML = '<p style="color:var(--gray);font-size:13px;">No on-call eligible employees</p>';
-    document.getElementById('rotationPreview').innerHTML = '';
-    return;
-  }
-  
-  let poolHtml = '';
-  eligible.forEach(emp => {
-    const inPool = settings.oncallEmployees.includes(emp.id);
-    const fullName = emp.first_name + ' ' + emp.last_name;
-    poolHtml += `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--light);border-radius:6px;margin-bottom:8px;">
-      <input type="checkbox" ${inPool ? 'checked' : ''} onchange="toggleOncallEmployee('${emp.id}')" style="width:18px;height:18px;accent-color:var(--orange);">
-      <label>${fullName}</label>
-    </div>`;
-  });
-  document.getElementById('oncallPool').innerHTML = poolHtml;
-  
-  // Rotation preview
-  if(settings.oncallEmployees.length && settings.oncallDays.length) {
-    const poolEmps = settings.oncallEmployees.map(id => employees.find(e => e.id === id)).filter(Boolean);
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const today = new Date(2025, 2, 3);
-    
-    let rotHtml = '<h4 style="font-size:13px;font-weight:600;margin-bottom:12px;">6-Month Schedule</h4><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">';
-    
-    for(let m = 0; m < 6; m++) {
-      const monthDate = new Date(today.getFullYear(), today.getMonth() + m, 1);
-      rotHtml += `<div style="background:var(--light);border-radius:6px;padding:12px;">
-        <div style="font-size:12px;font-weight:600;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">${months[monthDate.getMonth()]} ${monthDate.getFullYear()}</div>`;
-      
-      let weekStart = new Date(monthDate);
-      while(weekStart.getDay() !== 1) weekStart.setDate(weekStart.getDate() + 1);
-      
-      while(weekStart.getMonth() === monthDate.getMonth()) {
-        const weekNum = Math.floor((weekStart - new Date(weekStart.getFullYear(), 0, 1)) / (7*24*60*60*1000));
-        const emp = poolEmps[weekNum % poolEmps.length];
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekEnd.getDate() + 6);
-        
-        rotHtml += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;">
-          <span style="color:var(--gray);">${weekStart.getDate()}–${weekEnd.getDate()}</span>
-          <span>${emp?.first_name || '—'}</span>
-        </div>`;
-        
-        weekStart.setDate(weekStart.getDate() + 7);
-      }
-      
-      rotHtml += '</div>';
+  if (id) {
+    const team = teams.find(t => t.id === id);
+    if (team) {
+      document.getElementById('teamModalTitle').textContent = 'Edit Team';
+      document.getElementById('teamId').value = team.id;
+      document.getElementById('teamName').value = team.name;
     }
-    
-    rotHtml += '</div>';
-    document.getElementById('rotationPreview').innerHTML = rotHtml;
-  } else {
-    document.getElementById('rotationPreview').innerHTML = '';
   }
+  document.getElementById('modal-team').classList.add('active');
 }
 
-function toggleDay(day) {
-  const idx = settings.oncallDays.indexOf(day);
-  if(idx > -1) settings.oncallDays.splice(idx, 1);
-  else settings.oncallDays.push(day);
+async function saveTeam() {
+  const id = document.getElementById('teamId').value;
+  const name = document.getElementById('teamName').value.trim();
+  if (!name) return alert('Team name required');
+
+  if (id) {
+    const oldTeam = teams.find(t => t.id === id);
+    await db.from('teams').update({ name }).eq('id', id);
+    // Update employees with old team name
+    if (oldTeam) await db.from('employees').update({ team: name }).eq('team', oldTeam.name);
+  } else {
+    await db.from('teams').insert([{ name }]);
+  }
+  closeModal('team');
+  await loadTeams();
+  await loadEmployees();
+  renderTeam();
+}
+
+async function deleteTeam(id) {
+  const team = teams.find(t => t.id === id);
+  if (!team) return;
+  if (!confirm(`Delete ${team.name}? Employees will be unassigned.`)) return;
+  await db.from('teams').update({ is_active: false }).eq('id', id);
+  await loadTeams();
+  renderTeam();
+}
+
+// On-Call Override Modal
+function openOncallModal(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('oncallDate').value = dateStr;
+  document.getElementById('oncallDateDisplay').value = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  
+  const eligible = employees.filter(e => e.oncall_eligible);
+  const options = eligible.map(e => `<option value="${e.id}">${e.first_name} ${e.last_name}</option>`).join('');
+  document.getElementById('oncallPrimary').innerHTML = options;
+  document.getElementById('oncallBackup').innerHTML = '<option value="">None</option>' + options;
+
+  const override = oncallOverrides.find(o => o.override_date === dateStr);
+  if (override) {
+    document.getElementById('oncallPrimary').value = override.employee_id || '';
+    document.getElementById('oncallBackup').value = override.backup_employee_id || '';
+    document.getElementById('oncallNotes').value = override.notes || '';
+  } else {
+    document.getElementById('oncallNotes').value = '';
+  }
+
+  document.getElementById('modal-oncall').classList.add('active');
+}
+
+async function saveOncallOverride() {
+  const dateStr = document.getElementById('oncallDate').value;
+  const data = {
+    override_date: dateStr,
+    employee_id: document.getElementById('oncallPrimary').value || null,
+    backup_employee_id: document.getElementById('oncallBackup').value || null,
+    notes: document.getElementById('oncallNotes').value.trim() || null
+  };
+
+  const existing = oncallOverrides.find(o => o.override_date === dateStr);
+  if (existing) {
+    await db.from('oncall_overrides').update(data).eq('id', existing.id);
+  } else {
+    await db.from('oncall_overrides').insert([data]);
+  }
+  closeModal('oncall');
+  await loadOncallOverrides();
+  render();
   renderSettings();
 }
 
-function toggleOncallEmployee(id) {
-  const idx = settings.oncallEmployees.indexOf(id);
-  if(idx > -1) settings.oncallEmployees.splice(idx, 1);
-  else settings.oncallEmployees.push(id);
-  renderSettings();
-}
-
-// Initialize everything
+// Start
 init();
-setupNav();
-loadEmployees();
 </script>
-
 </body>
 </html>
