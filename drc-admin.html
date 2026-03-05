@@ -142,7 +142,7 @@ html,body { height:100%; background:var(--light); }
       <div class="side-nav-item active" data-page="home"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</div>
       <div class="side-nav-item" data-page="team"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</div>
       <div class="side-nav-item" data-page="recurring"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</div>
-      <div class="side-nav-item" data-page="settings"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Settings</div>
+      <div class="side-nav-item" data-page="oncall"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</div>
     </nav>
   </div>
 
@@ -203,19 +203,20 @@ html,body { height:100%; background:var(--light); }
     <div class="content" id="recurringContent"></div>
   </div>
 
-  <!-- Settings Page -->
-  <div class="page" id="page-settings">
+  <!-- On-Call Page -->
+  <div class="page" id="page-oncall">
     <div class="header">
-      <h1 class="header-title">Settings</h1>
+      <h1 class="header-title">On-Call</h1>
+      <p class="header-subtitle">Manage coverage & shift swaps</p>
     </div>
-    <div class="content" id="settingsContent"></div>
+    <div class="content" id="oncallContent"></div>
   </div>
 
   <nav class="bottom-nav">
     <div class="nav-item active" data-page="home"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
     <div class="nav-item" data-page="team"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
     <div class="nav-item" data-page="recurring"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Recurring</span></div>
-    <div class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Settings</span></div>
+    <div class="nav-item" data-page="oncall"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span>On-Call</span></div>
   </nav>
   <button class="fab" onclick="openJobModal()"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
 </div>
@@ -493,6 +494,39 @@ html,body { height:100%; background:var(--light); }
   </div>
 </div>
 
+<!-- Shift Swap Request Modal -->
+<div class="modal-bg" id="modal-swap">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="swapModalTitle">Request Coverage</span>
+      <button class="modal-close" onclick="closeModal('swap')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="swapId">
+      <div class="form-group">
+        <label class="form-label">Employee Requesting Off *</label>
+        <select class="form-select" id="swapRequester"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date Needing Coverage *</label>
+        <input class="form-input" id="swapDate" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Covered By (Optional)</label>
+        <select class="form-select" id="swapCoveredBy"><option value="">Not yet assigned</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="swapNotes" placeholder="Reason for request..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('swap')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSwapRequest()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // Supabase
 const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
@@ -511,6 +545,7 @@ let oncallOverrides = [];
 let oncallSettings = { oncall_days: ['Saturday', 'Sunday'], rotation_employee_ids: [] };
 let jobTypes = [];
 let recurringJobs = [];
+let shiftSwaps = [];
 
 // Initialize
 async function init() {
@@ -522,7 +557,7 @@ async function init() {
 }
 
 async function loadAll() {
-  await Promise.all([loadTeams(), loadEmployees(), loadJobs(), loadOncallSettings(), loadOncallOverrides(), loadJobTypes(), loadRecurringJobs()]);
+  await Promise.all([loadTeams(), loadEmployees(), loadJobs(), loadOncallSettings(), loadOncallOverrides(), loadJobTypes(), loadRecurringJobs(), loadShiftSwaps()]);
 }
 
 async function loadTeams() {
@@ -562,12 +597,16 @@ async function loadRecurringJobs() {
   recurringJobs = data || [];
 }
 
+async function loadShiftSwaps() {
+  const { data } = await db.from('shift_swap_requests').select('*').order('swap_date');
+  shiftSwaps = data || [];
+}
+
 function updateJobTypeDropdowns() {
   const select = document.getElementById('recurringjobType');
   if (select) {
     select.innerHTML = jobTypes.map(jt => `<option value="${jt.name}">${jt.name}</option>`).join('');
   }
-  // Also update job modal type dropdown
   const jobTypeSelect = document.getElementById('jobType');
   if (jobTypeSelect && jobTypes.length) {
     jobTypeSelect.innerHTML = jobTypes.map(jt => `<option value="${jt.name.toLowerCase().replace(' ', '-')}">${jt.name}</option>`).join('');
@@ -595,7 +634,7 @@ function setupNav() {
         document.getElementById('page-' + page).classList.add('active');
         if (page === 'team') renderTeam();
         if (page === 'recurring') renderRecurring();
-        if (page === 'settings') renderSettings();
+        if (page === 'oncall') renderOncallPage();
       }
     };
   });
@@ -714,30 +753,84 @@ function renderSchedule() {
 
   let html = '';
 
-  // On-call banner for today view
+  // === ON-CALL SECTION (only on Today view) ===
   if (currentView === 'today') {
+    html += '<div class="section" style="margin-bottom:16px;">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><span class="section-title">On-Call</span><a style="font-size:12px;color:var(--orange);cursor:pointer;" onclick="goToPage(\'oncall\')">Manage →</a></div>';
+    
+    // Today's on-call
+    const todayStr = currentDate.toISOString().split('T')[0];
     const dayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const todayOncall = getOncallForDate(todayStr);
+    
     if (oncallSettings.oncall_days?.includes(dayName)) {
-      const dateStr = currentDate.toISOString().split('T')[0];
-      const override = oncallOverrides.find(o => o.override_date === dateStr);
-      let oncallEmp = null;
-      if (override) {
-        oncallEmp = employees.find(e => e.id === override.employee_id);
-      } else if (oncallSettings.rotation_employee_ids?.length) {
-        const weekNum = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / (7*24*60*60*1000));
-        const empId = oncallSettings.rotation_employee_ids[weekNum % oncallSettings.rotation_employee_ids.length];
-        oncallEmp = employees.find(e => e.id === empId);
-      }
-      if (oncallEmp) {
-        html += `<div class="oncall">
-          <div class="oncall-icon"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
-          <div><div class="oncall-label">On-Call</div><div class="oncall-name">${oncallEmp.first_name} ${oncallEmp.last_name} · ${oncallEmp.phone || 'No phone'}</div></div>
-          <button class="oncall-edit" onclick="openOncallModal('${dateStr}')">Edit</button>
-        </div>`;
-      }
+      html += `<div style="background:var(--charcoal);color:white;padding:12px;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:11px;opacity:0.7;">TODAY'S ON-CALL</div>
+          <div style="font-weight:600;">${todayOncall ? todayOncall.first_name + ' ' + todayOncall.last_name : 'Not assigned'}</div>
+          ${todayOncall?.phone ? `<div style="font-size:12px;opacity:0.8;">${todayOncall.phone}</div>` : ''}
+        </div>
+        <button onclick="openOncallModal('${todayStr}')" style="padding:6px 10px;background:rgba(255,255,255,0.15);border:none;border-radius:6px;color:white;font-size:11px;cursor:pointer;">Edit</button>
+      </div>`;
     }
+
+    // Pending Swap Requests
+    const pendingSwaps = shiftSwaps.filter(s => s.status === 'pending' || s.status === 'claimed');
+    if (pendingSwaps.length) {
+      html += '<div style="margin-bottom:12px;">';
+      html += '<div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:8px;">Pending Swap Requests</div>';
+      pendingSwaps.forEach(swap => {
+        const requester = employees.find(e => e.id === swap.requester_id);
+        const coveredBy = swap.covered_by_id ? employees.find(e => e.id === swap.covered_by_id) : null;
+        const swapDate = new Date(swap.swap_date + 'T12:00:00');
+        const dateStr = swapDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        
+        html += `<div style="background:var(--orange-light);border:1px solid var(--orange);border-radius:8px;padding:12px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div style="font-weight:600;color:var(--dark);">${requester?.first_name || 'Unknown'} needs coverage</div>
+              <div style="font-size:12px;color:var(--gray);">${dateStr}${swap.requester_notes ? ' · ' + swap.requester_notes : ''}</div>
+              ${coveredBy ? `<div style="font-size:12px;color:var(--green);margin-top:4px;">✓ ${coveredBy.first_name} volunteered</div>` : ''}
+            </div>
+            <div style="display:flex;gap:6px;">
+              ${swap.status === 'claimed' ? `<button class="btn btn-sm btn-primary" onclick="approveSwap('${swap.id}')">Approve</button>` : ''}
+              <button class="btn btn-sm btn-secondary" onclick="openSwapModal('${swap.id}')">Edit</button>
+            </div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+
+    // This Week's On-Call Preview
+    html += '<div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:8px;">This Week</div>';
+    html += '<div style="display:flex;gap:6px;overflow-x:auto;">';
+    const weekStart = new Date(currentDate);
+    weekStart.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+    const dayAbbrevs = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      const dStr = d.toISOString().split('T')[0];
+      const dName = d.toLocaleDateString('en-US', { weekday: 'long' });
+      const isOncallDay = oncallSettings.oncall_days?.includes(dName);
+      const isToday = dStr === new Date().toISOString().split('T')[0];
+      const oncallEmp = isOncallDay ? getOncallForDate(dStr) : null;
+      
+      html += `<div style="flex:1;min-width:44px;text-align:center;padding:8px 4px;background:${isToday ? 'var(--orange-light)' : 'var(--light)'};border-radius:6px;${isToday ? 'border:2px solid var(--orange);' : ''}">
+        <div style="font-size:10px;color:var(--gray);">${dayAbbrevs[i]}</div>
+        <div style="font-size:14px;font-weight:600;color:var(--dark);">${d.getDate()}</div>
+        ${isOncallDay ? `<div style="font-size:9px;color:var(--orange);margin-top:2px;">${oncallEmp?.first_name?.slice(0,4) || '—'}</div>` : ''}
+      </div>`;
+    }
+    html += '</div>';
+    html += '</div>';
   }
 
+  // === JOBS SECTION ===
   if (!filtered.length) {
     html += `<div class="empty"><h3>No jobs</h3><p>Nothing scheduled</p></div>`;
   } else {
@@ -775,6 +868,30 @@ function renderSchedule() {
     });
   }
   content.innerHTML = html;
+}
+
+// Helper to get on-call for a specific date
+function getOncallForDate(dateStr) {
+  const override = oncallOverrides.find(o => o.override_date === dateStr);
+  if (override) {
+    return employees.find(e => e.id === override.employee_id);
+  }
+  if (oncallSettings.rotation_employee_ids?.length) {
+    const d = new Date(dateStr + 'T12:00:00');
+    const weekNum = Math.floor((d - new Date(d.getFullYear(), 0, 1)) / (7*24*60*60*1000));
+    const empId = oncallSettings.rotation_employee_ids[weekNum % oncallSettings.rotation_employee_ids.length];
+    return employees.find(e => e.id === empId);
+  }
+  return null;
+}
+
+function goToPage(page) {
+  document.querySelectorAll('.nav-item, .side-nav-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll(`[data-page="${page}"]`).forEach(i => i.classList.add('active'));
+  document.querySelector('.main-wrap').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (page === 'oncall') renderOncallPage();
 }
 
 function formatTime(time) {
@@ -844,11 +961,76 @@ function renderTeam() {
   document.getElementById('teamContent').innerHTML = html;
 }
 
-// Settings Page
-function renderSettings() {
+// On-Call Page (formerly Settings)
+function renderOncallPage() {
   let html = '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  // On-Call Days
+  // Pending Swap Requests
+  const pendingSwaps = shiftSwaps.filter(s => s.status === 'pending' || s.status === 'claimed');
+  html += `<div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div class="section-title">Shift Swap Requests</div>
+      <button class="btn btn-sm btn-primary" onclick="openSwapModal()">+ Request Coverage</button>
+    </div>`;
+  
+  if (!pendingSwaps.length) {
+    html += '<p style="color:var(--gray);font-size:13px;">No pending requests</p>';
+  } else {
+    pendingSwaps.forEach(swap => {
+      const requester = employees.find(e => e.id === swap.requester_id);
+      const coveredBy = swap.covered_by_id ? employees.find(e => e.id === swap.covered_by_id) : null;
+      const swapDate = new Date(swap.swap_date + 'T12:00:00');
+      const dateStr = swapDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      
+      html += `<div style="background:${swap.status === 'claimed' ? 'rgba(16,185,129,0.1)' : 'var(--orange-light)'};border:1px solid ${swap.status === 'claimed' ? 'var(--green)' : 'var(--orange)'};border-radius:8px;padding:12px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-weight:600;color:var(--dark);">${requester?.first_name} ${requester?.last_name || ''}</div>
+            <div style="font-size:13px;color:var(--gray);">Needs coverage: <strong>${dateStr}</strong></div>
+            ${swap.requester_notes ? `<div style="font-size:12px;color:var(--gray);margin-top:4px;font-style:italic;">"${swap.requester_notes}"</div>` : ''}
+            ${coveredBy ? `<div style="font-size:12px;color:var(--green);margin-top:6px;">✓ ${coveredBy.first_name} ${coveredBy.last_name} volunteered to cover</div>` : ''}
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            ${swap.status === 'claimed' ? `<button class="btn btn-sm btn-primary" onclick="approveSwap('${swap.id}')">Approve</button>` : ''}
+            <button class="btn btn-sm btn-secondary" onclick="openSwapModal('${swap.id}')">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="denySwap('${swap.id}')">Deny</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  }
+  html += '</div>';
+
+  // This Week's Coverage
+  html += `<div class="section">
+    <div class="section-title">This Week's Coverage</div>
+    <div style="margin-top:12px;">`;
+  
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    const dStr = d.toISOString().split('T')[0];
+    const dName = dayNames[i];
+    const isOncallDay = oncallSettings.oncall_days?.includes(dName);
+    const isToday = dStr === new Date().toISOString().split('T')[0];
+    const oncallEmp = isOncallDay ? getOncallForDate(dStr) : null;
+    
+    html += `<div class="list-item" style="${isToday ? 'border:2px solid var(--orange);' : ''}">
+      <div>
+        <div style="font-weight:500;color:var(--dark);">${dName.slice(0,3)} ${d.getDate()}</div>
+        ${isOncallDay ? `<div style="font-size:12px;color:${oncallEmp ? 'var(--green)' : 'var(--red)'};">${oncallEmp ? oncallEmp.first_name + ' ' + oncallEmp.last_name : 'Not assigned'}</div>` : '<div style="font-size:12px;color:var(--gray);">No coverage needed</div>'}
+      </div>
+      ${isOncallDay ? `<button class="btn btn-sm btn-secondary" onclick="openOncallModal('${dStr}')">Edit</button>` : ''}
+    </div>`;
+  }
+  html += '</div></div>';
+
+  // On-Call Days Config
   html += `<div class="section">
     <div class="section-title">On-Call Days</div>
     <p class="section-desc">Select days requiring coverage</p>
@@ -861,8 +1043,8 @@ function renderSettings() {
 
   // Rotation Pool
   html += `<div class="section">
-    <div class="section-title">On-Call Rotation</div>
-    <p class="section-desc">Select employees for rotation</p>`;
+    <div class="section-title">Rotation Pool</div>
+    <p class="section-desc">Employees in on-call rotation</p>`;
   const eligible = employees.filter(e => e.oncall_eligible);
   if (!eligible.length) {
     html += '<p style="color:var(--gray);font-size:13px;">No on-call eligible employees. Mark employees as on-call eligible in their profile.</p>';
@@ -879,39 +1061,34 @@ function renderSettings() {
   }
   html += '</div>';
 
-  // Upcoming On-Call Schedule
+  // Upcoming Schedule (8 weeks)
   html += `<div class="section">
-    <div class="section-title">Upcoming On-Call Schedule</div>
-    <p class="section-desc">Click to edit any week</p>
+    <div class="section-title">Upcoming Schedule</div>
+    <p class="section-desc">8-week on-call preview</p>
     <div style="display:flex;flex-direction:column;gap:8px;">`;
   
   const today = new Date();
   for (let i = 0; i < 8; i++) {
-    const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - today.getDay() + 1 + (i * 7));
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    const dateStr = weekStart.toISOString().split('T')[0];
+    const ws = new Date(today);
+    ws.setDate(today.getDate() - today.getDay() + 1 + (i * 7));
+    const we = new Date(ws);
+    we.setDate(ws.getDate() + 6);
+    const dateStr = ws.toISOString().split('T')[0];
     
-    const override = oncallOverrides.find(o => o.override_date >= dateStr && o.override_date <= weekEnd.toISOString().split('T')[0]);
-    let emp = null;
-    if (override) {
-      emp = employees.find(e => e.id === override.employee_id);
-    } else if (oncallSettings.rotation_employee_ids?.length) {
-      const weekNum = Math.floor((weekStart - new Date(weekStart.getFullYear(), 0, 1)) / (7*24*60*60*1000));
-      const empId = oncallSettings.rotation_employee_ids[weekNum % oncallSettings.rotation_employee_ids.length];
-      emp = employees.find(e => e.id === empId);
-    }
+    const oncallEmp = getOncallForDate(dateStr);
+    const override = oncallOverrides.find(o => o.override_date >= dateStr && o.override_date <= we.toISOString().split('T')[0]);
 
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     html += `<div class="list-item" style="cursor:pointer;" onclick="openOncallModal('${dateStr}')">
-      <span style="font-size:13px;">${months[weekStart.getMonth()]} ${weekStart.getDate()} – ${months[weekEnd.getMonth()]} ${weekEnd.getDate()}</span>
-      <span style="font-weight:500;color:${emp ? 'var(--dark)' : 'var(--gray)'};">${emp ? emp.first_name + ' ' + emp.last_name : 'Not set'}</span>
+      <span style="font-size:13px;">${months[ws.getMonth()]} ${ws.getDate()} – ${months[we.getMonth()]} ${we.getDate()}</span>
+      <span style="font-weight:500;color:${oncallEmp ? 'var(--dark)' : 'var(--gray)'};">
+        ${oncallEmp ? oncallEmp.first_name + ' ' + oncallEmp.last_name : 'Not set'}
+        ${override ? '<span style="font-size:10px;color:var(--orange);margin-left:4px;">edited</span>' : ''}
+      </span>
     </div>`;
   }
   html += '</div></div>';
 
-  document.getElementById('settingsContent').innerHTML = html;
+  document.getElementById('oncallContent').innerHTML = html;
 }
 
 async function toggleOncallDay(day) {
@@ -921,7 +1098,8 @@ async function toggleOncallDay(day) {
   else days.push(day);
   await db.from('oncall_settings').update({ oncall_days: days }).eq('id', oncallSettings.id);
   oncallSettings.oncall_days = days;
-  renderSettings();
+  renderOncallPage();
+  render();
 }
 
 async function toggleRotationEmployee(empId) {
@@ -931,7 +1109,90 @@ async function toggleRotationEmployee(empId) {
   else ids.push(empId);
   await db.from('oncall_settings').update({ rotation_employee_ids: ids }).eq('id', oncallSettings.id);
   oncallSettings.rotation_employee_ids = ids;
-  renderSettings();
+  renderOncallPage();
+  render();
+}
+
+// Shift Swap Modal
+function openSwapModal(id = null) {
+  document.getElementById('swapId').value = '';
+  document.getElementById('swapDate').value = '';
+  document.getElementById('swapNotes').value = '';
+  document.getElementById('swapModalTitle').textContent = 'Request Coverage';
+
+  // Populate employee dropdowns
+  const eligible = employees.filter(e => e.oncall_eligible);
+  const opts = eligible.map(e => `<option value="${e.id}">${e.first_name} ${e.last_name}</option>`).join('');
+  document.getElementById('swapRequester').innerHTML = opts;
+  document.getElementById('swapCoveredBy').innerHTML = '<option value="">Not yet assigned</option>' + opts;
+
+  if (id) {
+    const swap = shiftSwaps.find(s => s.id === id);
+    if (swap) {
+      document.getElementById('swapModalTitle').textContent = 'Edit Swap Request';
+      document.getElementById('swapId').value = swap.id;
+      document.getElementById('swapRequester').value = swap.requester_id;
+      document.getElementById('swapDate').value = swap.swap_date;
+      document.getElementById('swapCoveredBy').value = swap.covered_by_id || '';
+      document.getElementById('swapNotes').value = swap.requester_notes || '';
+    }
+  }
+  document.getElementById('modal-swap').classList.add('active');
+}
+
+async function saveSwapRequest() {
+  const id = document.getElementById('swapId').value;
+  const requesterId = document.getElementById('swapRequester').value;
+  const swapDate = document.getElementById('swapDate').value;
+  
+  if (!requesterId || !swapDate) return alert('Employee and date required');
+
+  const coveredById = document.getElementById('swapCoveredBy').value || null;
+  const data = {
+    requester_id: requesterId,
+    swap_date: swapDate,
+    covered_by_id: coveredById,
+    requester_notes: document.getElementById('swapNotes').value.trim() || null,
+    status: coveredById ? 'claimed' : 'pending'
+  };
+
+  if (id) {
+    await db.from('shift_swap_requests').update(data).eq('id', id);
+  } else {
+    await db.from('shift_swap_requests').insert([data]);
+  }
+  closeModal('swap');
+  await loadShiftSwaps();
+  render();
+  renderOncallPage();
+}
+
+async function approveSwap(id) {
+  const swap = shiftSwaps.find(s => s.id === id);
+  if (!swap || !swap.covered_by_id) return;
+  
+  // Create an override for this date
+  await db.from('oncall_overrides').upsert({
+    override_date: swap.swap_date,
+    employee_id: swap.covered_by_id,
+    notes: `Swap approved - covering for ${employees.find(e => e.id === swap.requester_id)?.first_name || 'employee'}`
+  }, { onConflict: 'override_date' });
+  
+  // Update swap status
+  await db.from('shift_swap_requests').update({ status: 'approved', reviewed_at: new Date().toISOString() }).eq('id', id);
+  
+  await loadShiftSwaps();
+  await loadOncallOverrides();
+  render();
+  renderOncallPage();
+}
+
+async function denySwap(id) {
+  if (!confirm('Deny this swap request?')) return;
+  await db.from('shift_swap_requests').update({ status: 'denied', reviewed_at: new Date().toISOString() }).eq('id', id);
+  await loadShiftSwaps();
+  render();
+  renderOncallPage();
 }
 
 // Modals
