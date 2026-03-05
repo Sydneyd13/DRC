@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DRC Employee</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #E85A24;
+  --orange-light: rgba(232,90,36,0.1);
+  --dark: #1F1F1F;
+  --charcoal: #2D2D2D;
+  --gray: #6B7280;
+  --light: #F5F5F5;
+  --border: #E5E5E5;
+  --white: #FFFFFF;
+  --blue: #3B82F6;
+  --red: #EF4444;
+  --green: #10B981;
+  --purple: #8B5CF6;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; background:var(--light); }
+.app { height:100%; display:flex; flex-direction:column; }
+
+/* Login Screen */
+.login-screen { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; background:var(--charcoal); }
+.login-logo { width:80px; height:80px; background:var(--orange); border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:24px; }
+.login-logo svg { width:40px; height:40px; color:white; }
+.login-title { color:white; font-size:24px; font-weight:700; margin-bottom:8px; }
+.login-subtitle { color:rgba(255,255,255,0.6); font-size:14px; margin-bottom:32px; }
+.pin-display { display:flex; gap:12px; margin-bottom:24px; }
+.pin-dot { width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,0.2); transition:all 0.2s; }
+.pin-dot.filled { background:var(--orange); }
+.pin-dot.error { background:var(--red); animation:shake 0.3s; }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+.keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:280px; }
+.key { width:80px; height:60px; border-radius:12px; border:none; background:rgba(255,255,255,0.1); color:white; font-size:24px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.key:hover { background:rgba(255,255,255,0.2); }
+.key:active { transform:scale(0.95); }
+.key.delete { font-size:14px; }
+.login-error { color:var(--red); font-size:13px; margin-top:16px; min-height:20px; }
+
+/* Main App */
+.main-app { display:none; height:100%; flex-direction:column; }
+.main-app.active { display:flex; }
+
+.header { background:var(--white); padding:16px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.header-top { display:flex; justify-content:space-between; align-items:center; }
+.header-title { font-size:20px; font-weight:700; color:var(--dark); }
+.header-subtitle { font-size:12px; color:var(--gray); margin-top:2px; }
+.header-user { display:flex; align-items:center; gap:8px; }
+.header-avatar { width:32px; height:32px; background:var(--orange); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:12px; }
+
+.view-toggle { display:flex; background:var(--light); border-radius:8px; padding:3px; margin:12px 0; }
+.view-btn { flex:1; padding:8px; border:none; background:none; font-size:13px; font-weight:500; color:var(--gray); border-radius:6px; cursor:pointer; }
+.view-btn.active { background:var(--white); color:var(--dark); box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+
+.date-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.date-nav-arrows { display:flex; gap:6px; }
+.nav-arrow { width:32px; height:32px; border:1px solid var(--border); background:var(--white); border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.date-label { font-size:15px; font-weight:600; color:var(--dark); }
+.today-link { font-size:12px; color:var(--orange); font-weight:500; cursor:pointer; }
+
+.content { flex:1; overflow-y:auto; padding:16px 20px; padding-bottom:100px; }
+
+.section { background:var(--white); border-radius:10px; padding:16px; margin-bottom:16px; border:1px solid var(--border); }
+.section-title { font-size:15px; font-weight:600; color:var(--dark); margin-bottom:4px; }
+.section-desc { font-size:12px; color:var(--gray); margin-bottom:14px; }
+
+.oncall-card { background:var(--charcoal); color:white; padding:14px 16px; border-radius:10px; margin-bottom:12px; display:flex; align-items:center; gap:12px; }
+.oncall-icon { width:40px; height:40px; background:var(--orange); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.oncall-label { font-size:11px; opacity:0.7; text-transform:uppercase; letter-spacing:0.5px; }
+.oncall-name { font-size:14px; font-weight:600; margin-top:2px; }
+
+.list-item { display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--light); border-radius:8px; margin-bottom:8px; }
+
+.agenda-group { margin-bottom:24px; }
+.agenda-date { font-size:13px; font-weight:600; color:var(--gray); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.today-badge { background:var(--orange); color:white; padding:2px 8px; border-radius:10px; font-size:10px; }
+
+.job-card { background:var(--white); border-radius:10px; padding:16px; margin-bottom:10px; border:1px solid var(--border); border-left:4px solid var(--gray); }
+.job-card.water { border-left-color:var(--blue); }
+.job-card.fire { border-left-color:var(--red); }
+.job-card.mold { border-left-color:var(--green); }
+.job-card.inspection { border-left-color:var(--purple); }
+.job-card.my-team { background:var(--orange-light); }
+.job-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px; }
+.job-title { font-size:15px; font-weight:600; color:var(--dark); line-height:1.4; }
+.job-status { padding:4px 8px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase; flex-shrink:0; }
+.job-status.scheduled { background:var(--orange-light); color:var(--orange); }
+.job-status.in-progress { background:rgba(59,130,246,0.1); color:var(--blue); }
+.job-status.completed { background:rgba(16,185,129,0.1); color:var(--green); }
+.job-time { font-size:13px; color:var(--gray); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.job-meta { display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--gray); }
+.job-meta-item { display:flex; align-items:center; gap:5px; }
+.crew-badge { background:var(--light); padding:3px 8px; border-radius:4px; font-weight:500; display:flex; align-items:center; gap:5px; }
+.crew-dot { width:8px; height:8px; border-radius:50%; }
+
+.profile-header { text-align:center; padding:24px 0; }
+.profile-avatar { width:80px; height:80px; background:var(--orange); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; margin:0 auto 12px; }
+.profile-name { font-size:20px; font-weight:700; color:var(--dark); }
+.profile-role { font-size:14px; color:var(--gray); margin-top:4px; }
+.profile-team { display:inline-block; margin-top:8px; padding:4px 12px; background:var(--orange-light); color:var(--orange); border-radius:20px; font-size:12px; font-weight:500; }
+
+.profile-section { margin-bottom:16px; }
+.profile-section-title { font-size:12px; font-weight:600; color:var(--gray); text-transform:uppercase; margin-bottom:8px; }
+.profile-item { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); }
+.profile-item:last-child { border-bottom:none; }
+.profile-item-label { color:var(--gray); font-size:14px; }
+.profile-item-value { color:var(--dark); font-size:14px; font-weight:500; }
+
+.btn { padding:10px 16px; border-radius:8px; font-size:14px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; width:100%; }
+.btn-primary { background:var(--orange); color:white; }
+.btn-secondary { background:var(--white); color:var(--dark); border:1px solid var(--border); }
+.btn-danger { background:var(--white); color:var(--red); border:1px solid var(--border); }
+.btn-sm { padding:8px 12px; font-size:13px; width:auto; }
+
+.empty { text-align:center; padding:40px 20px; color:var(--gray); }
+.empty h3 { color:var(--dark); margin-bottom:4px; }
+
+.page { display:none; height:100%; flex-direction:column; overflow:hidden; background:var(--light); }
+.page.active { display:flex; }
+
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:8px 0; padding-bottom:calc(8px + env(safe-area-inset-bottom)); z-index:100; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 16px; color:var(--gray); cursor:pointer; }
+.nav-item.active { color:var(--orange); }
+.nav-item svg { width:22px; height:22px; }
+.nav-item span { font-size:11px; font-weight:500; }
+
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:flex-end; justify-content:center; z-index:200; }
+.modal-bg.active { display:flex; }
+.modal { background:var(--white); border-radius:16px 16px 0 0; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; }
+.modal-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.modal-title { font-size:16px; font-weight:600; }
+.modal-close { width:32px; height:32px; border-radius:50%; border:none; background:var(--light); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.modal-body { padding:20px; }
+.modal-foot { padding:16px 20px; border-top:1px solid var(--border); display:flex; gap:10px; }
+.modal-foot .btn { flex:1; }
+
+.form-group { margin-bottom:16px; }
+.form-label { display:block; font-size:13px; font-weight:500; margin-bottom:6px; color:var(--dark); }
+.form-input,.form-select,.form-textarea { width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+.form-textarea { resize:vertical; min-height:80px; }
+
+.tag { display:inline-block; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:500; }
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-logo">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+  </div>
+  <h1 class="login-title">DRC Employee</h1>
+  <p class="login-subtitle">Enter your 3-digit PIN</p>
+  <div class="pin-display">
+    <div class="pin-dot" id="dot1"></div>
+    <div class="pin-dot" id="dot2"></div>
+    <div class="pin-dot" id="dot3"></div>
+  </div>
+  <div class="keypad">
+    <button class="key" onclick="enterPin('1')">1</button>
+    <button class="key" onclick="enterPin('2')">2</button>
+    <button class="key" onclick="enterPin('3')">3</button>
+    <button class="key" onclick="enterPin('4')">4</button>
+    <button class="key" onclick="enterPin('5')">5</button>
+    <button class="key" onclick="enterPin('6')">6</button>
+    <button class="key" onclick="enterPin('7')">7</button>
+    <button class="key" onclick="enterPin('8')">8</button>
+    <button class="key" onclick="enterPin('9')">9</button>
+    <button class="key" onclick="clearPin()">C</button>
+    <button class="key" onclick="enterPin('0')">0</button>
+    <button class="key delete" onclick="deletePin()">⌫</button>
+  </div>
+  <div class="login-error" id="loginError"></div>
+</div>
+
+<!-- Main App -->
+<div class="main-app" id="mainApp">
+  <!-- Schedule Page -->
+  <div class="page active" id="page-schedule">
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <h1 class="header-title">Schedule</h1>
+          <p class="header-subtitle" id="scheduleSubtitle">All jobs</p>
+        </div>
+        <div class="header-user" id="headerUser"></div>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" data-view="today">Today</button>
+        <button class="view-btn" data-view="week">Week</button>
+        <button class="view-btn" data-view="month">Month</button>
+      </div>
+      <div class="date-nav">
+        <div class="date-nav-arrows">
+          <button class="nav-arrow" onclick="navPrev()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+          <button class="nav-arrow" onclick="navNext()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+        <span class="date-label" id="dateLabel"></span>
+        <span class="today-link" onclick="goToday()">Today</span>
+      </div>
+    </div>
+    <div class="content" id="scheduleContent"></div>
+  </div>
+
+  <!-- On-Call Page -->
+  <div class="page" id="page-oncall">
+    <div class="header">
+      <div class="header-top">
+        <div>
+          <h1 class="header-title">On-Call</h1>
+          <p class="header-subtitle">Coverage & requests</p>
+        </div>
+      </div>
+    </div>
+    <div class="content" id="oncallContent"></div>
+  </div>
+
+  <!-- Profile Page -->
+  <div class="page" id="page-profile">
+    <div class="header">
+      <h1 class="header-title">Profile</h1>
+    </div>
+    <div class="content" id="profileContent"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-page="schedule">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <span>Schedule</span>
+    </div>
+    <div class="nav-item" data-page="oncall">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      <span>On-Call</span>
+    </div>
+    <div class="nav-item" data-page="profile">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      <span>Profile</span>
+    </div>
+  </nav>
+</div>
+
+<!-- Request Coverage Modal -->
+<div class="modal-bg" id="modal-request">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">Request Coverage</span>
+      <button class="modal-close" onclick="closeModal('request')"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Date you need covered *</label>
+        <input class="form-input" id="requestDate" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason (optional)</label>
+        <textarea class="form-textarea" id="requestNotes" placeholder="Let the team know why..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('request')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCoverageRequest()">Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Supabase
+const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// State
+let currentUser = null;
+let currentView = 'today';
+let currentDate = new Date();
+let jobs = [];
+let employees = [];
+let teams = [];
+let oncallSettings = { oncall_days: [], rotation_employee_ids: [] };
+let oncallOverrides = [];
+let shiftSwaps = [];
+let enteredPin = '';
+
+// Check for saved session
+function checkSession() {
+  const saved = localStorage.getItem('drc_employee_session');
+  if (saved) {
+    const user = JSON.parse(saved);
+    loginSuccess(user);
+  }
+}
+
+// PIN Entry
+function enterPin(digit) {
+  if (enteredPin.length >= 3) return;
+  enteredPin += digit;
+  updatePinDisplay();
+  
+  if (enteredPin.length === 3) {
+    verifyPin();
+  }
+}
+
+function deletePin() {
+  enteredPin = enteredPin.slice(0, -1);
+  updatePinDisplay();
+}
+
+function clearPin() {
+  enteredPin = '';
+  updatePinDisplay();
+  document.getElementById('loginError').textContent = '';
+}
+
+function updatePinDisplay() {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot' + i);
+    dot.classList.remove('filled', 'error');
+    if (i <= enteredPin.length) {
+      dot.classList.add('filled');
+    }
+  }
+}
+
+async function verifyPin() {
+  const { data, error } = await db
+    .from('employees')
+    .select('*')
+    .eq('pin_code', enteredPin)
+    .eq('is_active', true)
+    .single();
+  
+  if (error || !data) {
+    // Show error
+    document.querySelectorAll('.pin-dot').forEach(d => d.classList.add('error'));
+    document.getElementById('loginError').textContent = 'Invalid PIN. Try again.';
+    setTimeout(() => {
+      clearPin();
+    }, 500);
+    return;
+  }
+  
+  // Success
+  localStorage.setItem('drc_employee_session', JSON.stringify(data));
+  loginSuccess(data);
+}
+
+function loginSuccess(user) {
+  currentUser = user;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').classList.add('active');
+  
+  // Update header
+  const initials = (user.first_name[0] + user.last_name[0]).toUpperCase();
+  document.getElementById('headerUser').innerHTML = `
+    <div class="header-avatar">${initials}</div>
+  `;
+  
+  init();
+}
+
+function logout() {
+  if (!confirm('Log out?')) return;
+  localStorage.removeItem('drc_employee_session');
+  currentUser = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').classList.remove('active');
+  clearPin();
+}
+
+// Initialize App
+async function init() {
+  setupNav();
+  setupViewToggle();
+  await loadAll();
+  render();
+}
+
+async function loadAll() {
+  await Promise.all([
+    loadTeams(),
+    loadEmployees(),
+    loadJobs(),
+    loadOncallSettings(),
+    loadOncallOverrides(),
+    loadShiftSwaps()
+  ]);
+}
+
+async function loadTeams() {
+  const { data } = await db.from('teams').select('*').eq('is_active', true).order('sort_order');
+  teams = data || [];
+}
+
+async function loadEmployees() {
+  const { data } = await db.from('employees').select('*').eq('is_active', true).order('first_name');
+  employees = data || [];
+}
+
+async function loadJobs() {
+  const { data } = await db.from('jobs').select('*').eq('is_active', true).order('job_date').order('job_time');
+  jobs = data || [];
+}
+
+async function loadOncallSettings() {
+  const { data } = await db.from('oncall_settings').select('*').limit(1);
+  if (data && data[0]) oncallSettings = data[0];
+}
+
+async function loadOncallOverrides() {
+  const { data } = await db.from('oncall_overrides').select('*');
+  oncallOverrides = data || [];
+}
+
+async function loadShiftSwaps() {
+  const { data } = await db.from('shift_swap_requests').select('*').order('swap_date');
+  shiftSwaps = data || [];
+}
+
+// Navigation
+function setupNav() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.onclick = () => {
+      const page = item.dataset.page;
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      
+      if (page === 'oncall') renderOncall();
+      if (page === 'profile') renderProfile();
+    };
+  });
+}
+
+function setupViewToggle() {
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      render();
+    };
+  });
+}
+
+function navPrev() {
+  if (currentView === 'today') currentDate.setDate(currentDate.getDate() - 1);
+  else if (currentView === 'week') currentDate.setDate(currentDate.getDate() - 7);
+  else currentDate.setMonth(currentDate.getMonth() - 1);
+  render();
+}
+
+function navNext() {
+  if (currentView === 'today') currentDate.setDate(currentDate.getDate() + 1);
+  else if (currentView === 'week') currentDate.setDate(currentDate.getDate() + 7);
+  else currentDate.setMonth(currentDate.getMonth() + 1);
+  render();
+}
+
+function goToday() {
+  currentDate = new Date();
+  render();
+}
+
+// Render Schedule
+function render() {
+  renderDateLabel();
+  renderSchedule();
+}
+
+function renderDateLabel() {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let label = '';
+  if (currentView === 'today') {
+    label = `${days[currentDate.getDay()]}, ${months[currentDate.getMonth()]} ${currentDate.getDate()}`;
+  } else if (currentView === 'week') {
+    const start = new Date(currentDate);
+    start.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    label = `${months[start.getMonth()]} ${start.getDate()} – ${months[end.getMonth()]} ${end.getDate()}`;
+  } else {
+    label = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+  }
+  document.getElementById('dateLabel').textContent = label;
+}
+
+function renderSchedule() {
+  const content = document.getElementById('scheduleContent');
+  let filtered = [...jobs];
+
+  let startDate, endDate;
+  if (currentView === 'today') {
+    startDate = endDate = currentDate.toISOString().split('T')[0];
+  } else if (currentView === 'week') {
+    const ws = new Date(currentDate);
+    ws.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+    const we = new Date(ws);
+    we.setDate(ws.getDate() + 6);
+    startDate = ws.toISOString().split('T')[0];
+    endDate = we.toISOString().split('T')[0];
+  } else {
+    const y = currentDate.getFullYear(), m = currentDate.getMonth();
+    startDate = `${y}-${String(m+1).padStart(2,'0')}-01`;
+    endDate = `${y}-${String(m+1).padStart(2,'0')}-${new Date(y, m+1, 0).getDate()}`;
+  }
+
+  filtered = filtered.filter(j => j.job_date >= startDate && j.job_date <= endDate);
+
+  let html = '';
+
+  // On-call today banner (only on Today view)
+  if (currentView === 'today') {
+    const dayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    if (oncallSettings.oncall_days?.includes(dayName)) {
+      const oncallEmp = getOncallForDate(currentDate.toISOString().split('T')[0]);
+      if (oncallEmp) {
+        const isMe = oncallEmp.id === currentUser?.id;
+        html += `<div class="oncall-card" style="${isMe ? 'border:2px solid var(--orange);' : ''}">
+          <div class="oncall-icon"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+          <div>
+            <div class="oncall-label">${isMe ? "YOU'RE ON-CALL TODAY" : "ON-CALL TODAY"}</div>
+            <div class="oncall-name">${oncallEmp.first_name} ${oncallEmp.last_name}${oncallEmp.phone ? ' · ' + oncallEmp.phone : ''}</div>
+          </div>
+        </div>`;
+      }
+    }
+  }
+
+  if (!filtered.length) {
+    html += `<div class="empty"><h3>No jobs scheduled</h3><p>Nothing on the calendar</p></div>`;
+  } else {
+    const grouped = {};
+    filtered.forEach(j => {
+      if (!grouped[j.job_date]) grouped[j.job_date] = [];
+      grouped[j.job_date].push(j);
+    });
+
+    const today = new Date().toISOString().split('T')[0];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    Object.keys(grouped).sort().forEach(date => {
+      const d = new Date(date + 'T12:00:00');
+      const isToday = date === today;
+      html += `<div class="agenda-group"><div class="agenda-date">${dayNames[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()} ${isToday ? '<span class="today-badge">Today</span>' : ''}</div>`;
+      grouped[date].forEach(job => {
+        const team = teams.find(t => t.name === job.team_name);
+        const color = team?.color || '#6B7280';
+        const isMyTeam = job.team_name === currentUser?.team;
+        html += `<div class="job-card ${job.job_type} ${isMyTeam ? 'my-team' : ''}">
+          <div class="job-header">
+            <div class="job-title">${job.title}</div>
+            <span class="job-status ${job.status}">${job.status.replace('-', ' ')}</span>
+          </div>
+          <div class="job-time"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${formatTime(job.job_time)}</div>
+          <div class="job-meta">
+            <span class="job-meta-item crew-badge"><span class="crew-dot" style="background:${color}"></span>${job.team_name || 'Unassigned'}${isMyTeam ? ' (Your team)' : ''}</span>
+            ${job.location ? `<span class="job-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>${job.location}</span>` : ''}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+  }
+  content.innerHTML = html;
+}
+
+function formatTime(time) {
+  if (!time) return '';
+  const [h, m] = time.split(':');
+  const hour = parseInt(h);
+  return `${hour > 12 ? hour - 12 : hour || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
+}
+
+function getOncallForDate(dateStr) {
+  const override = oncallOverrides.find(o => o.override_date === dateStr);
+  if (override) {
+    return employees.find(e => e.id === override.employee_id);
+  }
+  if (oncallSettings.rotation_employee_ids?.length) {
+    const d = new Date(dateStr + 'T12:00:00');
+    const weekNum = Math.floor((d - new Date(d.getFullYear(), 0, 1)) / (7*24*60*60*1000));
+    const empId = oncallSettings.rotation_employee_ids[weekNum % oncallSettings.rotation_employee_ids.length];
+    return employees.find(e => e.id === empId);
+  }
+  return null;
+}
+
+// On-Call Page
+function renderOncall() {
+  let html = '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  // My On-Call Status
+  const isOncallEligible = currentUser?.oncall_eligible;
+  
+  html += '<div class="section">';
+  html += '<div class="section-title">My On-Call Status</div>';
+  if (isOncallEligible) {
+    html += `<p style="color:var(--green);font-size:13px;margin-bottom:12px;">✓ You are in the on-call rotation</p>`;
+    html += `<button class="btn btn-primary" onclick="openRequestModal()">Request Coverage</button>`;
+  } else {
+    html += `<p style="color:var(--gray);font-size:13px;">You are not in the on-call rotation.</p>`;
+  }
+  html += '</div>';
+
+  // This Week's On-Call
+  html += '<div class="section">';
+  html += '<div class="section-title">This Week\'s Coverage</div>';
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(weekStart.getDate() + i);
+    const dStr = d.toISOString().split('T')[0];
+    const dName = dayNames[i];
+    const isOncallDay = oncallSettings.oncall_days?.includes(dName);
+    const isToday = dStr === new Date().toISOString().split('T')[0];
+    const oncallEmp = isOncallDay ? getOncallForDate(dStr) : null;
+    const isMe = oncallEmp?.id === currentUser?.id;
+    
+    if (isOncallDay) {
+      html += `<div class="list-item" style="${isToday ? 'border:2px solid var(--orange);' : ''} ${isMe ? 'background:var(--orange-light);' : ''}">
+        <div>
+          <div style="font-weight:500;color:var(--dark);">${dName.slice(0,3)} ${d.getDate()}</div>
+          <div style="font-size:12px;color:${isMe ? 'var(--orange)' : 'var(--gray)'};">${oncallEmp ? (isMe ? 'You' : oncallEmp.first_name + ' ' + oncallEmp.last_name) : 'Not assigned'}</div>
+        </div>
+        ${isToday ? '<span class="tag" style="background:var(--orange);color:white;">Today</span>' : ''}
+      </div>`;
+    }
+  }
+  html += '</div>';
+
+  // My Pending Requests
+  const myRequests = shiftSwaps.filter(s => s.requester_id === currentUser?.id && (s.status === 'pending' || s.status === 'claimed'));
+  if (myRequests.length) {
+    html += '<div class="section">';
+    html += '<div class="section-title">My Coverage Requests</div>';
+    myRequests.forEach(req => {
+      const swapDate = new Date(req.swap_date + 'T12:00:00');
+      const dateStr = swapDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const coveredBy = req.covered_by_id ? employees.find(e => e.id === req.covered_by_id) : null;
+      
+      html += `<div class="list-item" style="flex-direction:column;align-items:flex-start;gap:8px;">
+        <div style="display:flex;justify-content:space-between;width:100%;">
+          <span style="font-weight:500;">${dateStr}</span>
+          <span class="tag" style="background:${req.status === 'claimed' ? 'var(--green)' : 'var(--orange-light)'};color:${req.status === 'claimed' ? 'white' : 'var(--orange)'};">${req.status === 'claimed' ? 'Covered!' : 'Pending'}</span>
+        </div>
+        ${coveredBy ? `<div style="font-size:12px;color:var(--green);">✓ ${coveredBy.first_name} ${coveredBy.last_name} will cover</div>` : '<div style="font-size:12px;color:var(--gray);">Waiting for someone to pick up...</div>'}
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Open Shifts (others requesting coverage)
+  const openShifts = shiftSwaps.filter(s => s.requester_id !== currentUser?.id && s.status === 'pending');
+  if (openShifts.length && isOncallEligible) {
+    html += '<div class="section">';
+    html += '<div class="section-title">Open Shifts</div>';
+    html += '<p class="section-desc">Teammates looking for coverage</p>';
+    openShifts.forEach(req => {
+      const requester = employees.find(e => e.id === req.requester_id);
+      const swapDate = new Date(req.swap_date + 'T12:00:00');
+      const dateStr = swapDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      
+      html += `<div class="list-item" style="flex-direction:column;align-items:flex-start;gap:8px;">
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:flex-start;">
+          <div>
+            <div style="font-weight:500;">${requester?.first_name || 'Someone'} needs coverage</div>
+            <div style="font-size:13px;color:var(--gray);">${dateStr}</div>
+            ${req.requester_notes ? `<div style="font-size:12px;color:var(--gray);font-style:italic;margin-top:4px;">"${req.requester_notes}"</div>` : ''}
+          </div>
+        </div>
+        <button class="btn btn-sm btn-primary" onclick="volunteerForShift('${req.id}')" style="width:100%;">I'll Cover This</button>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  document.getElementById('oncallContent').innerHTML = html;
+}
+
+function openRequestModal() {
+  document.getElementById('requestDate').value = '';
+  document.getElementById('requestNotes').value = '';
+  document.getElementById('modal-request').classList.add('active');
+}
+
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('active');
+}
+
+async function submitCoverageRequest() {
+  const date = document.getElementById('requestDate').value;
+  if (!date) return alert('Please select a date');
+  
+  const { error } = await db.from('shift_swap_requests').insert([{
+    requester_id: currentUser.id,
+    swap_date: date,
+    requester_notes: document.getElementById('requestNotes').value.trim() || null,
+    status: 'pending'
+  }]);
+  
+  if (error) {
+    alert('Error submitting request');
+    return;
+  }
+  
+  closeModal('request');
+  await loadShiftSwaps();
+  renderOncall();
+  alert('Coverage request submitted! You\'ll be notified when someone picks it up.');
+}
+
+async function volunteerForShift(swapId) {
+  if (!confirm('Volunteer to cover this shift?')) return;
+  
+  const { error } = await db.from('shift_swap_requests')
+    .update({ covered_by_id: currentUser.id, status: 'claimed' })
+    .eq('id', swapId);
+  
+  if (error) {
+    alert('Error volunteering');
+    return;
+  }
+  
+  await loadShiftSwaps();
+  renderOncall();
+  alert('Thanks! The admin will approve your coverage request.');
+}
+
+// Profile Page
+function renderProfile() {
+  if (!currentUser) return;
+  
+  const initials = (currentUser.first_name[0] + currentUser.last_name[0]).toUpperCase();
+  const team = teams.find(t => t.name === currentUser.team);
+  
+  let html = `
+    <div class="section">
+      <div class="profile-header">
+        <div class="profile-avatar">${initials}</div>
+        <div class="profile-name">${currentUser.first_name} ${currentUser.last_name}</div>
+        <div class="profile-role">${currentUser.role}</div>
+        <div class="profile-team">${currentUser.team}</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="profile-section">
+        <div class="profile-section-title">Contact Info</div>
+        <div class="profile-item">
+          <span class="profile-item-label">Email</span>
+          <span class="profile-item-value">${currentUser.email || 'Not set'}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Phone</span>
+          <span class="profile-item-value">${currentUser.phone || 'Not set'}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="profile-section">
+        <div class="profile-section-title">Work Info</div>
+        <div class="profile-item">
+          <span class="profile-item-label">Team</span>
+          <span class="profile-item-value">${currentUser.team}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Role</span>
+          <span class="profile-item-value">${currentUser.role}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Start Date</span>
+          <span class="profile-item-value">${currentUser.start_date ? new Date(currentUser.start_date).toLocaleDateString() : 'Not set'}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">On-Call Eligible</span>
+          <span class="profile-item-value">${currentUser.oncall_eligible ? 'Yes' : 'No'}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">PIN</span>
+          <span class="profile-item-value" style="font-family:monospace;letter-spacing:4px;font-weight:700;">${currentUser.pin_code}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="profile-section">
+        <div class="profile-section-title">Emergency Contact</div>
+        <div class="profile-item">
+          <span class="profile-item-label">Name</span>
+          <span class="profile-item-value">${currentUser.emergency_contact_name || 'Not set'}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-item-label">Phone</span>
+          <span class="profile-item-value">${currentUser.emergency_contact_phone || 'Not set'}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div style="padding:20px 0;">
+      <button class="btn btn-danger" onclick="logout()">Log Out</button>
+    </div>
+  `;
+  
+  document.getElementById('profileContent').innerHTML = html;
+}
+
+// Start
+checkSession();
+</script>
+</body>
+</html>
