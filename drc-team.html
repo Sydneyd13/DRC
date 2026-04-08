@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRC — Team</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#E85A24;--orange-dim:rgba(232,90,36,0.10);--orange-mid:rgba(232,90,36,0.22);
+  --dark:#1A1A1A;--sidebar-bg:#1E1E1E;--page-bg:#F2F0EC;--card:#FFFFFF;--card2:#F7F5F2;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.11);--text:#1A1A1A;--muted:#888480;--muted2:#6B6864;
+  --green:#1A9E65;--green-dim:rgba(26,158,101,0.10);--red:#D64040;--red-dim:rgba(214,64,64,0.10);
+  --blue:#2D7DD2;--blue-dim:rgba(45,125,210,0.10);--amber:#C87E18;--amber-dim:rgba(200,126,24,0.10);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
+.app{display:flex;height:100vh;overflow:hidden;}
+
+/* Sidebar */
+.sidebar{width:220px;flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;}
+.logo{padding:22px 18px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
+.logo-mark{width:32px;height:32px;flex-shrink:0;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;}
+.logo-text{font-size:14px;font-weight:600;color:#F0EDE8;}.logo-sub{font-size:11px;color:rgba(255,255,255,0.32);margin-top:1px;}
+.nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:1px;overflow-y:auto;}
+.nav-section{padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;color:rgba(255,255,255,0.42);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;transition:background 0.12s,color 0.12s;}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82);}
+.nav-item.active{background:var(--orange);color:#fff;}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
+.sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.07);}
+.user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;}
+.user-chip:hover{background:rgba(255,255,255,0.06);}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--orange);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;}
+.user-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.78);}
+.user-role{font-size:11px;color:rgba(255,255,255,0.32);}
+
+/* Mobile */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;opacity:0;transition:opacity 0.2s;}
+.overlay.open{opacity:1;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:268px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);}
+.drawer.open{transform:translateX(0);}
+.drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{padding:13px 16px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:11px;}
+.menu-btn{width:36px;height:36px;flex-shrink:0;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
+.topbar-title{font-size:15px;font-weight:600;}
+.topbar-meta{font-size:12px;color:var(--muted);margin-top:1px;}
+
+/* Buttons */
+.btn{padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all 0.12s;}
+.btn-primary{background:var(--orange);color:#fff;}.btn-primary:hover{background:#cc4f1c;}
+.btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border2);}.btn-ghost:hover{background:var(--card2);color:var(--text);}
+.btn-danger{background:var(--red);color:#fff;}.btn-danger:hover{background:#b83535;}
+.btn-sm{padding:6px 11px;font-size:12px;}
+.btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+/* Content */
+.content{flex:1;overflow-y:auto;padding:20px;}
+.content::-webkit-scrollbar{width:5px;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* Search bar */
+.search-bar{padding:12px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.search-wrap{flex:1;position:relative;}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-input{width:100%;padding:9px 11px 9px 34px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text);}
+.search-input:focus{outline:none;border-color:var(--orange);background:var(--card);}
+.search-input::placeholder{color:var(--muted);}
+
+/* Section header */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:16px;font-weight:600;}
+.sec-meta{font-size:12px;color:var(--muted);}
+
+/* Team section */
+.team-section{margin-bottom:28px;}
+.team-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--dark);border-radius:10px 10px 0 0;}
+.team-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.team-name{font-size:14px;font-weight:600;color:#F0EDE8;flex:1;}
+.team-count{font-size:12px;color:rgba(255,255,255,0.45);}
+.team-header-btns{display:flex;gap:6px;}
+.team-header-btn{padding:4px 10px;border-radius:6px;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.team-header-btn.edit{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);}
+.team-header-btn.edit:hover{background:rgba(255,255,255,0.2);}
+.team-header-btn.del{background:rgba(214,64,64,0.25);color:#ff8080;}
+.team-header-btn.del:hover{background:rgba(214,64,64,0.4);}
+.team-body{background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;}
+.team-empty{padding:20px;text-align:center;font-size:13px;color:var(--muted);}
+
+/* Employee row */
+.emp-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);transition:background 0.1s;}
+.emp-row:last-child{border-bottom:none;}
+.emp-row:hover{background:var(--card2);}
+.emp-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;}
+.emp-info{flex:1;min-width:0;}
+.emp-name{font-size:14px;font-weight:600;}
+.emp-role{font-size:12px;color:var(--muted);margin-top:1px;}
+.emp-contact{font-size:12px;color:var(--muted2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.emp-pin{font-family:'DM Mono',monospace;font-size:16px;font-weight:600;letter-spacing:4px;background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:5px 12px;color:var(--text);flex-shrink:0;}
+.emp-badges{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
+.emp-badge{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-oncall{background:var(--orange-dim);color:var(--orange);}
+.emp-actions{display:flex;gap:6px;flex-shrink:0;}
+
+/* Unassigned section */
+.unassigned-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card2);border:1px solid var(--border2);border-radius:10px 10px 0 0;}
+.unassigned-title{font-size:13px;font-weight:600;color:var(--muted2);flex:1;}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--card);border-radius:14px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;background:var(--card);z-index:1;border-radius:14px 14px 0 0;}
+.modal-title{font-size:16px;font-weight:600;}
+.modal-x{width:30px;height:30px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);}
+.modal-body{padding:20px;flex:1;}
+.modal-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.modal-foot .btn{flex:1;justify-content:center;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px;display:block;}
+.form-input,.form-select{width:100%;padding:9px 11px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.12s;}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--orange);}
+.form-input.err{border-color:var(--red);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-check{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;}
+.form-check input{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;}
+.form-divider{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);display:block;}
+.pin-input{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:8px;text-align:center;max-width:120px;font-weight:600;}
+
+/* Confirm */
+.confirm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.confirm-bg.open{display:flex;}
+.confirm-box{background:var(--card);border-radius:14px;width:100%;max-width:360px;padding:28px 24px;text-align:center;}
+.confirm-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.confirm-title{font-size:17px;font-weight:600;margin-bottom:8px;}
+.confirm-msg{font-size:13px;color:var(--muted2);margin-bottom:22px;line-height:1.6;}
+.confirm-foot{display:flex;gap:8px;}
+.confirm-foot .btn{flex:1;justify-content:center;}
+
+/* Color picker */
+.color-swatches{display:flex;gap:8px;flex-wrap:wrap;}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border-color 0.1s;}
+.color-swatch.selected{border-color:var(--dark);}
+
+/* Toast */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--red);}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--border) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.bnav-inner{display:flex;justify-content:space-around;padding:6px 0 4px;}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;}
+.bnav-item.active{color:var(--orange);}
+.bnav-item svg{width:22px;height:22px;}
+.bnav-item span{font-size:10px;font-weight:500;}
+
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
+  .content{padding:14px 14px 100px;}
+  .emp-pin{display:none;}
+  .emp-actions .btn-ghost{display:none;}
+  .modal-bg{align-items:flex-end;padding:0;}
+  .modal{border-radius:16px 16px 0 0;max-height:92vh;}
+  .form-row{grid-template-columns:1fr;gap:0;}
+}
+@media(min-width:769px){
+  .topbar{padding:15px 24px;}.topbar-title{font-size:17px;}
+  .content{padding:24px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="logo"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+  <nav class="nav">
+    <div class="nav-section">Main</div>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+    <a class="nav-item" href="customer-admin.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+    <div class="nav-section" style="margin-top:6px;">Operations</div>
+    <a class="nav-item active" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+  </nav>
+  <div class="sidebar-footer"><div class="user-chip"><div class="user-avatar">DR</div><div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div></div></div>
+</aside>
+
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+  <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+  <nav class="nav">
+    <div class="nav-section">Main</div>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item" href="customer-admin.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+    <div class="nav-section" style="margin-top:6px;">Operations</div>
+    <a class="nav-item active" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+  </nav>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-btn" onclick="openDrawer()"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div><div class="topbar-title">Team</div><div class="topbar-meta" id="topbarMeta">Loading...</div></div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="openTeamModal()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Add Crew
+      </button>
+      <button class="btn btn-primary" onclick="openEmpModal()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Add Employee
+      </button>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input class="search-input" placeholder="Search employees..." oninput="doSearch(this.value)">
+    </div>
+  </div>
+
+  <div class="content" id="content">
+    <!-- Loading skeleton -->
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <div><div class="skeleton" style="height:46px;border-radius:10px 10px 0 0;margin-bottom:0;"></div><div style="background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="skeleton" style="height:38px;border-radius:6px;"></div><div class="skeleton" style="height:38px;border-radius:6px;"></div></div></div>
+      <div><div class="skeleton" style="height:46px;border-radius:10px 10px 0 0;"></div><div style="background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;padding:16px;"><div class="skeleton" style="height:38px;border-radius:6px;"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Employee Modal -->
+<div class="modal-bg" id="empModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="empModalTitle">Add Employee</span>
+      <button class="modal-x" onclick="closeEmpModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">First name *</label><input class="form-input" id="eFirst" placeholder="Marcus"></div>
+        <div class="form-group"><label class="form-label">Last name *</label><input class="form-input" id="eLast" placeholder="Rivera"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="ePhone" type="tel" placeholder="(801) 555-0142"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="eEmail" type="email" placeholder="marcus@drc.com"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Role</label>
+          <select class="form-select" id="eRole">
+            <option>Technician</option>
+            <option>Team Lead</option>
+            <option>Estimator</option>
+            <option>Project Manager</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Crew / Team</label>
+          <select class="form-select" id="eTeam">
+            <option value="">— Unassigned —</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">3-Digit PIN *</label>
+          <input class="form-input pin-input" id="ePin" maxlength="3" placeholder="142" type="text" inputmode="numeric" pattern="[0-9]{3}">
+        </div>
+        <div class="form-group"><label class="form-label">Start date</label><input class="form-input" id="eStartDate" type="date"></div>
+      </div>
+      <div class="form-group" style="margin-top:4px;">
+        <label class="form-check">
+          <input type="checkbox" id="eOncall">
+          On-call eligible
+        </label>
+      </div>
+      <span class="form-divider">Emergency contact</span>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="eEmergName" placeholder="Jane Rivera"></div>
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="eEmergPhone" placeholder="(801) 555-0199"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeEmpModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveEmpBtn" onclick="saveEmployee()">Save employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- Team Modal -->
+<div class="modal-bg" id="teamModal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-head">
+      <span class="modal-title" id="teamModalTitle">Add Crew</span>
+      <button class="modal-x" onclick="closeTeamModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Crew name *</label><input class="form-input" id="tName" placeholder="Team A"></div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <div class="color-swatches" id="colorSwatches"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeTeamModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveTeamBtn" onclick="saveTeam()">Save crew</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="confirm-bg" id="confirmBg">
+  <div class="confirm-box">
+    <div class="confirm-icon" style="background:var(--red-dim);"><svg width="22" height="22" fill="none" stroke="var(--red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
+    <div class="confirm-title" id="confirmTitle">Delete?</div>
+    <div class="confirm-msg" id="confirmMsg">This action cannot be undone.</div>
+    <div class="confirm-foot">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav class="bottom-nav">
+  <div class="bnav-inner">
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
+    <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></div>
+  </div>
+</nav>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── State ─────────────────────────────────────────────────
+let teams     = [];
+let employees = [];
+let searchQ   = '';
+let editingEmpId  = null;
+let editingTeamId = null;
+let selectedColor = '#2D7DD2';
+let pendingConfirm = null;
+
+const COLORS = ['#2D7DD2','#D64040','#1A9E65','#C87E18','#7B52D4','#E85A24','#6B7280','#0891B2'];
+
+// ── Helpers ───────────────────────────────────────────────
+function getInitials(e){ return ((e.first_name||'')[0]+(e.last_name||'')[0]).toUpperCase(); }
+function getName(e){ return [e.first_name,e.last_name].filter(Boolean).join(' '); }
+function getTeamColor(teamName){ const t=teams.find(x=>x.name===teamName); return t?t.color:'#888480'; }
+
+function showToast(msg,isError){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast'+(isError?' error':'')+' show';
+  setTimeout(()=>t.className='toast',2800);
+}
+function setBtn(id,loading,label){
+  const b=document.getElementById(id); if(!b)return;
+  b.disabled=loading;
+  b.innerHTML=loading?'<span class="spinner"></span>':label;
+}
+
+// ── Load ──────────────────────────────────────────────────
+async function loadAll(){
+  const [tr,er]=await Promise.all([
+    db.from('teams').select('*').eq('is_active',true).order('sort_order').order('name'),
+    db.from('employees').select('*').eq('is_active',true).order('first_name')
+  ]);
+  if(tr.error){ showToast('Error loading teams: '+tr.error.message,true); return; }
+  if(er.error){ showToast('Error loading employees: '+er.error.message,true); return; }
+  teams     = tr.data||[];
+  employees = er.data||[];
+  render();
+  populateTeamDropdown();
+  document.getElementById('topbarMeta').textContent=employees.length+' employee'+(employees.length!==1?'s':'')+' · '+teams.length+' crew'+(teams.length!==1?'s':'');
+}
+
+// ── Render ────────────────────────────────────────────────
+function render(){
+  const q=searchQ.toLowerCase();
+  const filtered=employees.filter(e=>!q||getName(e).toLowerCase().includes(q)||(e.role||'').toLowerCase().includes(q)||(e.phone||'').includes(q));
+
+  let html='';
+
+  // Teams
+  teams.forEach(t=>{
+    const emps=filtered.filter(e=>e.team===t.name);
+    const all=employees.filter(e=>e.team===t.name);
+    html+=`<div class="team-section">
+      <div class="team-header">
+        <div class="team-dot" style="background:${t.color||'#888'}"></div>
+        <div class="team-name">${t.name}</div>
+        <div class="team-count">${all.length} member${all.length!==1?'s':''}</div>
+        <div class="team-header-btns">
+          <button class="team-header-btn edit" onclick="openTeamModal('${t.id}')">Edit</button>
+          <button class="team-header-btn del" onclick="confirmDeleteTeam('${t.id}','${t.name}')">Delete</button>
+        </div>
+      </div>
+      <div class="team-body">
+        ${emps.length ? emps.map(e=>empRowHtml(e,t.color)).join('') : `<div class="team-empty">No${q?' matching':''} employees in ${t.name}</div>`}
+      </div>
+    </div>`;
+  });
+
+  // Unassigned
+  const unassigned=filtered.filter(e=>!e.team||!teams.find(t=>t.name===e.team));
+  if(unassigned.length){
+    html+=`<div class="team-section">
+      <div class="unassigned-header">
+        <div class="team-dot" style="background:#888480"></div>
+        <div class="unassigned-title">Unassigned</div>
+        <div class="team-count" style="font-size:12px;color:var(--muted);">${unassigned.length} employee${unassigned.length!==1?'s':''}</div>
+      </div>
+      <div class="team-body">${unassigned.map(e=>empRowHtml(e,'#888480')).join('')}</div>
+    </div>`;
+  }
+
+  if(!html){
+    html=`<div style="text-align:center;padding:60px 20px;color:var(--muted);">
+      <p style="font-size:14px;font-weight:500;">${q?'No employees match your search.':'No employees yet — add your first one above.'}</p>
+    </div>`;
+  }
+
+  document.getElementById('content').innerHTML=html;
+}
+
+function empRowHtml(e,teamColor){
+  const color=teamColor||getTeamColor(e.team)||'#888480';
+  const initials=getInitials(e);
+  return `<div class="emp-row">
+    <div class="emp-avatar" style="background:${color}">${initials}</div>
+    <div class="emp-info">
+      <div class="emp-name">${getName(e)}</div>
+      <div class="emp-role">${e.role||''}${e.team?' · '+e.team:''}</div>
+      ${e.phone||e.email?`<div class="emp-contact">${[e.phone,e.email].filter(Boolean).join(' · ')}</div>`:''}
+      <div class="emp-badges">
+        ${e.oncall_eligible?'<span class="emp-badge badge-oncall">On-Call</span>':''}
+      </div>
+    </div>
+    <div class="emp-pin">${e.pin_code||'—'}</div>
+    <div class="emp-actions">
+      <button class="btn btn-ghost btn-sm" onclick="openEmpModal('${e.id}')">Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmDeleteEmp('${e.id}','${getName(e).replace(/'/g,"\\'")}')">Delete</button>
+    </div>
+  </div>`;
+}
+
+function doSearch(q){ searchQ=q; render(); }
+
+// ── Team dropdown ──────────────────────────────────────────
+function populateTeamDropdown(){
+  const sel=document.getElementById('eTeam');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— Unassigned —</option>'+teams.map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
+  if(cur) sel.value=cur;
+}
+
+// ── Employee modal ─────────────────────────────────────────
+function openEmpModal(id){
+  editingEmpId=id||null;
+  document.getElementById('empModalTitle').textContent=id?'Edit Employee':'Add Employee';
+  populateTeamDropdown();
+
+  if(id){
+    const e=employees.find(x=>x.id===id);
+    if(e){
+      document.getElementById('eFirst').value=e.first_name||'';
+      document.getElementById('eLast').value=e.last_name||'';
+      document.getElementById('ePhone').value=e.phone||'';
+      document.getElementById('eEmail').value=e.email||'';
+      document.getElementById('eRole').value=e.role||'Technician';
+      document.getElementById('eTeam').value=e.team||'';
+      document.getElementById('ePin').value=e.pin_code||'';
+      document.getElementById('eStartDate').value=e.start_date||'';
+      document.getElementById('eOncall').checked=!!e.oncall_eligible;
+      document.getElementById('eEmergName').value=e.emergency_contact_name||'';
+      document.getElementById('eEmergPhone').value=e.emergency_contact_phone||'';
+    }
+  } else {
+    ['eFirst','eLast','ePhone','eEmail','ePin','eStartDate','eEmergName','eEmergPhone'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('eRole').value='Technician';
+    document.getElementById('eTeam').value='';
+    document.getElementById('eOncall').checked=false;
+    // Auto-generate PIN suggestion
+    document.getElementById('ePin').value=String(Math.floor(100+Math.random()*900));
+  }
+
+  document.getElementById('empModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('eFirst').focus(),120);
+}
+
+function closeEmpModal(){
+  document.getElementById('empModal').classList.remove('open');
+  document.body.style.overflow='';
+  ['eFirst','eLast','ePin'].forEach(i=>document.getElementById(i).classList.remove('err'));
+  editingEmpId=null;
+}
+
+async function saveEmployee(){
+  const fn=document.getElementById('eFirst').value.trim();
+  const ln=document.getElementById('eLast').value.trim();
+  const pin=document.getElementById('ePin').value.trim();
+
+  let valid=true;
+  if(!fn){ document.getElementById('eFirst').classList.add('err'); valid=false; }
+  else document.getElementById('eFirst').classList.remove('err');
+  if(!ln){ document.getElementById('eLast').classList.add('err'); valid=false; }
+  else document.getElementById('eLast').classList.remove('err');
+  if(!/^\d{3}$/.test(pin)){ document.getElementById('ePin').classList.add('err'); showToast('PIN must be exactly 3 digits',true); valid=false; }
+  else document.getElementById('ePin').classList.remove('err');
+  if(!valid){ if(!fn) document.getElementById('eFirst').focus(); return; }
+
+  setBtn('saveEmpBtn',true,'Save employee');
+
+  const payload={
+    first_name:fn, last_name:ln,
+    phone:document.getElementById('ePhone').value.trim()||null,
+    email:document.getElementById('eEmail').value.trim()||null,
+    role:document.getElementById('eRole').value,
+    team:document.getElementById('eTeam').value||null,
+    pin_code:pin,
+    start_date:document.getElementById('eStartDate').value||null,
+    oncall_eligible:document.getElementById('eOncall').checked,
+    emergency_contact_name:document.getElementById('eEmergName').value.trim()||null,
+    emergency_contact_phone:document.getElementById('eEmergPhone').value.trim()||null,
+    is_active:true
+  };
+
+  let error;
+  if(editingEmpId){
+    ({error}=await db.from('employees').update(payload).eq('id',editingEmpId));
+  } else {
+    ({error}=await db.from('employees').insert([payload]));
+  }
+
+  setBtn('saveEmpBtn',false,'Save employee');
+
+  if(error){
+    if(error.code==='23505') showToast('PIN already in use — try a different one',true);
+    else showToast('Error: '+error.message,true);
+    return;
+  }
+
+  showToast(editingEmpId?'Employee updated':'Employee added');
+  closeEmpModal();
+  await loadAll();
+}
+
+// ── Team modal ─────────────────────────────────────────────
+function renderColorSwatches(){
+  document.getElementById('colorSwatches').innerHTML=COLORS.map(c=>`
+    <div class="color-swatch${selectedColor===c?' selected':''}" style="background:${c}" onclick="selectColor('${c}')"></div>
+  `).join('');
+}
+
+function selectColor(c){
+  selectedColor=c;
+  renderColorSwatches();
+}
+
+function openTeamModal(id){
+  editingTeamId=id||null;
+  document.getElementById('teamModalTitle').textContent=id?'Edit Crew':'Add Crew';
+  if(id){
+    const t=teams.find(x=>x.id===id);
+    if(t){ document.getElementById('tName').value=t.name; selectedColor=t.color||COLORS[0]; }
+  } else {
+    document.getElementById('tName').value='';
+    selectedColor=COLORS[teams.length%COLORS.length];
+  }
+  renderColorSwatches();
+  document.getElementById('teamModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('tName').focus(),120);
+}
+
+function closeTeamModal(){
+  document.getElementById('teamModal').classList.remove('open');
+  document.body.style.overflow='';
+  editingTeamId=null;
+}
+
+async function saveTeam(){
+  const name=document.getElementById('tName').value.trim();
+  if(!name){ document.getElementById('tName').classList.add('err'); document.getElementById('tName').focus(); return; }
+  document.getElementById('tName').classList.remove('err');
+
+  setBtn('saveTeamBtn',true,'Save crew');
+
+  let error;
+  if(editingTeamId){
+    const old=teams.find(t=>t.id===editingTeamId);
+    ({error}=await db.from('teams').update({name,color:selectedColor}).eq('id',editingTeamId));
+    // If name changed, update employees
+    if(!error&&old&&old.name!==name){
+      await db.from('employees').update({team:name}).eq('team',old.name);
+    }
+  } else {
+    ({error}=await db.from('teams').insert([{name,color:selectedColor}]));
+  }
+
+  setBtn('saveTeamBtn',false,'Save crew');
+
+  if(error){ showToast('Error: '+error.message,true); return; }
+  showToast(editingTeamId?'Crew updated':'Crew added');
+  closeTeamModal();
+  await loadAll();
+}
+
+// ── Delete confirms ────────────────────────────────────────
+function confirmDeleteEmp(id,name){
+  document.getElementById('confirmTitle').textContent='Delete employee?';
+  document.getElementById('confirmMsg').textContent=`This will permanently remove ${name} from the team.`;
+  pendingConfirm=async()=>{
+    const {error}=await db.from('employees').update({is_active:false}).eq('id',id);
+    if(error){ showToast('Error: '+error.message,true); return; }
+    showToast('Employee removed');
+    closeConfirm(); await loadAll();
+  };
+  document.getElementById('confirmBtn').onclick=()=>pendingConfirm();
+  document.getElementById('confirmBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function confirmDeleteTeam(id,name){
+  document.getElementById('confirmTitle').textContent='Delete crew?';
+  document.getElementById('confirmMsg').textContent=`This will remove "${name}". Employees in this crew will become unassigned.`;
+  pendingConfirm=async()=>{
+    const {error}=await db.from('teams').update({is_active:false}).eq('id',id);
+    if(error){ showToast('Error: '+error.message,true); return; }
+    showToast('Crew removed');
+    closeConfirm(); await loadAll();
+  };
+  document.getElementById('confirmBtn').onclick=()=>pendingConfirm();
+  document.getElementById('confirmBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeConfirm(){
+  document.getElementById('confirmBg').classList.remove('open');
+  document.body.style.overflow='';
+  pendingConfirm=null;
+}
+
+// ── Drawer ─────────────────────────────────────────────────
+function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+// ── Init ───────────────────────────────────────────────────
+loadAll();
+</script>
+</body>
+</html>
