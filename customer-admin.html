@@ -4,870 +4,721 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DRC — Customers</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --orange:     #E85A24;
-  --orange-dim: rgba(232,90,36,0.10);
-  --orange-mid: rgba(232,90,36,0.22);
-  --dark:       #1A1A1A;
-  --sidebar-bg: #1E1E1E;
-  --page-bg:    #F2F0EC;
-  --card:       #FFFFFF;
-  --card2:      #F7F5F2;
-  --border:     rgba(0,0,0,0.07);
-  --border2:    rgba(0,0,0,0.11);
-  --text:       #1A1A1A;
-  --muted:      #888480;
-  --muted2:     #6B6864;
-  --green:      #1A9E65;
-  --green-dim:  rgba(26,158,101,0.10);
-  --red:        #D64040;
-  --red-dim:    rgba(214,64,64,0.10);
-  --blue:       #2D7DD2;
-  --blue-dim:   rgba(45,125,210,0.10);
-  --amber:      #C87E18;
-  --amber-dim:  rgba(200,126,24,0.10);
+  --orange:#E85A24;--orange-dim:rgba(232,90,36,0.10);--dark:#1A1A1A;
+  --sidebar-bg:#1E1E1E;--page-bg:#F2F0EC;--card:#FFFFFF;--card2:#F7F5F2;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.11);--text:#1A1A1A;
+  --muted:#888480;--muted2:#6B6864;--green:#1A9E65;--green-dim:rgba(26,158,101,0.10);
+  --red:#D64040;--red-dim:rgba(214,64,64,0.10);--blue:#2D7DD2;--blue-dim:rgba(45,125,210,0.10);
+  --amber:#C87E18;--amber-dim:rgba(200,126,24,0.10);
 }
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { height:100%; background:var(--page-bg); color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; }
-.app { display:flex; height:100vh; overflow:hidden; }
-
-/* ── Sidebar ── */
-.sidebar { width:220px; flex-shrink:0; background:var(--sidebar-bg); display:flex; flex-direction:column; }
-.logo { padding:22px 18px 18px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:11px; }
-.logo-mark { width:32px; height:32px; flex-shrink:0; background:var(--orange); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:14px; color:#fff; }
-.logo-text { font-size:14px; font-weight:600; color:#F0EDE8; }
-.logo-sub  { font-size:11px; color:rgba(255,255,255,0.32); margin-top:1px; }
-.nav { padding:10px 8px; flex:1; display:flex; flex-direction:column; gap:1px; overflow-y:auto; }
-.nav-section { padding:12px 12px 4px; font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.28); }
-.nav-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:7px; color:rgba(255,255,255,0.42); font-size:13px; font-weight:500; text-decoration:none; cursor:pointer; transition:background 0.12s, color 0.12s; }
-.nav-item:hover  { background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.82); }
-.nav-item.active { background:var(--orange); color:#fff; }
-.nav-item svg    { width:16px; height:16px; flex-shrink:0; }
-.nav-badge { margin-left:auto; background:rgba(255,255,255,0.14); color:rgba(255,255,255,0.75); font-size:10px; font-weight:600; padding:2px 7px; border-radius:10px; }
-.nav-item.active .nav-badge { background:rgba(255,255,255,0.25); color:#fff; }
-.sidebar-footer { padding:12px; border-top:1px solid rgba(255,255,255,0.07); }
-.user-chip { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:7px; cursor:pointer; }
-.user-chip:hover { background:rgba(255,255,255,0.06); }
-.user-avatar { width:30px; height:30px; border-radius:50%; background:var(--orange); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#fff; }
-.user-name { font-size:13px; font-weight:500; color:rgba(255,255,255,0.78); }
-.user-role { font-size:11px; color:rgba(255,255,255,0.32); }
-
-/* ── Mobile drawer ── */
-.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; opacity:0; transition:opacity 0.2s; }
-.overlay.open { opacity:1; }
-.drawer { position:fixed; top:0; left:0; bottom:0; width:268px; background:var(--sidebar-bg); z-index:201; display:flex; flex-direction:column; transform:translateX(-100%); transition:transform 0.22s cubic-bezier(0.4,0,0.2,1); }
-.drawer.open { transform:translateX(0); }
-.drawer-close { position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.1); border:none; color:rgba(255,255,255,0.6); cursor:pointer; display:flex; align-items:center; justify-content:center; }
-
-/* ── Main ── */
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
-
-/* ── Topbar ── */
-.topbar { padding:13px 16px; border-bottom:1px solid var(--border2); background:var(--card); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.topbar-left { display:flex; align-items:center; gap:11px; }
-.menu-btn { width:36px; height:36px; flex-shrink:0; background:transparent; border:1px solid var(--border2); border-radius:8px; color:var(--muted2); cursor:pointer; display:none; align-items:center; justify-content:center; }
-.topbar-title { font-size:15px; font-weight:600; }
-.topbar-meta  { font-size:12px; color:var(--muted); margin-top:1px; }
-.topbar-right { display:flex; align-items:center; gap:8px; }
-.btn { padding:8px 14px; border-radius:8px; border:none; font-size:13px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-family:'DM Sans',sans-serif; transition:all 0.12s; }
-.btn-primary { background:var(--orange); color:#fff; }
-.btn-primary:hover { background:#cc4f1c; }
-.btn-ghost { background:transparent; color:var(--muted2); border:1px solid var(--border2); }
-.btn-ghost:hover { background:var(--card2); color:var(--text); }
-.btn-sm { padding:6px 11px; font-size:12px; }
-
-/* ── Search + filter bar ── */
-.search-bar { padding:12px 16px; background:var(--card); border-bottom:1px solid var(--border2); display:flex; align-items:center; gap:10px; flex-shrink:0; }
-.search-wrap { flex:1; position:relative; }
-.search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; }
-.search-input { width:100%; padding:9px 11px 9px 34px; border:1px solid var(--border2); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; background:var(--card2); color:var(--text); transition:all 0.12s; }
-.search-input:focus { outline:none; border-color:var(--orange); background:var(--card); }
-.search-input::placeholder { color:var(--muted); }
-.filter-pills { display:flex; gap:6px; overflow-x:auto; }
-.filter-pills::-webkit-scrollbar { display:none; }
-.fpill { padding:6px 12px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border2); background:var(--card); color:var(--muted2); white-space:nowrap; cursor:pointer; flex-shrink:0; transition:all 0.12s; }
-.fpill.active { background:var(--orange-dim); border-color:var(--orange); color:var(--orange); }
-
-/* ── Content area: split view on desktop ── */
-.content-area { flex:1; display:flex; overflow:hidden; }
-
-/* ── Contact list ── */
-.contact-list { width:380px; flex-shrink:0; border-right:1px solid var(--border2); overflow-y:auto; background:var(--page-bg); }
-.contact-list::-webkit-scrollbar { width:4px; }
-.contact-list::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
-.list-inner { padding:12px; display:flex; flex-direction:column; gap:8px; }
-.contact-count { font-size:12px; color:var(--muted); padding:4px 4px 8px; }
-
-.contact-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:14px 16px; cursor:pointer; transition:all 0.12s; }
-.contact-card:hover { box-shadow:0 2px 10px rgba(0,0,0,0.07); }
-.contact-card.active { border-color:var(--orange); box-shadow:0 0 0 3px var(--orange-dim); }
-.cc-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
-.cc-avatar { width:40px; height:40px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#fff; }
-.cc-info { flex:1; min-width:0; }
-.cc-name { font-size:14px; font-weight:600; margin-bottom:2px; }
-.cc-type { font-size:11px; color:var(--muted); }
-.cc-value { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; color:var(--green); text-align:right; flex-shrink:0; }
-.cc-meta { display:flex; flex-direction:column; gap:3px; padding-top:10px; border-top:1px solid var(--border); }
-.cc-row { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted2); }
-.cc-row svg { width:12px; height:12px; flex-shrink:0; color:var(--muted); }
-.cc-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-.cc-tag { padding:3px 8px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
-.tag-insurance { background:var(--blue-dim); color:var(--blue); }
-.tag-repeat    { background:var(--green-dim); color:var(--green); }
-.tag-google    { background:var(--amber-dim); color:var(--amber); }
-.tag-wom       { background:var(--orange-dim); color:var(--orange); }
-
-/* ── Profile panel ── */
-.profile-panel { flex:1; overflow-y:auto; background:var(--page-bg); }
-.profile-panel::-webkit-scrollbar { width:4px; }
-.profile-panel::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
-.profile-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--muted); gap:12px; }
-.profile-empty svg { opacity:0.3; }
-
-.profile-inner { padding:24px; max-width:720px; }
-
-/* Profile header */
-.profile-head { background:var(--card); border:1px solid var(--border2); border-radius:12px; padding:20px 22px; margin-bottom:18px; display:flex; align-items:flex-start; gap:16px; }
-.profile-avatar { width:56px; height:56px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:600; color:#fff; }
-.profile-name { font-size:20px; font-weight:600; margin-bottom:4px; }
-.profile-type { font-size:13px; color:var(--muted); margin-bottom:10px; }
-.profile-contact-row { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted2); margin-bottom:4px; }
-.profile-contact-row svg { width:14px; height:14px; color:var(--muted); flex-shrink:0; }
-.profile-contact-row a { color:var(--blue); text-decoration:none; }
-.profile-contact-row a:hover { text-decoration:underline; }
-.profile-actions { margin-left:auto; display:flex; gap:8px; flex-shrink:0; }
-
-/* Stats row */
-.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
-.stat-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:14px 16px; }
-.stat-label { font-size:11px; color:var(--muted); font-weight:500; margin-bottom:4px; }
-.stat-value { font-family:'DM Mono',monospace; font-size:20px; font-weight:500; }
-.stat-sub   { font-size:11px; color:var(--muted); margin-top:3px; }
-
-/* Section card */
-.section-card { background:var(--card); border:1px solid var(--border2); border-radius:12px; margin-bottom:16px; overflow:hidden; }
-.section-card-head { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-.section-card-title { font-size:14px; font-weight:600; }
-.section-card-body  { padding:16px 18px; }
-
-/* Insurance info */
-.ins-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.ins-field { }
-.ins-label { font-size:11px; color:var(--muted); font-weight:500; margin-bottom:3px; }
-.ins-value { font-size:13px; font-weight:500; }
-.ins-mono  { font-family:'DM Mono',monospace; }
-
-/* Jobs linked */
-.job-row { display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.1s; }
-.job-row:last-child { border-bottom:none; }
-.job-row:hover { background:var(--card2); margin:0 -18px; padding:11px 18px; border-radius:0; }
-.job-row-bar  { width:4px; height:36px; border-radius:2px; flex-shrink:0; }
-.job-row-info { flex:1; min-width:0; }
-.job-row-title { font-size:13px; font-weight:500; }
-.job-row-meta  { font-size:12px; color:var(--muted2); margin-top:2px; }
-.job-row-right { text-align:right; flex-shrink:0; }
-.job-row-value { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; }
-.job-row-status { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
-.s-complete  { color:var(--green); }
-.s-progress  { color:var(--blue); }
-.s-scheduled { color:var(--amber); }
-
-/* Notes */
-.add-note-box { border:1.5px dashed var(--border2); border-radius:8px; padding:12px; margin-bottom:12px; }
-.add-note-ta  { width:100%; padding:8px 10px; border:1px solid var(--border2); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; resize:vertical; min-height:68px; line-height:1.5; background:var(--card); }
-.add-note-ta:focus { outline:none; border-color:var(--orange); }
-.add-note-foot { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
-.note-item { background:var(--card2); border:1px solid var(--border2); border-radius:8px; padding:12px; margin-bottom:9px; }
-.note-meta  { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
-.note-date  { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; }
-.note-acts  { display:flex; gap:6px; }
-.note-btn   { background:none; border:none; font-size:11px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; padding:2px 6px; border-radius:4px; }
-.note-btn.edit { color:var(--blue); }
-.note-btn.edit:hover { background:var(--blue-dim); }
-.note-btn.del  { color:var(--red); }
-.note-btn.del:hover  { background:var(--red-dim); }
-.note-text  { font-size:13px; line-height:1.6; }
-.note-edit-wrap { display:none; }
-.note-edit-wrap.open { display:block; }
-.note-edit-ta { width:100%; padding:8px 10px; border:1px solid var(--orange); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; resize:vertical; min-height:60px; line-height:1.5; }
-.note-edit-ta:focus { outline:none; }
-.note-edit-foot { display:flex; gap:6px; margin-top:6px; }
-
-/* ── Mobile: slide-in profile ── */
-.mobile-profile {
-  display:none;
-  position:fixed; inset:0; z-index:250;
-  background:var(--page-bg);
-  overflow-y:auto;
-  transform:translateX(100%);
-  transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
+.app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:220px;flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;}
+.logo{padding:22px 18px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
+.logo-mark{width:32px;height:32px;flex-shrink:0;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;}
+.logo-text{font-size:14px;font-weight:600;color:#F0EDE8;}.logo-sub{font-size:11px;color:rgba(255,255,255,0.32);margin-top:1px;}
+.nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:1px;overflow-y:auto;}
+.nav-section{padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;color:rgba(255,255,255,0.42);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;transition:background 0.12s,color 0.12s;}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82);}
+.nav-item.active{background:var(--orange);color:#fff;}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
+.sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.07);}
+.user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;}
+.user-chip:hover{background:rgba(255,255,255,0.06);}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--orange);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;}
+.user-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.78);}
+.user-role{font-size:11px;color:rgba(255,255,255,0.32);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;opacity:0;transition:opacity 0.2s;}
+.overlay.open{opacity:1;}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:268px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);}
+.drawer.open{transform:translateX(0);}
+.drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{padding:13px 16px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:11px;}
+.menu-btn{width:36px;height:36px;flex-shrink:0;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
+.topbar-title{font-size:15px;font-weight:600;}
+.topbar-meta{font-size:12px;color:var(--muted);margin-top:1px;}
+.btn{padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all 0.12s;}
+.btn-primary{background:var(--orange);color:#fff;}.btn-primary:hover{background:#cc4f1c;}
+.btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border2);}.btn-ghost:hover{background:var(--card2);color:var(--text);}
+.btn-danger{background:var(--red);color:#fff;}.btn-danger:hover{background:#b83535;}
+.btn-sm{padding:6px 11px;font-size:12px;}
+.btn:disabled{opacity:0.6;cursor:not-allowed;}
+.search-bar{padding:12px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+.search-wrap{position:relative;}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-input{width:100%;padding:9px 11px 9px 34px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text);}
+.search-input:focus{outline:none;border-color:var(--orange);background:var(--card);}
+.search-input::placeholder{color:var(--muted);}
+.filter-pills{display:flex;gap:6px;overflow-x:auto;}.filter-pills::-webkit-scrollbar{display:none;}
+.fpill{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:var(--card);color:var(--muted2);white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all 0.12s;}
+.fpill.active{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
+.content-area{flex:1;display:flex;overflow:hidden;}
+.contact-list{width:380px;flex-shrink:0;border-right:1px solid var(--border2);overflow-y:auto;background:var(--page-bg);}
+.contact-list::-webkit-scrollbar{width:4px;}.contact-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.list-inner{padding:12px;display:flex;flex-direction:column;gap:8px;}
+.contact-count{font-size:12px;color:var(--muted);padding:4px 4px 6px;}
+.contact-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all 0.12s;}
+.contact-card:hover{box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+.contact-card.selected{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.cc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.cc-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;}
+.cc-info{flex:1;min-width:0;}.cc-name{font-size:14px;font-weight:600;margin-bottom:2px;}.cc-type{font-size:11px;color:var(--muted);}
+.cc-meta{display:flex;flex-direction:column;gap:3px;padding-top:10px;border-top:1px solid var(--border);}
+.cc-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted2);}
+.cc-row svg{width:12px;height:12px;flex-shrink:0;color:var(--muted);}
+.cc-tags{display:flex;gap:6px;margin-top:8px;}
+.cc-tag{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+.tag-insurance{background:var(--blue-dim);color:var(--blue);}
+.tag-repeat{background:var(--green-dim);color:var(--green);}
+.tag-google{background:var(--amber-dim);color:var(--amber);}
+.tag-wom{background:var(--orange-dim);color:var(--orange);}
+.tag-other{background:var(--border);color:var(--muted2);}
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--border) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;height:14px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.profile-panel{flex:1;overflow-y:auto;background:var(--page-bg);}
+.profile-panel::-webkit-scrollbar{width:4px;}.profile-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.profile-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);gap:12px;}
+.profile-empty svg{opacity:0.25;}.profile-empty p{font-size:14px;font-weight:500;}
+.profile-inner{padding:22px;max-width:700px;}
+.profile-head{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:20px 22px;margin-bottom:16px;}
+.ph-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.profile-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#fff;}
+.profile-name{font-size:19px;font-weight:600;margin-bottom:3px;}.profile-subtype{font-size:13px;color:var(--muted);margin-bottom:10px;}
+.pc-row{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted2);margin-bottom:4px;}
+.pc-row svg{width:14px;height:14px;color:var(--muted);flex-shrink:0;}
+.pc-row a{color:var(--blue);text-decoration:none;}.pc-row a:hover{text-decoration:underline;}
+.ph-actions{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.stat-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
+.stat-label{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:4px;}
+.stat-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.sec-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;margin-bottom:14px;overflow:hidden;}
+.sec-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sec-title{font-size:14px;font-weight:600;}.sec-body{padding:16px 18px;}
+.job-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.job-row:last-child{border-bottom:none;}
+.job-row:hover{background:var(--card2);margin:0 -18px;padding:11px 18px;}
+.job-bar{width:4px;height:36px;border-radius:2px;flex-shrink:0;}
+.job-info{flex:1;min-width:0;}.job-title{font-size:13px;font-weight:500;}.job-meta{font-size:12px;color:var(--muted2);margin-top:2px;}
+.job-right{text-align:right;flex-shrink:0;}
+.job-value{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;}
+.job-status-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;}
+.s-complete{color:var(--green);}.s-progress{color:var(--blue);}.s-scheduled{color:var(--amber);}
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ins-label{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:3px;}
+.ins-value{font-size:13px;font-weight:500;}.ins-mono{font-family:'DM Mono',monospace;}
+.add-note-box{border:1.5px dashed var(--border2);border-radius:8px;padding:12px;margin-bottom:12px;}
+.add-note-ta{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:68px;line-height:1.5;background:var(--card);}
+.add-note-ta:focus{outline:none;border-color:var(--orange);}
+.add-note-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;}
+.note-item{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:12px;margin-bottom:9px;}
+.note-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.note-date{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;}
+.note-acts{display:flex;gap:6px;}
+.nbtn{background:none;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;padding:2px 6px;border-radius:4px;}
+.nbtn.edit{color:var(--blue);}.nbtn.edit:hover{background:var(--blue-dim);}
+.nbtn.del{color:var(--red);}.nbtn.del:hover{background:var(--red-dim);}
+.note-text{font-size:13px;line-height:1.6;}
+.note-edit-wrap{display:none;}.note-edit-wrap.open{display:block;}
+.note-edit-ta{width:100%;padding:8px 10px;border:1px solid var(--orange);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:60px;line-height:1.5;}
+.note-edit-ta:focus{outline:none;}
+.note-edit-foot{display:flex;gap:6px;margin-top:6px;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--red);}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--card);border-radius:14px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;background:var(--card);z-index:1;border-radius:14px 14px 0 0;}
+.modal-title{font-size:16px;font-weight:600;}
+.modal-x{width:30px;height:30px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);}
+.modal-body{padding:20px;flex:1;}.modal-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.modal-foot .btn{flex:1;justify-content:center;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px;display:block;}
+.form-input,.form-select{width:100%;padding:9px 11px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.12s;}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--orange);}
+.form-input.err{border-color:var(--red);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-divider{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);display:block;}
+.confirm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.confirm-bg.open{display:flex;}
+.confirm-box{background:var(--card);border-radius:14px;width:100%;max-width:380px;padding:28px 24px;text-align:center;}
+.confirm-icon{width:52px;height:52px;border-radius:50%;background:var(--red-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.confirm-title{font-size:17px;font-weight:600;margin-bottom:8px;}
+.confirm-msg{font-size:13px;color:var(--muted2);margin-bottom:22px;line-height:1.6;}
+.confirm-foot{display:flex;gap:8px;}.confirm-foot .btn{flex:1;justify-content:center;}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mobile-profile{display:none;position:fixed;inset:0;z-index:250;background:var(--page-bg);overflow-y:auto;transform:translateX(100%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);}
+.mobile-profile.open{transform:translateX(0);}
+.mob-topbar{padding:13px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--orange);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.bnav-inner{display:flex;justify-content:space-around;padding:6px 0 4px;}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;}
+.bnav-item.active{color:var(--orange);}
+.bnav-item svg{width:22px;height:22px;}
+.bnav-item span{font-size:10px;font-weight:500;}
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
+  .contact-list{width:100%;border-right:none;}.profile-panel{display:none;}.mobile-profile{display:block;}
+  .list-inner{padding:12px 12px 100px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .stats-row .stat-card:last-child{grid-column:span 2;}
+  .ins-grid{grid-template-columns:1fr;}
+  .ph-actions .btn{flex:1;justify-content:center;}
+  .profile-inner{padding:14px 14px 100px;}
+  .modal-bg{align-items:flex-end;padding:0;}
+  .modal{border-radius:16px 16px 0 0;max-height:92vh;}
+  .form-row{grid-template-columns:1fr;gap:0;}
 }
-.mobile-profile.open { transform:translateX(0); }
-.mobile-profile-topbar { padding:13px 16px; background:var(--card); border-bottom:1px solid var(--border2); display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:10; }
-.back-btn { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:500; color:var(--orange); cursor:pointer; border:none; background:none; font-family:'DM Sans',sans-serif; }
-
-/* ── Bottom nav ── */
-.bottom-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border2); z-index:100; padding-bottom:env(safe-area-inset-bottom); }
-.bnav-inner { display:flex; justify-content:space-around; padding:6px 0 4px; }
-.bnav-item  { display:flex; flex-direction:column; align-items:center; gap:3px; padding:5px 8px; color:var(--muted); cursor:pointer; min-width:54px; position:relative; }
-.bnav-item.active { color:var(--orange); }
-.bnav-item svg  { width:22px; height:22px; }
-.bnav-item span { font-size:10px; font-weight:500; }
-.bnav-dot { position:absolute; top:4px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--orange); border:2px solid var(--card); }
-
-/* ── Responsive ── */
-@media (max-width:768px) {
-  .sidebar       { display:none; }
-  .menu-btn      { display:flex; }
-  .bottom-nav    { display:block; }
-  .overlay       { display:block; }
-  .btn-ghost     { display:none; }
-  .topbar-meta   { display:none; }
-  .contact-list  { width:100%; border-right:none; }
-  .profile-panel { display:none; }
-  .mobile-profile{ display:block; }
-  .list-inner    { padding:12px 12px 100px; }
-  .stats-row     { grid-template-columns:1fr 1fr; }
-  .stats-row .stat-card:last-child { grid-column:span 2; }
-  .ins-grid      { grid-template-columns:1fr; }
-  .profile-head  { flex-wrap:wrap; }
-  .profile-actions { margin-left:0; width:100%; }
-  .profile-actions .btn { flex:1; justify-content:center; }
-  .profile-inner { padding:14px 14px 100px; }
-}
-@media (min-width:769px) {
-  .topbar { padding:15px 24px; }
-  .topbar-title { font-size:17px; }
-  .search-bar { padding:12px 20px; }
-}
-
-/* ── Contact modal ── */
-.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:500; align-items:center; justify-content:center; padding:20px; }
-.modal-bg.open { display:flex; }
-.modal { background:var(--card); border-radius:14px; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; display:flex; flex-direction:column; }
-.modal-head { padding:18px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; position:sticky; top:0; background:var(--card); z-index:1; border-radius:14px 14px 0 0; }
-.modal-title { font-size:16px; font-weight:600; }
-.modal-close { width:30px; height:30px; border-radius:50%; background:var(--card2); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted2); }
-.modal-body { padding:20px; flex:1; }
-.modal-foot { padding:16px 20px; border-top:1px solid var(--border); display:flex; gap:8px; flex-shrink:0; }
-.modal-foot .btn { flex:1; justify-content:center; }
-.form-group { margin-bottom:14px; }
-.form-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:5px; display:block; }
-.form-input, .form-select { width:100%; padding:9px 11px; border:1px solid var(--border2); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; background:var(--card); color:var(--text); }
-.form-input:focus, .form-select:focus { outline:none; border-color:var(--orange); }
-.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.form-section { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin:18px 0 10px; padding-top:14px; border-top:1px solid var(--border); }
-
-/* ── Delete confirm ── */
-.confirm-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:600; align-items:center; justify-content:center; padding:20px; }
-.confirm-bg.open { display:flex; }
-.confirm-box { background:var(--card); border-radius:14px; width:100%; max-width:380px; padding:24px; text-align:center; }
-.confirm-icon { width:48px; height:48px; border-radius:50%; background:var(--red-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
-.confirm-title { font-size:16px; font-weight:600; margin-bottom:6px; }
-.confirm-body  { font-size:13px; color:var(--muted2); margin-bottom:20px; line-height:1.5; }
-.confirm-foot  { display:flex; gap:8px; }
-.confirm-foot .btn { flex:1; justify-content:center; }
-.btn-danger { background:var(--red); color:#fff; }
-.btn-danger:hover { background:#b83535; }
-
-@media (max-width:768px) {
-  .modal-bg { align-items:flex-end; padding:0; }
-  .modal { border-radius:16px 16px 0 0; max-height:92vh; }
-  .form-row { grid-template-columns:1fr; gap:0; }
-}
+@media(min-width:769px){.topbar{padding:15px 24px;}.topbar-title{font-size:17px;}}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-mark">D</div>
-      <div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div>
-    </div>
-    <nav class="nav">
-      <div class="nav-section">Main</div>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
-      <a class="nav-item active" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
-      <div class="nav-section" style="margin-top:6px;">Operations</div>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call <span class="nav-badge">2</span></a>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
-      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="user-chip">
-        <div class="user-avatar">DR</div>
-        <div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Mobile drawer -->
-  <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
-  <div class="drawer" id="drawer">
-    <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-    <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
-    <nav class="nav">
-      <div class="nav-section">Main</div>
-      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
-      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
-      <a class="nav-item active" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
-      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
-      <div class="nav-section" style="margin-top:6px;">Operations</div>
-      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
-      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
-    </nav>
-  </div>
-
-  <div class="main">
-
-    <!-- Topbar -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <button class="menu-btn" onclick="openDrawer()"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-        <div>
-          <div class="topbar-title">Customers</div>
-          <div class="topbar-meta">12 contacts</div>
-        </div>
-      </div>
-      <div class="topbar-right">
-        <button class="btn btn-primary" onclick="openContactModal()">
-          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Add Contact
-        </button>
-      </div>
-    </div>
-
-    <!-- Search + filter -->
-    <div class="search-bar">
-      <div class="search-wrap">
-        <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input class="search-input" placeholder="Search by name, phone, address..." oninput="filterContacts(this.value)">
-      </div>
-    </div>
-    <div style="padding:10px 16px 0; background:var(--card); border-bottom:1px solid var(--border2); display:flex; gap:6px; overflow-x:auto; padding-bottom:10px; flex-shrink:0;">
-      <div class="fpill active" onclick="setFilter('all',this)">All</div>
-      <div class="fpill" onclick="setFilter('insurance',this)">Insurance referral</div>
-      <div class="fpill" onclick="setFilter('google',this)">Google</div>
-      <div class="fpill" onclick="setFilter('wom',this)">Word of mouth</div>
-      <div class="fpill" onclick="setFilter('repeat',this)">Repeat</div>
-    </div>
-
-    <!-- Content area -->
-    <div class="content-area">
-
-      <!-- Contact list -->
-      <div class="contact-list" id="contactList">
-        <div class="list-inner">
-          <div class="contact-count" id="contactCount">12 contacts</div>
-
-          <!-- Cards -->
-          <div class="contact-card" data-source="insurance" onclick="selectContact(this, 'henderson')">
-            <div class="cc-top">
-              <div class="cc-avatar" style="background:#2D7DD2">DH</div>
-              <div class="cc-info">
-                <div class="cc-name">David Henderson</div>
-                <div class="cc-type">Henderson Property Mgmt</div>
-              </div>
-              <div class="cc-value">$28,000</div>
-            </div>
-            <div class="cc-meta">
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0198</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1b7f35737e757f7e696874755b736b7635787476">[email&#160;protected]</a></div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>847 Maple Ave, West Jordan, UT 84084</div>
-            </div>
-            <div class="cc-tags"><span class="cc-tag tag-insurance">Insurance referral</span></div>
-          </div>
-
-          <div class="contact-card" data-source="repeat" onclick="selectContact(this, 'thompson')">
-            <div class="cc-top">
-              <div class="cc-avatar" style="background:#1A9E65">RT</div>
-              <div class="cc-info">
-                <div class="cc-name">Rachel Thompson</div>
-                <div class="cc-type">Homeowner</div>
-              </div>
-              <div class="cc-value">$18,500</div>
-            </div>
-            <div class="cc-meta">
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0311</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dba9f5afb3b4b6aba8b4b59bbcb6bab2b7f5b8b4b6">[email&#160;protected]</a></div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>234 Oak St, Salt Lake City, UT 84101</div>
-            </div>
-            <div class="cc-tags"><span class="cc-tag tag-repeat">Repeat customer</span></div>
-          </div>
-
-          <div class="contact-card" data-source="google" onclick="selectContact(this, 'garcia')">
-            <div class="cc-top">
-              <div class="cc-avatar" style="background:#C87E18">MG</div>
-              <div class="cc-info">
-                <div class="cc-name">Miguel Garcia</div>
-                <div class="cc-type">Garcia Commercial LLC</div>
-              </div>
-              <div class="cc-value">$38,000</div>
-            </div>
-            <div class="cc-meta">
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0422</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f39edd949281909a92b3949281909a92909c9e9e9681909a929fdd909c9e">[email&#160;protected]</a></div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>1100 S State St, Salt Lake City, UT 84111</div>
-            </div>
-            <div class="cc-tags"><span class="cc-tag tag-google">Google</span></div>
-          </div>
-
-          <div class="contact-card" data-source="insurance" onclick="selectContact(this, 'reyes')">
-            <div class="cc-top">
-              <div class="cc-avatar" style="background:#D64040">CR</div>
-              <div class="cc-info">
-                <div class="cc-name">Carlos Reyes</div>
-                <div class="cc-type">Reyes Commercial</div>
-              </div>
-              <div class="cc-value">$95,000</div>
-            </div>
-            <div class="cc-meta">
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0577</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d5e134f5844584e7d4f5844584e5e525050584f5e545c51135e5250">[email&#160;protected]</a></div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>4400 Highland Dr, Murray, UT 84117</div>
-            </div>
-            <div class="cc-tags"><span class="cc-tag tag-insurance">Insurance referral</span></div>
-          </div>
-
-          <div class="contact-card" data-source="wom" onclick="selectContact(this, 'nguyen')">
-            <div class="cc-top">
-              <div class="cc-avatar" style="background:#7B52D4">LN</div>
-              <div class="cc-info">
-                <div class="cc-name">Linh Nguyen</div>
-                <div class="cc-type">Homeowner</div>
-              </div>
-              <div class="cc-value">$21,500</div>
-            </div>
-            <div class="cc-meta">
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0634</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5653545214545d4f435f547a5f575b535614595557">[email&#160;protected]</a></div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>88 Redwood Rd, West Valley, UT 84119</div>
-            </div>
-            <div class="cc-tags"><span class="cc-tag tag-wom">Word of mouth</span></div>
-          </div>
-
-          <div class="contact-card" data-source="insurance" onclick="selectContact(this, 'parkcity')">
-            <div class="cc-top">
-              <div class="cc-avatar" style="background:#E85A24">PC</div>
-              <div class="cc-info">
-                <div class="cc-name">Park City LLC</div>
-                <div class="cc-type">Commercial</div>
-              </div>
-              <div class="cc-value">$52,000</div>
-            </div>
-            <div class="cc-meta">
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(435) 555-0711</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1776737a7e79576776657c747e636e7b7b743974787a">[email&#160;protected]</a></div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>1200 Park Ave, Park City, UT 84060</div>
-            </div>
-            <div class="cc-tags"><span class="cc-tag tag-insurance">Insurance referral</span></div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Desktop profile panel -->
-      <div class="profile-panel" id="profilePanel">
-        <div class="profile-empty" id="profileEmpty">
-          <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          <p style="font-size:14px;font-weight:500;">Select a contact to view their profile</p>
-        </div>
-        <div class="profile-inner" id="profileContent" style="display:none;">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <!-- Add/Edit Contact Modal -->
-  <div class="modal-bg" id="contactModal">
-    <div class="modal">
-      <div class="modal-head">
-        <span class="modal-title" id="modalTitle">Add Contact</span>
-        <button class="modal-close" onclick="closeContactModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="modalKey">
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">First name *</label><input class="form-input" id="fFirstName" placeholder="David"></div>
-          <div class="form-group"><label class="form-label">Last name</label><input class="form-input" id="fLastName" placeholder="Henderson"></div>
-        </div>
-        <div class="form-group"><label class="form-label">Company name</label><input class="form-input" id="fCompany" placeholder="Henderson Property Mgmt"></div>
-        <div class="form-group"><label class="form-label">Customer type</label>
-          <select class="form-select" id="fType">
-            <option value="homeowner">Homeowner</option>
-            <option value="commercial">Commercial</option>
-            <option value="property_management">Property Management</option>
-          </select>
-        </div>
-        <div class="form-section">Contact info</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="fPhone" placeholder="(801) 555-0198" type="tel"></div>
-          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="fEmail" placeholder="name@email.com" type="email"></div>
-        </div>
-        <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="fAddress" placeholder="847 Maple Ave"></div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">City</label><input class="form-input" id="fCity" placeholder="Salt Lake City"></div>
-          <div class="form-group"><label class="form-label">Zip</label><input class="form-input" id="fZip" placeholder="84101"></div>
-        </div>
-        <div class="form-section">How they found us</div>
-        <div class="form-group"><label class="form-label">Lead source</label>
-          <select class="form-select" id="fSource">
-            <option value="insurance_referral">Insurance referral</option>
-            <option value="google">Google</option>
-            <option value="word_of_mouth">Word of mouth</option>
-            <option value="repeat_customer">Repeat customer</option>
-            <option value="facebook">Facebook</option>
-            <option value="cold_outreach">Cold outreach</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="btn btn-ghost" onclick="closeContactModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveContact()">Save contact</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delete Confirm -->
-  <div class="confirm-bg" id="deleteConfirm">
-    <div class="confirm-box">
-      <div class="confirm-icon"><svg width="22" height="22" fill="none" stroke="var(--red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
-      <div class="confirm-title">Delete contact?</div>
-      <div class="confirm-body" id="confirmBody">This will permanently remove this contact and all their notes. Jobs linked to them will remain but will be unlinked.</div>
-      <div class="confirm-foot">
-        <button class="btn btn-ghost" onclick="closeDeleteConfirm()">Cancel</button>
-        <button class="btn btn-danger" onclick="executeDelete()">Yes, delete</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile profile slide-in -->
-  <div class="mobile-profile" id="mobileProfile">
-    <div class="mobile-profile-topbar">
-      <button class="back-btn" onclick="closeMobileProfile()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        Customers
-      </button>
-    </div>
-    <div class="profile-inner" id="mobileProfileContent">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-
-  <!-- Bottom nav -->
-  <nav class="bottom-nav">
-    <div class="bnav-inner">
-      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
-      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
-      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
-      <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Customers</span></div>
-      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></div>
-    </div>
+<aside class="sidebar">
+  <div class="logo"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+  <nav class="nav">
+    <div class="nav-section">Main</div>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+    <a class="nav-item active" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+    <div class="nav-section" style="margin-top:6px;">Operations</div>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
+    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
   </nav>
+  <div class="sidebar-footer"><div class="user-chip"><div class="user-avatar">DR</div><div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div></div></div>
+</aside>
 
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+  <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+  <nav class="nav">
+    <div class="nav-section">Main</div>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item active" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+    <div class="nav-section" style="margin-top:6px;">Operations</div>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+  </nav>
 </div>
 
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-btn" onclick="openDrawer()"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div><div class="topbar-title">Customers</div><div class="topbar-meta" id="topbarMeta">Loading...</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="openModal()">
+      <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Add Contact
+    </button>
+  </div>
+  <div class="search-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input class="search-input" placeholder="Search by name, phone, address..." oninput="doSearch(this.value)">
+    </div>
+    <div class="filter-pills">
+      <div class="fpill active" onclick="setFilter('all',this)">All</div>
+      <div class="fpill" onclick="setFilter('insurance_referral',this)">Insurance referral</div>
+      <div class="fpill" onclick="setFilter('google',this)">Google</div>
+      <div class="fpill" onclick="setFilter('word_of_mouth',this)">Word of mouth</div>
+      <div class="fpill" onclick="setFilter('repeat_customer',this)">Repeat</div>
+    </div>
+  </div>
+  <div class="content-area">
+    <div class="contact-list">
+      <div class="list-inner" id="listInner">
+        <div class="contact-count">Loading...</div>
+        <div class="skel-card"><div class="skeleton" style="width:40%;height:16px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:55%"></div></div>
+        <div class="skel-card"><div class="skeleton" style="width:40%;height:16px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:55%"></div></div>
+        <div class="skel-card"><div class="skeleton" style="width:40%;height:16px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:55%"></div></div>
+      </div>
+    </div>
+    <div class="profile-panel">
+      <div class="profile-empty" id="profileEmpty">
+        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <p>Select a contact to view their profile</p>
+      </div>
+      <div class="profile-inner" id="profileContent" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-profile" id="mobileProfile">
+  <div class="mob-topbar">
+    <button class="back-btn" onclick="closeMobileProfile()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Customers
+    </button>
+  </div>
+  <div class="profile-inner" id="mobileProfileContent"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-bg" id="contactModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">Add Contact</span>
+      <button class="modal-x" onclick="closeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">First name *</label><input class="form-input" id="fFirst" placeholder="David"></div>
+        <div class="form-group"><label class="form-label">Last name</label><input class="form-input" id="fLast" placeholder="Henderson"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="fCompany" placeholder="Henderson Property Mgmt"></div>
+      <div class="form-group"><label class="form-label">Customer type</label>
+        <select class="form-select" id="fType">
+          <option value="homeowner">Homeowner</option>
+          <option value="commercial">Commercial</option>
+          <option value="property_management">Property Management</option>
+        </select>
+      </div>
+      <span class="form-divider">Contact info</span>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="fPhone" placeholder="(801) 555-0198" type="tel"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="fEmail" placeholder="name@email.com" type="email"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="fAddr" placeholder="847 Maple Ave"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">City</label><input class="form-input" id="fCity" placeholder="Salt Lake City"></div>
+        <div class="form-group"><label class="form-label">Zip</label><input class="form-input" id="fZip" placeholder="84101"></div>
+      </div>
+      <span class="form-divider">How they found us</span>
+      <div class="form-group"><label class="form-label">Lead source</label>
+        <select class="form-select" id="fSource">
+          <option value="insurance_referral">Insurance referral</option>
+          <option value="google">Google</option>
+          <option value="word_of_mouth">Word of mouth</option>
+          <option value="repeat_customer">Repeat customer</option>
+          <option value="facebook">Facebook</option>
+          <option value="cold_outreach">Cold outreach</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveContact()">Save contact</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm -->
+<div class="confirm-bg" id="deleteConfirm">
+  <div class="confirm-box">
+    <div class="confirm-icon"><svg width="22" height="22" fill="none" stroke="var(--red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
+    <div class="confirm-title">Delete contact?</div>
+    <div class="confirm-msg" id="confirmMsg">This will permanently remove this contact.</div>
+    <div class="confirm-foot">
+      <button class="btn btn-ghost" onclick="closeDeleteConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="deleteBtn" onclick="executeDelete()">Yes, delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav class="bottom-nav">
+  <div class="bnav-inner">
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
+    <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Customers</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></div>
+  </div>
+</nav>
+
+</div>
 <script>
-// ── Contact data ──
-const contacts = {
-  henderson: {
-    name:'David Henderson', company:'Henderson Property Mgmt', type:'Property Management',
-    initials:'DH', color:'#2D7DD2',
-    phone:'(801) 555-0198', email:'d.henderson@hpm.com',
-    address:'847 Maple Ave, West Jordan, UT 84084',
-    source:'Insurance referral', totalValue:'$28,000',
-    jobs:[
-      { title:'Water damage — 847 Maple Ave', date:'Apr 14, 2026', value:'$28,000', status:'scheduled', color:'#2D7DD2' }
-    ],
-    insurance:{ carrier:'State Farm', policy:'SF-2026-88142', claim:'CLM-2026-4471', adjuster:'Sandra Kowalski', adjusterPhone:'(801) 555-0244' },
-    notes:[
-      { id:'n1', date:'Apr 5, 2026 · 10:30 AM', text:'Called David. Adjuster Sandra Kowalski scheduled for site visit Apr 9. David wants estimate beforehand.' },
-      { id:'n2', date:'Apr 4, 2026 · 2:14 PM', text:'Multiple unit flood — 4 units on 2nd and 3rd floor. Tenant displacement 2–3 weeks. Insurance claim filed.' }
-    ]
-  },
-  thompson: {
-    name:'Rachel Thompson', company:'', type:'Homeowner',
-    initials:'RT', color:'#1A9E65',
-    phone:'(801) 555-0311', email:'r.thompson@gmail.com',
-    address:'234 Oak St, Salt Lake City, UT 84101',
-    source:'Repeat customer', totalValue:'$36,000',
-    jobs:[
-      { title:'Water damage — 234 Oak St', date:'Apr 2, 2026', value:'$18,500', status:'progress', color:'#2D7DD2' },
-      { title:'Mold inspection — 234 Oak St', date:'Jan 12, 2026', value:'$17,500', status:'complete', color:'#1A9E65' }
-    ],
-    insurance:{ carrier:'Allstate', policy:'AL-2025-33812', claim:'CLM-2026-1022', adjuster:'Brian Foster', adjusterPhone:'(801) 555-0190' },
-    notes:[
-      { id:'n1', date:'Apr 3, 2026 · 9:00 AM', text:'Rachel called to check on crew ETA. Team A confirmed for 8 AM start.' }
-    ]
-  },
-  garcia: {
-    name:'Miguel Garcia', company:'Garcia Commercial LLC', type:'Commercial',
-    initials:'MG', color:'#C87E18',
-    phone:'(801) 555-0422', email:'m.garcia@garciacommercial.com',
-    address:'1100 S State St, Salt Lake City, UT 84111',
-    source:'Google', totalValue:'$38,000',
-    jobs:[
-      { title:'Mold remediation — 1100 S State St', date:'Apr 22, 2026', value:'$38,000', status:'scheduled', color:'#1A9E65' }
-    ],
-    insurance:{ carrier:'Travelers', policy:'TR-2026-55290', claim:'', adjuster:'', adjusterPhone:'' },
-    notes:[
-      { id:'n1', date:'Apr 3, 2026 · 11:20 AM', text:'Estimate sent. No response yet. Follow up needed by Apr 7.' }
-    ]
-  },
-  reyes: {
-    name:'Carlos Reyes', company:'Reyes Commercial', type:'Commercial',
-    initials:'CR', color:'#D64040',
-    phone:'(801) 555-0577', email:'c.reyes@reyescommercial.com',
-    address:'4400 Highland Dr, Murray, UT 84117',
-    source:'Insurance referral', totalValue:'$95,000',
-    jobs:[
-      { title:'Fire restoration — 4400 Highland Dr', date:'May 1, 2026', value:'$95,000', status:'scheduled', color:'#D64040' }
-    ],
-    insurance:{ carrier:'Farmers', policy:'FM-2026-71103', claim:'CLM-2026-5512', adjuster:'Denise Park', adjusterPhone:'(801) 555-0388' },
-    notes:[]
-  },
-  nguyen: {
-    name:'Linh Nguyen', company:'', type:'Homeowner',
-    initials:'LN', color:'#7B52D4',
-    phone:'(801) 555-0634', email:'linh.nguyen@email.com',
-    address:'88 Redwood Rd, West Valley, UT 84119',
-    source:'Word of mouth', totalValue:'$21,500',
-    jobs:[
-      { title:'Mold remediation — 88 Redwood Rd', date:'Apr 5, 2026', value:'$21,500', status:'complete', color:'#1A9E65' }
-    ],
-    insurance:{ carrier:'Liberty Mutual', policy:'LM-2026-20491', claim:'CLM-2026-2218', adjuster:'Tom Reeves', adjusterPhone:'(801) 555-0529' },
-    notes:[
-      { id:'n1', date:'Apr 6, 2026 · 3:45 PM', text:'Job complete. Invoice sent. Linh very happy with the work — potential referral to her neighbor.' }
-    ]
-  },
-  parkcity: {
-    name:'Park City LLC', company:'', type:'Commercial',
-    initials:'PC', color:'#E85A24',
-    phone:'(435) 555-0711', email:'admin@parkcityllc.com',
-    address:'1200 Park Ave, Park City, UT 84060',
-    source:'Insurance referral', totalValue:'$52,000',
-    jobs:[
-      { title:'Fire restoration — 1200 Park Ave', date:'Apr 15, 2026', value:'$52,000', status:'progress', color:'#D64040' }
-    ],
-    insurance:{ carrier:'State Farm', policy:'SF-2025-94410', claim:'CLM-2026-3390', adjuster:'Sandra Kowalski', adjusterPhone:'(801) 555-0244' },
-    notes:[
-      { id:'n1', date:'Mar 30, 2026 · 1:00 PM', text:'Adjuster came in 20% low on estimate. Sending supplemental with full scope documentation.' }
-    ]
+const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let allCustomers = [];
+let currentId    = null;
+let editingId    = null;
+let pendingDelete= null;
+let searchQ      = '';
+let sourceFilter = 'all';
+
+const sourceLabels = {insurance_referral:'Insurance referral',google:'Google',word_of_mouth:'Word of mouth',repeat_customer:'Repeat customer',facebook:'Facebook',cold_outreach:'Cold outreach',other:'Other'};
+const typeLabels   = {homeowner:'Homeowner',commercial:'Commercial',property_management:'Property Management'};
+const sourceTagClass = {insurance_referral:'tag-insurance',google:'tag-google',word_of_mouth:'tag-wom',repeat_customer:'tag-repeat',facebook:'tag-other',cold_outreach:'tag-other',other:'tag-other'};
+const avatarColors = ['#2D7DD2','#1A9E65','#C87E18','#D64040','#7B52D4','#E85A24'];
+const typeColor    = {water_damage:'#2D7DD2',fire_restoration:'#D64040',mold_remediation:'#1A9E65',inspection:'#7B52D4',other:'#888480'};
+const jobStatusLabel = {scheduled:'Scheduled',in_progress:'In Progress',completed:'Completed',cancelled:'Cancelled'};
+const jobStatusClass = {scheduled:'s-scheduled',in_progress:'s-progress',completed:'s-complete',cancelled:'s-progress'};
+
+function getName(c){ return [c.first_name,c.last_name].filter(Boolean).join(' '); }
+function getInitials(c){ return ((c.first_name||'')[0]+(c.last_name||c.first_name||'')[1]||'').toUpperCase(); }
+function getColor(id){ let s=0; for(let ch of(id||''))s+=ch.charCodeAt(0); return avatarColors[s%avatarColors.length]; }
+function getAddr(c){ return [c.address_line1,c.address_city,c.address_state,c.address_zip].filter(Boolean).join(', '); }
+
+function showToast(msg,isError){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast'+(isError?' error':'')+' show';
+  setTimeout(()=>t.className='toast',2800);
+}
+function setBtn(id,loading,label){
+  const b=document.getElementById(id); if(!b)return;
+  b.disabled=loading;
+  b.innerHTML=loading?'<span class="spinner"></span>':label;
+}
+
+async function loadCustomers(){
+  const {data,error}=await db.from('customers').select('*').eq('is_active',true).order('first_name');
+  if(error){showToast('Error loading contacts: '+error.message,true);return;}
+  allCustomers=data||[];
+  renderList();
+}
+
+function renderList(){
+  const filtered=allCustomers.filter(c=>{
+    const addr=getAddr(c).toLowerCase();
+    const name=getName(c).toLowerCase();
+    const ms=!searchQ||name.includes(searchQ)||(c.company_name||'').toLowerCase().includes(searchQ)||(c.phone||'').toLowerCase().includes(searchQ)||(c.email||'').toLowerCase().includes(searchQ)||addr.includes(searchQ);
+    const mf=sourceFilter==='all'||c.lead_source===sourceFilter;
+    return ms&&mf;
+  });
+  document.getElementById('topbarMeta').textContent=allCustomers.length+' contact'+(allCustomers.length!==1?'s':'');
+  if(!filtered.length){
+    document.getElementById('listInner').innerHTML=
+      '<div class="contact-count">0 contacts</div>'+
+      '<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;">'+(allCustomers.length===0?'No contacts yet — add your first one above.':'No contacts match your search.')+'</div>';
+    return;
   }
-};
-
-let noteCounter = 100;
-let currentContact = null;
-let activeFilter = 'all';
-let searchQuery = '';
-
-function buildProfile(key, targetId) {
-  const c = contacts[key];
-  if (!c) return '';
-
-  const statusLabel = { complete:'Completed', progress:'In Progress', scheduled:'Scheduled' };
-  const statusClass  = { complete:'s-complete', progress:'s-progress', scheduled:'s-scheduled' };
-
-  const jobsHtml = c.jobs.map(j => `
-    <div class="job-row">
-      <div class="job-row-bar" style="background:${j.color}"></div>
-      <div class="job-row-info">
-        <div class="job-row-title">${j.title}</div>
-        <div class="job-row-meta">${j.date}</div>
+  const cards=filtered.map(c=>{
+    const initials=getInitials(c);
+    const color=getColor(c.id);
+    const addr=getAddr(c);
+    const tagClass=sourceTagClass[c.lead_source]||'tag-other';
+    const tagLabel=sourceLabels[c.lead_source]||c.lead_source||'—';
+    return `<div class="contact-card${currentId===c.id?' selected':''}" onclick="selectContact('${c.id}')">
+      <div class="cc-top">
+        <div class="cc-avatar" style="background:${color}">${initials}</div>
+        <div class="cc-info"><div class="cc-name">${getName(c)}</div><div class="cc-type">${c.company_name||typeLabels[c.customer_type]||''}</div></div>
       </div>
-      <div class="job-row-right">
-        <div class="job-row-value">${j.value}</div>
-        <div class="job-row-status ${statusClass[j.status]}">${statusLabel[j.status]}</div>
+      <div class="cc-meta">
+        ${c.phone?`<div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>${c.phone}</div>`:''}
+        ${c.email?`<div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>${c.email}</div>`:''}
+        ${addr?`<div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${addr}</div>`:''}
       </div>
-    </div>`).join('');
-
-  const ins = c.insurance;
-  const insHtml = `
-    <div class="ins-grid">
-      <div class="ins-field"><div class="ins-label">Carrier</div><div class="ins-value">${ins.carrier || '—'}</div></div>
-      <div class="ins-field"><div class="ins-label">Policy #</div><div class="ins-value ins-mono">${ins.policy || '—'}</div></div>
-      <div class="ins-field"><div class="ins-label">Claim #</div><div class="ins-value ins-mono">${ins.claim || '—'}</div></div>
-      <div class="ins-field"><div class="ins-label">Adjuster</div><div class="ins-value">${ins.adjuster || '—'}</div></div>
-      ${ins.adjusterPhone ? `<div class="ins-field"><div class="ins-label">Adjuster phone</div><div class="ins-value"><a href="tel:${ins.adjusterPhone}" style="color:var(--blue);text-decoration:none;">${ins.adjusterPhone}</a></div></div>` : ''}
+      <div class="cc-tags"><span class="cc-tag ${tagClass}">${tagLabel}</span></div>
     </div>`;
+  }).join('');
+  document.getElementById('listInner').innerHTML=`<div class="contact-count">${filtered.length} contact${filtered.length!==1?'s':''}</div>`+cards;
+}
 
-  const notesHtml = c.notes.map(n => `
-    <div class="note-item" id="${targetId}-${n.id}">
-      <div class="note-meta">
-        <span class="note-date">${n.date}</span>
-        <div class="note-acts">
-          <button class="note-btn edit" onclick="editNote('${targetId}-${n.id}')">Edit</button>
-          <button class="note-btn del"  onclick="deleteNote('${targetId}-${n.id}')">Delete</button>
+async function selectContact(id){
+  currentId=id;
+  renderList();
+  const c=allCustomers.find(x=>x.id===id);
+  if(!c)return;
+  const html=await buildProfile(c);
+  if(window.innerWidth<=768){
+    document.getElementById('mobileProfileContent').innerHTML=html;
+    document.getElementById('mobileProfile').classList.add('open');
+    document.body.style.overflow='hidden';
+  } else {
+    document.getElementById('profileEmpty').style.display='none';
+    const pc=document.getElementById('profileContent');
+    pc.style.display='block'; pc.innerHTML=html;
+  }
+}
+
+function closeMobileProfile(){
+  document.getElementById('mobileProfile').classList.remove('open');
+  document.body.style.overflow='';
+  currentId=null; renderList();
+}
+
+async function refreshProfile(){
+  if(!currentId)return;
+  const c=allCustomers.find(x=>x.id===currentId);
+  if(!c)return;
+  const html=await buildProfile(c);
+  if(window.innerWidth<=768) document.getElementById('mobileProfileContent').innerHTML=html;
+  else document.getElementById('profileContent').innerHTML=html;
+}
+
+async function buildProfile(c){
+  const id=c.id;
+  const name=getName(c);
+  const initials=getInitials(c);
+  const color=getColor(id);
+  const addr=getAddr(c);
+
+  const [{data:jobs},{data:notes}]=await Promise.all([
+    db.from('jobs').select('*').eq('customer_id',id).eq('is_active',true).order('job_date',{ascending:false}),
+    db.from('customer_notes').select('*').eq('customer_id',id).order('created_at',{ascending:false})
+  ]);
+
+  const jobIds=(jobs||[]).map(j=>j.id);
+  let ins={};
+  if(jobIds.length){
+    const {data:insRows}=await db.from('job_insurance').select('*').in('job_id',jobIds).limit(1);
+    if(insRows&&insRows[0]) ins=insRows[0];
+  }
+
+  const totalValue=(jobs||[]).reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0);
+  const completed=(jobs||[]).filter(j=>j.status==='completed').length;
+
+  const jobsHtml=(jobs||[]).length
+    ?(jobs||[]).map(j=>`<div class="job-row">
+        <div class="job-bar" style="background:${typeColor[j.job_type]||'#888'}"></div>
+        <div class="job-info">
+          <div class="job-title">${j.title||'Untitled job'}</div>
+          <div class="job-meta">${j.job_date?new Date(j.job_date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}</div>
         </div>
-      </div>
-      <div class="note-text" id="${targetId}-${n.id}-text">${n.text}</div>
-      <div class="note-edit-wrap" id="${targetId}-${n.id}-edit">
-        <textarea class="note-edit-ta" id="${targetId}-${n.id}-ta">${n.text}</textarea>
-        <div class="note-edit-foot">
-          <button class="btn btn-ghost btn-sm" onclick="cancelEdit('${targetId}-${n.id}')">Cancel</button>
-          <button class="btn btn-primary btn-sm" onclick="saveNote('${targetId}-${n.id}')">Save</button>
+        <div class="job-right">
+          <div class="job-value">${j.estimated_value?'$'+Number(j.estimated_value).toLocaleString():'—'}</div>
+          <div class="job-status-lbl ${jobStatusClass[j.status]||''}">${jobStatusLabel[j.status]||j.status||''}</div>
         </div>
-      </div>
-    </div>`).join('');
+      </div>`).join('')
+    :'<div style="padding:12px 0;font-size:13px;color:var(--muted);">No jobs yet</div>';
+
+  const insHtml=`<div class="ins-grid">
+    <div><div class="ins-label">Carrier</div><div class="ins-value">${ins.carrier||'—'}</div></div>
+    <div><div class="ins-label">Policy #</div><div class="ins-value ins-mono">${ins.policy_number||'—'}</div></div>
+    <div><div class="ins-label">Claim #</div><div class="ins-value ins-mono">${ins.claim_number||'—'}</div></div>
+    <div><div class="ins-label">Adjuster</div><div class="ins-value">${ins.adjuster_name||'—'}</div></div>
+    ${ins.adjuster_phone?`<div><div class="ins-label">Adjuster phone</div><div class="ins-value"><a href="tel:${ins.adjuster_phone}" style="color:var(--blue);text-decoration:none;">${ins.adjuster_phone}</a></div></div>`:''}
+  </div>`;
+
+  const notesHtml=(notes||[]).map(n=>noteItemHtml(n.id,n.created_at,n.note_text)).join('');
+
+  const SVG_PHONE=`<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>`;
+  const SVG_MAIL=`<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`;
+  const SVG_PIN=`<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>`;
+  const SVG_EDIT=`<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`;
+  const SVG_TRASH=`<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`;
+  const SVG_PLUS=`<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>`;
 
   return `
     <div class="profile-head">
-      <div class="profile-avatar" style="background:${c.color}">${c.initials}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="profile-name">${c.name}</div>
-        <div class="profile-type">${c.company ? c.company + ' · ' : ''}${c.type}</div>
-        <div class="profile-contact-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg><a href="tel:${c.phone}">${c.phone}</a></div>
-        <div class="profile-contact-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="mailto:${c.email}">${c.email}</a></div>
-        <div class="profile-contact-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${c.address}</div>
+      <div class="ph-top">
+        <div class="profile-avatar" style="background:${color}">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="profile-name">${name}</div>
+          <div class="profile-subtype">${c.company_name?c.company_name+' · ':''}${typeLabels[c.customer_type]||''}</div>
+          ${c.phone?`<div class="pc-row">${SVG_PHONE}<a href="tel:${c.phone}">${c.phone}</a></div>`:''}
+          ${c.email?`<div class="pc-row">${SVG_MAIL}<a href="mailto:${c.email}">${c.email}</a></div>`:''}
+          ${addr?`<div class="pc-row">${SVG_PIN}${addr}</div>`:''}
+        </div>
       </div>
-      <div class="profile-actions">
-        <button class="btn btn-ghost btn-sm" onclick="openContactModal(currentContact)"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>Edit</button>
-        <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red-dim);" onclick="confirmDelete(currentContact)"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Delete</button>
-        <button class="btn btn-primary btn-sm" onclick="alert('New job flow coming soon!')"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New job</button>
+      <div class="ph-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('${id}')">${SVG_EDIT} Edit</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(214,64,64,0.25);" onclick="openDeleteConfirm('${id}')">${SVG_TRASH} Delete</button>
+        <button class="btn btn-primary btn-sm">${SVG_PLUS} New job</button>
       </div>
     </div>
-
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-label">Total value</div>
-        <div class="stat-value" style="color:var(--green)">${c.totalValue}</div>
-        <div class="stat-sub">Lifetime with DRC</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Jobs</div>
-        <div class="stat-value">${c.jobs.length}</div>
-        <div class="stat-sub">${c.jobs.filter(j=>j.status==='complete').length} completed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Lead source</div>
-        <div class="stat-value" style="font-size:14px;font-weight:500;margin-top:6px;">${c.source}</div>
-      </div>
+      <div class="stat-card"><div class="stat-label">Total value</div><div class="stat-value" style="color:var(--green)">${totalValue?'$'+totalValue.toLocaleString():'$0'}</div><div class="stat-sub">Across all jobs</div></div>
+      <div class="stat-card"><div class="stat-label">Jobs</div><div class="stat-value">${(jobs||[]).length}</div><div class="stat-sub">${completed} completed</div></div>
+      <div class="stat-card"><div class="stat-label">Lead source</div><div class="stat-value" style="font-size:13px;font-weight:500;margin-top:6px;">${sourceLabels[c.lead_source]||c.lead_source||'—'}</div></div>
     </div>
-
-    <div class="section-card">
-      <div class="section-card-head">
-        <div class="section-card-title">Linked jobs</div>
-        <button class="btn btn-primary btn-sm"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New job</button>
-      </div>
-      <div class="section-card-body" style="padding-top:0;padding-bottom:0;">${jobsHtml || '<div style="padding:16px 0;font-size:13px;color:var(--muted);">No jobs yet</div>'}</div>
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title">Linked jobs</div><button class="btn btn-primary btn-sm">${SVG_PLUS} New job</button></div>
+      <div class="sec-body" style="padding-top:0;padding-bottom:0;">${jobsHtml}</div>
     </div>
-
-    <div class="section-card">
-      <div class="section-card-head"><div class="section-card-title">Insurance info</div></div>
-      <div class="section-card-body">${insHtml}</div>
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title">Insurance info</div></div>
+      <div class="sec-body">${insHtml}</div>
     </div>
-
-    <div class="section-card">
-      <div class="section-card-head">
-        <div class="section-card-title">Notes</div>
-      </div>
-      <div class="section-card-body">
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title">Notes</div></div>
+      <div class="sec-body">
         <div class="add-note-box">
-          <textarea class="add-note-ta" placeholder="Add a note..." id="${targetId}-newNote"></textarea>
+          <textarea class="add-note-ta" id="newNote-${id}" placeholder="Add a note..."></textarea>
           <div class="add-note-foot">
-            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('${targetId}-newNote').value=''">Clear</button>
-            <button class="btn btn-primary btn-sm" onclick="addNote('${targetId}')">Add note</button>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('newNote-${id}').value=''">Clear</button>
+            <button class="btn btn-primary btn-sm" onclick="addNote('${id}')">Add note</button>
           </div>
         </div>
-        <div id="${targetId}-notesList">${notesHtml}</div>
+        <div id="notesList-${id}">${notesHtml}</div>
       </div>
     </div>`;
 }
 
-function selectContact(card, key) {
-  // Highlight card
-  document.querySelectorAll('.contact-card').forEach(c => c.classList.remove('active'));
-  card.classList.add('active');
-  currentContact = key;
-
-  const isMobile = window.innerWidth <= 768;
-  if (isMobile) {
-    document.getElementById('mobileProfileContent').innerHTML = buildProfile(key, 'mob');
-    openMobileProfile();
-  } else {
-    document.getElementById('profileEmpty').style.display = 'none';
-    const content = document.getElementById('profileContent');
-    content.style.display = 'block';
-    content.innerHTML = buildProfile(key, 'desk');
-  }
-}
-
-function openMobileProfile() {
-  document.getElementById('mobileProfile').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeMobileProfile() {
-  document.getElementById('mobileProfile').classList.remove('open');
-  document.body.style.overflow = '';
-  document.querySelectorAll('.contact-card').forEach(c => c.classList.remove('active'));
-}
-
-// Search
-function filterContacts(q) {
-  searchQuery = q.toLowerCase();
-  applyFilters();
-}
-
-// Source filter
-function setFilter(source, el) {
-  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  activeFilter = source;
-  applyFilters();
-}
-
-function applyFilters() {
-  const cards = document.querySelectorAll('.contact-card');
-  let visible = 0;
-  cards.forEach(card => {
-    const src = card.dataset.source;
-    const text = card.textContent.toLowerCase();
-    const matchFilter = activeFilter === 'all' || src === activeFilter;
-    const matchSearch = !searchQuery || text.includes(searchQuery);
-    const show = matchFilter && matchSearch;
-    card.style.display = show ? '' : 'none';
-    if (show) visible++;
-  });
-  document.getElementById('contactCount').textContent = visible + ' contact' + (visible !== 1 ? 's' : '');
-}
-
-// Notes
-function addNote(prefix) {
-  const ta = document.getElementById(prefix + '-newNote');
-  const text = ta.value.trim();
-  if (!text) return;
-  const id = prefix + '-n' + noteCounter++;
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  const html = `<div class="note-item" id="${id}">
+function noteItemHtml(id,createdAt,text){
+  const d=new Date(createdAt);
+  const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const safe=(text||'').replace(/</g,'&lt;');
+  return `<div class="note-item" id="note-${id}">
     <div class="note-meta"><span class="note-date">${dateStr}</span>
-    <div class="note-acts"><button class="note-btn edit" onclick="editNote('${id}')">Edit</button><button class="note-btn del" onclick="deleteNote('${id}')">Delete</button></div></div>
-    <div class="note-text" id="${id}-text">${text.replace(/</g,'&lt;')}</div>
-    <div class="note-edit-wrap" id="${id}-edit">
-      <textarea class="note-edit-ta" id="${id}-ta">${text.replace(/</g,'&lt;')}</textarea>
+    <div class="note-acts"><button class="nbtn edit" onclick="editNote('${id}')">Edit</button><button class="nbtn del" onclick="deleteNote('${id}')">Delete</button></div></div>
+    <div class="note-text" id="note-text-${id}">${safe}</div>
+    <div class="note-edit-wrap" id="note-edit-${id}">
+      <textarea class="note-edit-ta" id="note-ta-${id}">${safe}</textarea>
       <div class="note-edit-foot"><button class="btn btn-ghost btn-sm" onclick="cancelEdit('${id}')">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveNote('${id}')">Save</button></div>
     </div>
   </div>`;
-  document.getElementById(prefix + '-notesList').insertAdjacentHTML('afterbegin', html);
-  ta.value = '';
 }
-function editNote(id) {
-  document.getElementById(id+'-text').style.display='none';
-  const w = document.getElementById(id+'-edit');
+
+async function addNote(customerId){
+  const ta=document.getElementById('newNote-'+customerId);
+  const text=(ta?ta.value:'').trim();
+  if(!text)return;
+  const {data,error}=await db.from('customer_notes').insert([{customer_id:customerId,note_text:text}]).select().single();
+  if(error){showToast('Error saving note',true);return;}
+  ta.value='';
+  const list=document.getElementById('notesList-'+customerId);
+  if(list) list.insertAdjacentHTML('afterbegin',noteItemHtml(data.id,data.created_at,data.note_text));
+  showToast('Note saved');
+}
+
+function editNote(id){
+  document.getElementById('note-text-'+id).style.display='none';
+  const w=document.getElementById('note-edit-'+id);
   w.classList.add('open'); w.style.display='block';
-  document.getElementById(id+'-ta').focus();
+  document.getElementById('note-ta-'+id).focus();
 }
-function cancelEdit(id) {
-  document.getElementById(id+'-text').style.di
+function cancelEdit(id){
+  document.getElementById('note-text-'+id).style.display='';
+  const w=document.getElementById('note-edit-'+id);
+  w.classList.remove('open'); w.style.display='none';
+}
+async function saveNote(id){
+  const txt=(document.getElementById('note-ta-'+id).value||'').trim();
+  if(!txt)return;
+  const {error}=await db.from('customer_notes').update({note_text:txt}).eq('id',id);
+  if(error){showToast('Error saving note',true);return;}
+  document.getElementById('note-text-'+id).textContent=txt;
+  cancelEdit(id);
+  showToast('Note updated');
+}
+async function deleteNote(id){
+  const {error}=await db.from('customer_notes').delete().eq('id',id);
+  if(error){showToast('Error deleting note',true);return;}
+  const el=document.getElementById('note-'+id);
+  if(el){el.style.transition='opacity 0.18s';el.style.opacity='0';setTimeout(()=>el.remove(),200);}
+}
+
+function openModal(id){
+  editingId=id||null;
+  document.getElementById('modalTitle').textContent=id?'Edit Contact':'Add Contact';
+  if(id){
+    const c=allCustomers.find(x=>x.id===id);
+    if(c){
+      document.getElementById('fFirst').value=c.first_name||'';
+      document.getElementById('fLast').value=c.last_name||'';
+      document.getElementById('fCompany').value=c.company_name||'';
+      document.getElementById('fType').value=c.customer_type||'homeowner';
+      document.getElementById('fPhone').value=c.phone||'';
+      document.getElementById('fEmail').value=c.email||'';
+      document.getElementById('fAddr').value=c.address_line1||'';
+      document.getElementById('fCity').value=c.address_city||'';
+      document.getElementById('fZip').value=c.address_zip||'';
+      document.getElementById('fSource').value=c.lead_source||'insurance_referral';
+    }
+  } else {
+    ['fFirst','fLast','fCompany','fPhone','fEmail','fAddr','fCity','fZip'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('fType').value='homeowner';
+    document.getElementById('fSource').value='insurance_referral';
+  }
+  document.getElementById('contactModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('fFirst').focus(),120);
+}
+function closeModal(){
+  document.getElementById('contactModal').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('fFirst').classList.remove('err');
+  editingId=null;
+}
+async function saveContact(){
+  const fn=document.getElementById('fFirst').value.trim();
+  if(!fn){document.getElementById('fFirst').classList.add('err');document.getElementById('fFirst').focus();return;}
+  document.getElementById('fFirst').classList.remove('err');
+  setBtn('saveBtn',true,'Save contact');
+  const payload={
+    first_name:fn,
+    last_name:document.getElementById('fLast').value.trim()||null,
+    company_name:document.getElementById('fCompany').value.trim()||null,
+    customer_type:document.getElementById('fType').value,
+    phone:document.getElementById('fPhone').value.trim()||null,
+    email:document.getElementById('fEmail').value.trim()||null,
+    address_line1:document.getElementById('fAddr').value.trim()||null,
+    address_city:document.getElementById('fCity').value.trim()||null,
+    address_state:'UT',
+    address_zip:document.getElementById('fZip').value.trim()||null,
+    lead_source:document.getElementById('fSource').value,
+    is_active:true
+  };
+  let error;
+  if(editingId){({error}=await db.from('customers').update(payload).eq('id',editingId));}
+  else{({error}=await db.from('customers').insert([payload]));}
+  setBtn('saveBtn',false,'Save contact');
+  if(error){showToast('Error: '+error.message,true);return;}
+  showToast(editingId?'Contact updated':'Contact added');
+  closeModal();
+  await loadCustomers();
+  if(editingId&&currentId===editingId) await refreshProfile();
+}
+
+function openDeleteConfirm(id){
+  pendingDelete=id;
+  const c=allCustomers.find(x=>x.id===id);
+  document.getElementById('confirmMsg').textContent=`This will permanently remove ${c?getName(c):'this contact'} and all their notes. Linked jobs will remain but be unlinked.`;
+  document.getElementById('deleteConfirm').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDeleteConfirm(){
+  document.getElementById('deleteConfirm').classList.remove('open');
+  document.body.style.overflow='';
+  pendingDelete=null;
+}
+async function executeDelete(){
+  if(!pendingDelete)return;
+  setBtn('deleteBtn',true,'Yes, delete');
+  const {error}=await db.from('customers').update({is_active:false}).eq('id',pendingDelete);
+  setBtn('deleteBtn',false,'Yes, delete');
+  if(error){showToast('Error: '+error.message,true);return;}
+  if(currentId===pendingDelete){
+    currentId=null;
+    document.getElementById('profileEmpty').style.display='';
+    document.getElementById('profileContent').style.display='none';
+    closeMobileProfile();
+  }
+  showToast('Contact deleted');
+  closeDeleteConfirm();
+  await loadCustomers();
+}
+
+function doSearch(q){searchQ=q.toLowerCase();renderList();}
+function setFilter(src,el){
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  sourceFilter=src; renderList();
+}
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+
+loadCustomers();
+</script>
+</body>
+</html>
