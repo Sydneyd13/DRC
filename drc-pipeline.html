@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRC — Pipeline</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:      #E85A24;
+  --orange-dim:  rgba(232,90,36,0.10);
+  --orange-mid:  rgba(232,90,36,0.22);
+  --dark:        #1A1A1A;
+  --sidebar-bg:  #1E1E1E;
+  --page-bg:     #F2F0EC;
+  --card:        #FFFFFF;
+  --card2:       #F7F5F2;
+  --border:      rgba(0,0,0,0.07);
+  --border2:     rgba(0,0,0,0.11);
+  --text:        #1A1A1A;
+  --muted:       #888480;
+  --muted2:      #6B6864;
+  --green:       #1A9E65;
+  --green-dim:   rgba(26,158,101,0.10);
+  --red:         #D64040;
+  --red-dim:     rgba(214,64,64,0.10);
+  --blue:        #2D7DD2;
+  --blue-dim:    rgba(45,125,210,0.10);
+  --amber:       #C87E18;
+  --amber-dim:   rgba(200,126,24,0.10);
+  --purple:      #7B52D4;
+  --purple-dim:  rgba(123,82,212,0.10);
+  --c-prospect:  #6B7280;
+  --c-qualified: #2D7DD2;
+  --c-proposal:  #C87E18;
+  --c-negot:     #E85A24;
+  --c-won:       #1A9E65;
+  --c-lost:      #D64040;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; background:var(--page-bg); color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; }
+.app { display:flex; height:100vh; overflow:hidden; }
+
+/* ── Sidebar ── */
+.sidebar { width:220px; flex-shrink:0; background:var(--sidebar-bg); display:flex; flex-direction:column; }
+.logo { padding:22px 18px 18px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:11px; }
+.logo-mark { width:32px; height:32px; flex-shrink:0; background:var(--orange); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:14px; color:#fff; }
+.logo-text { font-size:14px; font-weight:600; color:#F0EDE8; }
+.logo-sub  { font-size:11px; color:rgba(255,255,255,0.32); margin-top:1px; }
+.nav { padding:10px 8px; flex:1; display:flex; flex-direction:column; gap:1px; overflow-y:auto; }
+.nav-section { padding:12px 12px 4px; font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.28); }
+.nav-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:7px; color:rgba(255,255,255,0.42); font-size:13px; font-weight:500; text-decoration:none; cursor:pointer; transition:background 0.12s, color 0.12s; }
+.nav-item:hover  { background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.82); }
+.nav-item.active { background:var(--orange); color:#fff; }
+.nav-item svg    { width:16px; height:16px; flex-shrink:0; }
+.nav-badge { margin-left:auto; background:rgba(255,255,255,0.14); color:rgba(255,255,255,0.75); font-size:10px; font-weight:600; padding:2px 7px; border-radius:10px; }
+.nav-item.active .nav-badge { background:rgba(255,255,255,0.25); color:#fff; }
+.sidebar-footer { padding:12px; border-top:1px solid rgba(255,255,255,0.07); }
+.user-chip { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:7px; cursor:pointer; }
+.user-chip:hover { background:rgba(255,255,255,0.06); }
+.user-avatar { width:30px; height:30px; border-radius:50%; background:var(--orange); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:#fff; }
+.user-name { font-size:13px; font-weight:500; color:rgba(255,255,255,0.78); }
+.user-role { font-size:11px; color:rgba(255,255,255,0.32); }
+
+/* ── Mobile drawer ── */
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; opacity:0; transition:opacity 0.2s; }
+.overlay.open { opacity:1; }
+.drawer { position:fixed; top:0; left:0; bottom:0; width:268px; background:var(--sidebar-bg); z-index:201; display:flex; flex-direction:column; transform:translateX(-100%); transition:transform 0.22s cubic-bezier(0.4,0,0.2,1); }
+.drawer.open { transform:translateX(0); }
+.drawer-close { position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.1); border:none; color:rgba(255,255,255,0.6); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+/* ── Main ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+
+/* ── Topbar ── */
+.topbar { padding:13px 16px; border-bottom:1px solid var(--border2); background:var(--card); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.topbar-left { display:flex; align-items:center; gap:11px; }
+.menu-btn { width:36px; height:36px; flex-shrink:0; background:transparent; border:1px solid var(--border2); border-radius:8px; color:var(--muted2); cursor:pointer; display:none; align-items:center; justify-content:center; }
+.topbar-title { font-size:15px; font-weight:600; }
+.topbar-meta  { font-size:12px; color:var(--muted); margin-top:1px; }
+.topbar-right { display:flex; align-items:center; gap:8px; }
+.btn { padding:8px 14px; border-radius:8px; border:none; font-size:13px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-family:'DM Sans',sans-serif; transition:all 0.12s; }
+.btn-primary { background:var(--orange); color:#fff; }
+.btn-primary:hover { background:#cc4f1c; }
+.btn-ghost { background:transparent; color:var(--muted2); border:1px solid var(--border2); }
+.btn-ghost:hover { background:var(--card2); color:var(--text); }
+.btn-sm { padding:6px 11px; font-size:12px; }
+
+/* ── Summary strip ── */
+.summary-strip { display:flex; background:var(--dark); flex-shrink:0; overflow-x:auto; }
+.summary-strip::-webkit-scrollbar { display:none; }
+.sum-cell { padding:11px 18px; border-right:1px solid rgba(255,255,255,0.07); flex-shrink:0; }
+.sum-cell:last-child { border-right:none; }
+.sum-label { font-size:9px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.38); margin-bottom:3px; }
+.sum-value { font-family:'DM Mono',monospace; font-size:14px; font-weight:500; color:#F0EDE8; }
+.sum-count { font-size:10px; color:rgba(255,255,255,0.38); margin-top:1px; }
+
+/* ════════════════════════
+   DESKTOP: KANBAN BOARD
+════════════════════════ */
+.board-wrap { flex:1; overflow-x:auto; overflow-y:hidden; padding:14px; display:flex; gap:11px; }
+.board-wrap::-webkit-scrollbar { height:5px; }
+.board-wrap::-webkit-scrollbar-track { background:transparent; }
+.board-wrap::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+.col { width:256px; flex-shrink:0; display:flex; flex-direction:column; }
+.col-head { padding:9px 11px; border-radius:9px 9px 0 0; display:flex; align-items:center; justify-content:space-between; }
+.col-title-wrap { display:flex; align-items:center; gap:7px; }
+.col-dot   { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.col-title { font-size:13px; font-weight:600; }
+.col-count { font-size:11px; font-weight:600; padding:2px 7px; border-radius:10px; }
+.col-add   { width:26px; height:26px; border-radius:6px; border:none; background:rgba(0,0,0,0.07); color:var(--muted2); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; line-height:1; transition:background 0.12s; }
+.col-add:hover { background:rgba(0,0,0,0.13); }
+.col-cards { flex:1; overflow-y:auto; padding:8px 1px; display:flex; flex-direction:column; gap:8px; min-height:80px; }
+.col-cards::-webkit-scrollbar { width:3px; }
+.col-cards::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+.col-empty { padding:20px 10px; text-align:center; font-size:12px; color:var(--muted); border:1.5px dashed var(--border2); border-radius:8px; }
+
+.tint-prospect  { background:rgba(107,114,128,0.06); border-radius:9px; padding:0 1px; }
+.tint-qualified { background:rgba(45,125,210,0.05);  border-radius:9px; padding:0 1px; }
+.tint-proposal  { background:rgba(200,126,24,0.05);  border-radius:9px; padding:0 1px; }
+.tint-negot     { background:rgba(232,90,36,0.05);   border-radius:9px; padding:0 1px; }
+.tint-won       { background:rgba(26,158,101,0.06);  border-radius:9px; padding:0 1px; }
+.tint-lost      { background:rgba(214,64,64,0.05);   border-radius:9px; padding:0 1px; }
+
+/* ── Job card (shared) ── */
+.job-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:13px; cursor:pointer; transition:box-shadow 0.12s, transform 0.12s; position:relative; overflow:hidden; }
+.job-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.job-card:hover { box-shadow:0 4px 14px rgba(0,0,0,0.09); transform:translateY(-1px); }
+.job-card:active { transform:translateY(0); box-shadow:none; }
+.card-prospect::before  { background:var(--c-prospect); }
+.card-qualified::before { background:var(--c-qualified); }
+.card-proposal::before  { background:var(--c-proposal); }
+.card-negot::before     { background:var(--c-negot); }
+.card-won::before       { background:var(--c-won); }
+.card-lost::before      { background:var(--c-lost); }
+
+.jc-top      { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:7px; }
+.jc-customer { font-size:13px; font-weight:600; line-height:1.3; }
+.jc-type     { padding:3px 7px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; flex-shrink:0; }
+.type-water  { background:var(--blue-dim);   color:var(--blue); }
+.type-fire   { background:var(--red-dim);    color:var(--red); }
+.type-mold   { background:var(--green-dim);  color:var(--green); }
+.type-insp   { background:var(--purple-dim); color:var(--purple); }
+
+.jc-value    { font-family:'DM Mono',monospace; font-size:15px; font-weight:500; margin-bottom:7px; }
+.jc-meta     { display:flex; flex-direction:column; gap:3px; margin-bottom:8px; }
+.jc-row      { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted2); }
+.jc-row svg  { width:11px; height:11px; flex-shrink:0; }
+.jc-preview  { font-size:11px; color:var(--muted2); font-style:italic; background:var(--card2); border-radius:5px; padding:5px 8px; margin-bottom:8px; border-left:2px solid var(--border2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.jc-footer   { display:flex; align-items:center; justify-content:space-between; padding-top:8px; border-top:1px solid var(--border); }
+.jc-link     { font-size:11px; font-weight:500; color:var(--orange); display:flex; align-items:center; gap:3px; }
+.jc-age      { font-size:11px; color:var(--muted); }
+
+/* ════════════════════════
+   MOBILE: LIST VIEW
+════════════════════════ */
+.list-wrap { display:none; flex:1; overflow-y:auto; padding:12px 14px 100px; }
+.list-wrap::-webkit-scrollbar { width:4px; }
+.list-wrap::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+/* Stage filter pills */
+.stage-pills { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; margin-bottom:14px; }
+.stage-pills::-webkit-scrollbar { display:none; }
+.stage-pill { padding:6px 13px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border2); background:var(--card); color:var(--muted2); white-space:nowrap; cursor:pointer; flex-shrink:0; transition:all 0.12s; }
+.stage-pill.active { background:var(--dark); color:#F0EDE8; border-color:var(--dark); }
+
+/* Stage group in list */
+.stage-group { margin-bottom:20px; }
+.stage-group-head { display:flex; align-items:center; gap:8px; margin-bottom:10px; padding:0 2px; }
+.stage-group-dot   { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.stage-group-title { font-size:13px; font-weight:600; }
+.stage-group-count { font-size:11px; font-weight:600; padding:2px 7px; border-radius:10px; }
+.stage-group-add   { margin-left:auto; font-size:11px; color:var(--orange); font-weight:500; cursor:pointer; }
+
+/* Mobile list card — horizontal layout */
+.list-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:13px 14px; display:flex; align-items:center; gap:12px; cursor:pointer; margin-bottom:8px; position:relative; overflow:hidden; transition:box-shadow 0.12s; }
+.list-card:last-child { margin-bottom:0; }
+.list-card:active { box-shadow:0 2px 10px rgba(0,0,0,0.09); }
+.list-card-bar { width:4px; align-self:stretch; border-radius:2px; flex-shrink:0; }
+.list-card-body { flex:1; min-width:0; }
+.list-card-top   { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:3px; }
+.list-card-name  { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.list-card-value { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; flex-shrink:0; }
+.list-card-sub   { display:flex; align-items:center; gap:8px; }
+.list-card-type  { padding:2px 6px; border-radius:4px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+.list-card-loc   { font-size:12px; color:var(--muted2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.list-card-arrow { color:var(--muted); flex-shrink:0; }
+
+/* ════════════════════════
+   DETAIL PANEL
+════════════════════════ */
+.panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.3); z-index:300; }
+.panel-overlay.open { display:block; }
+.detail-panel {
+  position:fixed; top:0; right:0; bottom:0; width:440px;
+  background:var(--card); z-index:301;
+  display:flex; flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);
+  border-left:1px solid var(--border2);
+}
+.detail-panel.open { transform:translateX(0); }
+.panel-head { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; justify-content:space-between; flex-shrink:0; }
+.panel-title    { font-size:16px; font-weight:600; }
+.panel-subtitle { font-size:12px; color:var(--muted); margin-top:3px; }
+.panel-close { width:30px; height:30px; border-radius:50%; background:var(--card2); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted2); flex-shrink:0; margin-left:10px; }
+.panel-tabs { display:flex; border-bottom:1px solid var(--border); flex-shrink:0; }
+.ptab { padding:10px 16px; font-size:13px; font-weight:500; color:var(--muted2); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.12s; }
+.ptab.active { color:var(--orange); border-bottom-color:var(--orange); }
+.ptab:hover:not(.active) { color:var(--text); }
+.panel-body { flex:1; overflow-y:auto; }
+.panel-body::-webkit-scrollbar { width:4px; }
+.panel-body::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+.tab-pane { display:none; padding:18px; }
+.tab-pane.active { display:block; }
+
+.field-group { margin-bottom:14px; }
+.field-label { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:5px; display:block; }
+.field-input, .field-select { width:100%; padding:9px 11px; border:1px solid var(--border2); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; background:var(--card); color:var(--text); transition:border-color 0.12s; }
+.field-input:focus, .field-select:focus { outline:none; border-color:var(--orange); }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.field-mono { font-family:'DM Mono',monospace; }
+.stage-sel { width:100%; padding:10px 12px; border:1px solid var(--border2); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; background:var(--card); color:var(--text); cursor:pointer; }
+.stage-sel:focus { outline:none; border-color:var(--orange); }
+
+.contact-block { background:var(--card2); border:1px solid var(--border2); border-radius:9px; padding:13px; margin-bottom:14px; }
+.contact-block-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.contact-block-title { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+.contact-name { font-size:14px; font-weight:600; margin-bottom:6px; }
+.contact-row  { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted2); margin-bottom:3px; }
+.contact-row svg { width:12px; height:12px; color:var(--muted); flex-shrink:0; }
+.contact-row a { color:var(--blue); text-decoration:none; }
+.contact-row a:hover { text-decoration:underline; }
+
+/* Notes */
+.add-note-box { border:1.5px dashed var(--border2); border-radius:8px; padding:12px; margin-bottom:12px; }
+.add-note-ta  { width:100%; padding:8px 10px; border:1px solid var(--border2); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; resize:vertical; min-height:68px; line-height:1.5; background:var(--card); }
+.add-note-ta:focus { outline:none; border-color:var(--orange); }
+.add-note-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
+.note-item { background:var(--card2); border:1px solid var(--border2); border-radius:8px; padding:12px; margin-bottom:9px; }
+.note-meta  { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+.note-date  { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; }
+.note-actions { display:flex; gap:6px; }
+.note-btn   { background:none; border:none; font-size:11px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; padding:2px 6px; border-radius:4px; }
+.note-btn.edit { color:var(--blue); }
+.note-btn.edit:hover { background:var(--blue-dim); }
+.note-btn.del  { color:var(--red); }
+.note-btn.del:hover  { background:var(--red-dim); }
+.note-text  { font-size:13px; line-height:1.6; }
+.note-edit-area { display:none; }
+.note-edit-area.open { display:block; }
+.note-edit-ta { width:100%; padding:8px 10px; border:1px solid var(--orange); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; resize:vertical; min-height:60px; line-height:1.5; }
+.note-edit-ta:focus { outline:none; }
+.note-edit-actions { display:flex; gap:6px; margin-top:6px; }
+
+/* Activity */
+.act-item { display:flex; gap:12px; padding-bottom:18px; position:relative; }
+.act-item:not(:last-child)::before { content:''; position:absolute; left:15px; top:30px; bottom:0; width:1px; background:var(--border2); }
+.act-icon { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.act-icon svg { width:13px; height:13px; }
+.act-body { flex:1; padding-top:5px; }
+.act-text { font-size:13px; line-height:1.4; }
+.act-text strong { font-weight:600; }
+.act-time { font-size:11px; color:var(--muted); margin-top:3px; font-family:'DM Mono',monospace; }
+
+.panel-foot { padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:8px; flex-shrink:0; }
+.panel-foot .btn { flex:1; justify-content:center; }
+
+/* ── Bottom nav ── */
+.bottom-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border2); z-index:100; padding-bottom:env(safe-area-inset-bottom); }
+.bnav-inner { display:flex; justify-content:space-around; padding:6px 0 4px; }
+.bnav-item  { display:flex; flex-direction:column; align-items:center; gap:3px; padding:5px 8px; color:var(--muted); cursor:pointer; min-width:54px; position:relative; }
+.bnav-item.active { color:var(--orange); }
+.bnav-item svg  { width:22px; height:22px; }
+.bnav-item span { font-size:10px; font-weight:500; }
+.bnav-dot { position:absolute; top:4px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--orange); border:2px solid var(--card); }
+
+/* ════════════════════════
+   RESPONSIVE
+════════════════════════ */
+@media (max-width:768px) {
+  .sidebar    { display:none; }
+  .menu-btn   { display:flex; }
+  .bottom-nav { display:block; }
+  .overlay    { display:block; }
+  .btn-ghost  { display:none; }
+  .topbar-meta{ display:none; }
+
+  /* Switch board → list */
+  .board-wrap { display:none; }
+  .list-wrap  { display:block; }
+
+  /* Panel slides up from bottom */
+  .detail-panel {
+    width:100%; border-left:none;
+    top:auto; height:92vh;
+    border-radius:16px 16px 0 0;
+    transform:translateY(100%);
+  }
+  .detail-panel.open { transform:translateY(0); }
+
+  .field-row { grid-template-columns:1fr; gap:0; }
+}
+@media (min-width:769px) {
+  .topbar { padding:15px 24px; }
+  .topbar-title { font-size:17px; }
+}
+
+/* ── Filter drawer ── */
+.filter-drawer {
+  position:fixed; top:0; right:0; bottom:0; width:300px;
+  background:var(--card); z-index:400;
+  display:flex; flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  border-left:1px solid var(--border2);
+  box-shadow:-4px 0 24px rgba(0,0,0,0.08);
+}
+.filter-drawer.open { transform:translateX(0); }
+.filter-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.2); z-index:399; }
+.filter-overlay.open { display:block; }
+.filter-head { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.filter-title { font-size:15px; font-weight:600; }
+.filter-body  { flex:1; overflow-y:auto; padding:18px; }
+.filter-foot  { padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:8px; }
+.filter-foot .btn { flex:1; justify-content:center; }
+.filter-section { margin-bottom:22px; }
+.filter-section-title { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:0.05em; text-transform:uppercase; margin-bottom:10px; display:block; }
+.filter-chips { display:flex; flex-wrap:wrap; gap:7px; }
+.filter-chip {
+  padding:6px 13px; border-radius:20px; font-size:12px; font-weight:500;
+  border:1px solid var(--border2); background:var(--card); color:var(--muted2);
+  cursor:pointer; transition:all 0.12s; user-select:none;
+}
+.filter-chip:hover { border-color:var(--orange); color:var(--orange); }
+.filter-chip.on { background:var(--orange-dim); border-color:var(--orange); color:var(--orange); font-weight:600; }
+.filter-dot { display:none; width:7px; height:7px; border-radius:50%; background:var(--orange); margin-left:4px; vertical-align:middle; }
+.filter-dot.show { display:inline-block; }
+.date-presets { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:12px; }
+.date-preset { padding:7px 10px; border-radius:8px; font-size:12px; font-weight:500; border:1px solid var(--border2); background:var(--card); color:var(--muted2); cursor:pointer; text-align:center; transition:all 0.12s; }
+.date-preset:hover { border-color:var(--orange); color:var(--orange); }
+.date-preset.on { background:var(--orange-dim); border-color:var(--orange); color:var(--orange); font-weight:600; }
+.date-custom { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+@media (max-width:768px) {
+  .filter-drawer { width:100%; border-left:none; top:auto; height:85vh; border-radius:16px 16px 0 0; transform:translateY(100%); box-shadow:0 -4px 24px rgba(0,0,0,0.1); }
+  .filter-drawer.open { transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">D</div>
+      <div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Main</div>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+      <a class="nav-item active" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline <span class="nav-badge">9</span></a>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+      <div class="nav-section" style="margin-top:6px;">Operations</div>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call <span class="nav-badge">2</span></a>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
+      <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">DR</div>
+        <div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile drawer -->
+  <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+    <nav class="nav">
+      <div class="nav-section">Main</div>
+      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+      <a class="nav-item active" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline <span class="nav-badge">9</span></a>
+      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+      <div class="nav-section" style="margin-top:6px;">Operations</div>
+      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call <span class="nav-badge">2</span></a>
+      <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+    </nav>
+  </div>
+
+  <div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openDrawer()"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <div>
+          <div class="topbar-title">Pipeline</div>
+          <div class="topbar-meta">9 active · $284,500 in play</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" onclick="openFilter()" id="filterBtn"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>Filter <span class="filter-dot" id="filterDot"></span></button>
+        <button class="btn btn-primary" onclick="openPanel()"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Lead</button>
+      </div>
+    </div>
+
+    <!-- Summary strip -->
+    <div class="summary-strip">
+      <div class="sum-cell"><div class="sum-label">Total</div><div class="sum-value">$284,500</div><div class="sum-count">9 deals</div></div>
+      <div class="sum-cell"><div class="sum-label">Prospecting</div><div class="sum-value">$52,000</div><div class="sum-count">2 leads</div></div>
+      <div class="sum-cell"><div class="sum-label">Proposal</div><div class="sum-value">$118,000</div><div class="sum-count">3 out</div></div>
+      <div class="sum-cell"><div class="sum-label">Negotiation</div><div class="sum-value">$74,500</div><div class="sum-count">2 deals</div></div>
+      <div class="sum-cell"><div class="sum-label">Won (MTD)</div><div class="sum-value" style="color:#2ECC8A;">$40,000</div><div class="sum-count">2 closed</div></div>
+    </div>
+
+    <!-- ── DESKTOP: KANBAN ── -->
+    <div class="board-wrap">
+
+      <div class="col tint-prospect">
+        <div class="col-head"><div class="col-title-wrap"><div class="col-dot" style="background:var(--c-prospect)"></div><span class="col-title">Prospecting</span><span class="col-count" style="background:rgba(107,114,128,0.12);color:var(--c-prospect)">2</span></div><button class="col-add" onclick="openPanel()">+</button></div>
+        <div class="col-cards">
+          <div class="job-card card-prospect" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Henderson Property Mgmt</div><span class="jc-type type-water">Water</span></div>
+            <div class="jc-value">$28,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>West Jordan, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 14</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Insurance referral</div>
+            </div>
+            <div class="jc-preview">Multiple unit flood, tenant displacement likely...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">3d ago</span></div>
+          </div>
+          <div class="job-card card-prospect" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Olsen Residence</div><span class="jc-type type-mold">Mold</span></div>
+            <div class="jc-value">$24,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Sandy, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 20</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Repeat customer</div>
+            </div>
+            <div class="jc-preview">Basement mold after pipe burst...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">1d ago</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col tint-qualified">
+        <div class="col-head"><div class="col-title-wrap"><div class="col-dot" style="background:var(--c-qualified)"></div><span class="col-title">Qualified</span><span class="col-count" style="background:var(--blue-dim);color:var(--blue)">2</span></div><button class="col-add" onclick="openPanel()">+</button></div>
+        <div class="col-cards">
+          <div class="job-card card-qualified" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Sunrise HOA</div><span class="jc-type type-water">Water</span></div>
+            <div class="jc-value">$45,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Draper, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 18</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Google</div>
+            </div>
+            <div class="jc-preview">Board approval needed before signing...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">5d ago</span></div>
+          </div>
+          <div class="job-card card-qualified" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Reyes Commercial</div><span class="jc-type type-fire">Fire</span></div>
+            <div class="jc-value">$95,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Murray, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: May 1</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Insurance referral</div>
+            </div>
+            <div class="jc-preview">Adjuster meeting next week...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">2d ago</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col tint-proposal">
+        <div class="col-head"><div class="col-title-wrap"><div class="col-dot" style="background:var(--c-proposal)"></div><span class="col-title">Proposal</span><span class="col-count" style="background:var(--amber-dim);color:var(--amber)">3</span></div><button class="col-add" onclick="openPanel()">+</button></div>
+        <div class="col-cards">
+          <div class="job-card card-proposal" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Garcia Commercial</div><span class="jc-type type-mold">Mold</span></div>
+            <div class="jc-value">$38,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Salt Lake City, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 22</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Word of mouth</div>
+            </div>
+            <div class="jc-preview">Follow up needed — no response in 3 days...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">3d ago</span></div>
+          </div>
+          <div class="job-card card-proposal" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Fairview Apartments</div><span class="jc-type type-water">Water</span></div>
+            <div class="jc-value">$62,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Ogden, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 28</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Insurance referral</div>
+            </div>
+            <div class="jc-preview">Owner reviewing with insurance broker...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">6d ago</span></div>
+          </div>
+          <div class="job-card card-proposal" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Nakamura Residence</div><span class="jc-type type-fire">Fire</span></div>
+            <div class="jc-value">$18,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Provo, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: May 5</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Google</div>
+            </div>
+            <div class="jc-preview">Accepted verbally, awaiting signature...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">1d ago</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col tint-negot">
+        <div class="col-head"><div class="col-title-wrap"><div class="col-dot" style="background:var(--c-negot)"></div><span class="col-title">Negotiation</span><span class="col-count" style="background:var(--orange-dim);color:var(--orange)">2</span></div><button class="col-add" onclick="openPanel()">+</button></div>
+        <div class="col-cards">
+          <div class="job-card card-negot" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Park City LLC</div><span class="jc-type type-fire">Fire</span></div>
+            <div class="jc-value">$52,000</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Park City, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 15</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Insurance referral</div>
+            </div>
+            <div class="jc-preview">Adjuster came in 20% low. Pushing back...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">8d ago</span></div>
+          </div>
+          <div class="job-card card-negot" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Benson Industrial</div><span class="jc-type type-water">Water</span></div>
+            <div class="jc-value">$22,500</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Taylorsville, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Start: Apr 17</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Word of mouth</div>
+            </div>
+            <div class="jc-preview">Scope dispute — re-measure scheduled...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">4d ago</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col tint-won">
+        <div class="col-head"><div class="col-title-wrap"><div class="col-dot" style="background:var(--c-won)"></div><span class="col-title">Closed Won</span><span class="col-count" style="background:var(--green-dim);color:var(--green)">2</span></div><button class="col-add" onclick="openPanel()">+</button></div>
+        <div class="col-cards">
+          <div class="job-card card-won" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Thompson Residence</div><span class="jc-type type-water">Water</span></div>
+            <div class="jc-value">$18,500</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>Salt Lake City, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Started: Apr 2</div>
+            </div>
+            <div class="jc-preview">Signed and in progress. Invoice pending...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">5d ago</span></div>
+          </div>
+          <div class="job-card card-won" onclick="openPanel()">
+            <div class="jc-top"><div class="jc-customer">Nguyen Family</div><span class="jc-type type-mold">Mold</span></div>
+            <div class="jc-value">$21,500</div>
+            <div class="jc-meta">
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>West Valley, UT</div>
+              <div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Started: Apr 5</div>
+            </div>
+            <div class="jc-preview">Job complete. Invoice sent, awaiting payment...</div>
+            <div class="jc-footer"><span class="jc-link">View details <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span><span class="jc-age">2d ago</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col tint-lost">
+        <div class="col-head"><div class="col-title-wrap"><div class="col-dot" style="background:var(--c-lost)"></div><span class="col-title">Closed Lost</span><span class="col-count" style="background:var(--red-dim);color:var(--red)">0</span></div><button class="col-add" onclick="openPanel()">+</button></div>
+        <div class="col-cards"><div class="col-empty">No lost deals this month</div></div>
+      </div>
+
+    </div>
+
+    <!-- ── MOBILE: LIST VIEW ── -->
+    <div class="list-wrap" id="listWrap">
+
+      <!-- Stage filter pills -->
+      <div class="stage-pills">
+        <div class="stage-pill active" onclick="filterStage('all', this)">All (9)</div>
+        <div class="stage-pill" onclick="filterStage('prospect', this)">Prospecting (2)</div>
+        <div class="stage-pill" onclick="filterStage('qualified', this)">Qualified (2)</div>
+        <div class="stage-pill" onclick="filterStage('proposal', this)">Proposal (3)</div>
+        <div class="stage-pill" onclick="filterStage('negot', this)">Negotiation (2)</div>
+        <div class="stage-pill" onclick="filterStage('won', this)">Won (2)</div>
+        <div class="stage-pill" onclick="filterStage('lost', this)">Lost (0)</div>
+      </div>
+
+      <!-- Prospecting group -->
+      <div class="stage-group" data-stage="prospect">
+        <div class="stage-group-head">
+          <div class="stage-group-dot" style="background:var(--c-prospect)"></div>
+          <span class="stage-group-title">Prospecting</span>
+          <span class="stage-group-count" style="background:rgba(107,114,128,0.12);color:var(--c-prospect)">2</span>
+          <span class="stage-group-add" onclick="openPanel()">+ Add</span>
+        </div>
+        <div class="list-card card-prospect" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-prospect)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top">
+              <div class="list-card-name">Henderson Property Mgmt</div>
+              <div class="list-card-value">$28,000</div>
+            </div>
+            <div class="list-card-sub">
+              <span class="list-card-type type-water">Water</span>
+              <span class="list-card-loc">West Jordan, UT · Apr 14</span>
+            </div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="list-card card-prospect" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-prospect)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top">
+              <div class="list-card-name">Olsen Residence</div>
+              <div class="list-card-value">$24,000</div>
+            </div>
+            <div class="list-card-sub">
+              <span class="list-card-type type-mold">Mold</span>
+              <span class="list-card-loc">Sandy, UT · Apr 20</span>
+            </div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Qualified group -->
+      <div class="stage-group" data-stage="qualified">
+        <div class="stage-group-head">
+          <div class="stage-group-dot" style="background:var(--c-qualified)"></div>
+          <span class="stage-group-title">Qualified</span>
+          <span class="stage-group-count" style="background:var(--blue-dim);color:var(--blue)">2</span>
+          <span class="stage-group-add" onclick="openPanel()">+ Add</span>
+        </div>
+        <div class="list-card card-qualified" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-qualified)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Sunrise HOA</div><div class="list-card-value">$45,000</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-water">Water</span><span class="list-card-loc">Draper, UT · Apr 18</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="list-card card-qualified" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-qualified)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Reyes Commercial</div><div class="list-card-value">$95,000</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-fire">Fire</span><span class="list-card-loc">Murray, UT · May 1</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Proposal group -->
+      <div class="stage-group" data-stage="proposal">
+        <div class="stage-group-head">
+          <div class="stage-group-dot" style="background:var(--c-proposal)"></div>
+          <span class="stage-group-title">Proposal</span>
+          <span class="stage-group-count" style="background:var(--amber-dim);color:var(--amber)">3</span>
+          <span class="stage-group-add" onclick="openPanel()">+ Add</span>
+        </div>
+        <div class="list-card card-proposal" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-proposal)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Garcia Commercial</div><div class="list-card-value">$38,000</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-mold">Mold</span><span class="list-card-loc">Salt Lake City · Apr 22</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="list-card card-proposal" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-proposal)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Fairview Apartments</div><div class="list-card-value">$62,000</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-water">Water</span><span class="list-card-loc">Ogden, UT · Apr 28</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="list-card card-proposal" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-proposal)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Nakamura Residence</div><div class="list-card-value">$18,000</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-fire">Fire</span><span class="list-card-loc">Provo, UT · May 5</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Negotiation group -->
+      <div class="stage-group" data-stage="negot">
+        <div class="stage-group-head">
+          <div class="stage-group-dot" style="background:var(--c-negot)"></div>
+          <span class="stage-group-title">Negotiation</span>
+          <span class="stage-group-count" style="background:var(--orange-dim);color:var(--orange)">2</span>
+          <span class="stage-group-add" onclick="openPanel()">+ Add</span>
+        </div>
+        <div class="list-card card-negot" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-negot)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Park City LLC</div><div class="list-card-value">$52,000</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-fire">Fire</span><span class="list-card-loc">Park City, UT · Apr 15</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="list-card card-negot" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-negot)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Benson Industrial</div><div class="list-card-value">$22,500</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-water">Water</span><span class="list-card-loc">Taylorsville, UT · Apr 17</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Won group -->
+      <div class="stage-group" data-stage="won">
+        <div class="stage-group-head">
+          <div class="stage-group-dot" style="background:var(--c-won)"></div>
+          <span class="stage-group-title">Closed Won</span>
+          <span class="stage-group-count" style="background:var(--green-dim);color:var(--green)">2</span>
+          <span class="stage-group-add" onclick="openPanel()">+ Add</span>
+        </div>
+        <div class="list-card card-won" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-won)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Thompson Residence</div><div class="list-card-value">$18,500</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-water">Water</span><span class="list-card-loc">Salt Lake City · Apr 2</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="list-card card-won" onclick="openPanel()">
+          <div class="list-card-bar" style="background:var(--c-won)"></div>
+          <div class="list-card-body">
+            <div class="list-card-top"><div class="list-card-name">Nguyen Family</div><div class="list-card-value">$21,500</div></div>
+            <div class="list-card-sub"><span class="list-card-type type-mold">Mold</span><span class="list-card-loc">West Valley, UT · Apr 5</span></div>
+          </div>
+          <svg class="list-card-arrow" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+
+      <!-- Lost group -->
+      <div class="stage-group" data-stage="lost">
+        <div class="stage-group-head">
+          <div class="stage-group-dot" style="background:var(--c-lost)"></div>
+          <span class="stage-group-title">Closed Lost</span>
+          <span class="stage-group-count" style="background:var(--red-dim);color:var(--red)">0</span>
+          <span class="stage-group-add" onclick="openPanel()">+ Add</span>
+        </div>
+        <div style="text-align:center;font-size:12px;color:var(--muted);padding:16px;border:1.5px dashed var(--border2);border-radius:8px;">No lost deals this month</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail panel -->
+  <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+  <div class="detail-panel" id="detailPanel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Henderson Property Mgmt</div>
+        <div class="panel-subtitle">Prospecting · Water Damage · 3 days ago</div>
+      </div>
+      <button class="panel-close" onclick="closePanel()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="panel-tabs">
+      <div class="ptab active" onclick="switchTab('details')">Details</div>
+      <div class="ptab" onclick="switchTab('notes')">Notes <span id="noteCount" style="background:var(--orange-dim);color:var(--orange);font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;margin-left:4px;">2</span></div>
+      <div class="ptab" onclick="switchTab('activity')">Activity</div>
+    </div>
+    <div class="panel-body">
+
+      <!-- Details -->
+      <div class="tab-pane active" id="tab-details">
+        <div class="field-group">
+          <label class="field-label">Stage</label>
+          <select class="stage-sel"><option>Prospecting</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Closed Won</option><option>Closed Lost</option></select>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px;">Deal details</div>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">Est. value</label><input class="field-input field-mono" value="$28,000"></div>
+          <div class="field-group"><label class="field-label">Job type</label><select class="field-select"><option>Water Damage</option><option>Fire Restoration</option><option>Mold Remediation</option><option>Inspection</option><option>Other</option></select></div>
+        </div>
+        <div class="field-group"><label class="field-label">Location</label><input class="field-input" value="West Jordan, UT"></div>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">Potential start</label><input class="field-input" type="date" value="2026-04-14"></div>
+          <div class="field-group"><label class="field-label">Follow-up date</label><input class="field-input" type="date" value="2026-04-10"></div>
+        </div>
+        <div class="field-row">
+          <div class="field-group"><label class="field-label">Lead source</label><select class="field-select"><option>Insurance referral</option><option>Google</option><option>Word of mouth</option><option>Repeat customer</option><option>Facebook</option><option>Cold outreach</option><option>Other</option></select></div>
+          <div class="field-group"><label class="field-label">Insurance claim #</label><input class="field-input field-mono" placeholder="CLM-2026-4471"></div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin:16px 0 10px;">Customer contact</div>
+        <div class="contact-block">
+          <div class="contact-block-head"><span class="contact-block-title">Primary</span><span style="font-size:11px;color:var(--orange);cursor:pointer;font-weight:500;">View customer →</span></div>
+          <div class="contact-name">David Henderson</div>
+          <div class="contact-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg><a href="tel:8015550198">(801) 555-0198</a></div>
+          <div class="contact-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="mailto:d.henderson@hpm.com">d.henderson@hpm.com</a></div>
+        </div>
+
+      </div>
+
+      <!-- Notes -->
+      <div class="tab-pane" id="tab-notes">
+        <div class="add-note-box">
+          <textarea class="add-note-ta" placeholder="Add a note..." id="newNoteText"></textarea>
+          <div class="add-note-actions">
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('newNoteText').value=''">Clear</button>
+            <button class="btn btn-primary btn-sm" onclick="addNote()">Add note</button>
+          </div>
+        </div>
+        <div id="notesList">
+          <div class="note-item" id="note-1">
+            <div class="note-meta"><span class="note-date">Apr 5, 2026 · 10:30 AM</span><div class="note-actions"><button class="note-btn edit" onclick="editNote('note-1')">Edit</button><button class="note-btn del" onclick="deleteNote('note-1')">Delete</button></div></div>
+            <div class="note-text" id="note-1-text">Called David Henderson. Adjuster Sandra Kowalski is scheduled for a site visit Apr 9. Henderson wants estimate before that meeting.</div>
+            <div class="note-edit-area" id="note-1-edit"><textarea class="note-edit-ta" id="note-1-ta">Called David Henderson. Adjuster Sandra Kowalski is scheduled for a site visit Apr 9. Henderson wants estimate before that meeting.</textarea><div class="note-edit-actions"><button class="btn btn-ghost btn-sm" onclick="cancelEdit('note-1')">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveNote('note-1')">Save</button></div></div>
+          </div>
+          <div class="note-item" id="note-2">
+            <div class="note-meta"><span class="note-date">Apr 4, 2026 · 2:14 PM</span><div class="note-actions"><button class="note-btn edit" onclick="editNote('note-2')">Edit</button><button class="note-btn del" onclick="deleteNote('note-2')">Delete</button></div></div>
+            <div class="note-text" id="note-2-text">Multiple unit flood — 4 units affected. Insurance claim in progress through State Farm. Need to confirm scope before sending estimate.</div>
+            <div class="note-edit-area" id="note-2-edit"><textarea class="note-edit-ta" id="note-2-ta">Multiple unit flood — 4 units affected. Insurance claim in progress through State Farm. Need to confirm scope before sending estimate.</textarea><div class="note-edit-actions"><button class="btn btn-ghost btn-sm" onclick="cancelEdit('note-2')">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveNote('note-2')">Save</button></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="tab-pane" id="tab-activity">
+        <div>
+          <div class="act-item"><div class="act-icon" style="background:var(--green-dim)"><svg fill="none" stroke="var(--green)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></div><div class="act-body"><div class="act-text">Note added by <strong>Admin</strong></div><div class="act-time">Apr 5, 2026 · 10:30 AM</div></div></div>
+          <div class="act-item"><div class="act-icon" style="background:var(--blue-dim)"><svg fill="none" stroke="var(--blue)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg></div><div class="act-body"><div class="act-text">Moved to <strong>Prospecting</strong></div><div class="act-time">Apr 4, 2026 · 2:18 PM</div></div></div>
+          <div class="act-item"><div class="act-icon" style="background:var(--green-dim)"><svg fill="none" stroke="var(--green)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></div><div class="act-body"><div class="act-text">Note added by <strong>Admin</strong></div><div class="act-time">Apr 4, 2026 · 2:14 PM</div></div></div>
+          <div class="act-item"><div class="act-icon" style="background:var(--amber-dim)"><svg fill="none" stroke="var(--amber)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></div><div class="act-body"><div class="act-text">Lead created — <strong>Henderson Property Mgmt</strong></div><div class="act-time">Apr 4, 2026 · 2:10 PM</div></div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-foot">
+      <button class="btn btn-ghost" onclick="closePanel()">Close</button>
+      <button class="btn btn-primary">Save changes</button>
+    </div>
+  </div>
+
+
+  <!-- Filter overlay + drawer -->
+  <div class="filter-overlay" id="filterOverlay" onclick="closeFilter()"></div>
+  <div class="filter-drawer" id="filterDrawer">
+    <div class="filter-head">
+      <span class="filter-title">Filter pipeline</span>
+      <button class="panel-close" onclick="closeFilter()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="filter-body">
+
+      <div class="filter-section">
+        <span class="filter-section-title">Job type</span>
+        <div class="filter-chips">
+          <div class="filter-chip" onclick="toggleChip(this)">Water Damage</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Fire Restoration</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Mold Remediation</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Inspection</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Other</div>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-section-title">Lead source</span>
+        <div class="filter-chips">
+          <div class="filter-chip" onclick="toggleChip(this)">Insurance referral</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Google</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Word of mouth</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Repeat customer</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Facebook</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Cold outreach</div>
+          <div class="filter-chip" onclick="toggleChip(this)">Other</div>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-section-title">Date range</span>
+        <div class="date-presets">
+          <div class="date-preset" onclick="setDatePreset('this-month', this)">This month</div>
+          <div class="date-preset" onclick="setDatePreset('last-month', this)">Last month</div>
+          <div class="date-preset" onclick="setDatePreset('last-30', this)">Last 30 days</div>
+          <div class="date-preset" onclick="setDatePreset('last-90', this)">Last 90 days</div>
+        </div>
+        <div class="date-custom">
+          <div class="field-group" style="margin:0">
+            <label class="field-label">From</label>
+            <input class="field-input" type="date" id="dateFrom">
+          </div>
+          <div class="field-group" style="margin:0">
+            <label class="field-label">To</label>
+            <input class="field-input" type="date" id="dateTo">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="filter-foot">
+      <button class="btn btn-ghost" onclick="clearFilters()">Clear all</button>
+      <button class="btn btn-primary" onclick="applyFilters()">Apply filters</button>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <nav class="bottom-nav">
+    <div class="bnav-inner">
+      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
+      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
+      <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
+      <div class="bnav-item" style="position:relative;"><div class="bnav-dot"></div><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span>On-Call</span></div>
+      <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></div>
+    </div>
+  </nav>
+
+</div>
+
+<script>
+let noteCounter = 3;
+
+function openFilter() {
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('filterOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFilter() {
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('filterOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function toggleChip(el) {
+  el.classList.toggle('on');
+  updateFilterDot();
+}
+function setDatePreset(preset, el) {
+  document.querySelectorAll('.date-preset').forEach(p => p.classList.remove('on'));
+  el.classList.toggle('on');
+  const today = new Date();
+  let from, to = today.toISOString().split('T')[0];
+  if (preset === 'this-month') {
+    from = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+  } else if (preset === 'last-month') {
+    const lm = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    from = lm.toISOString().split('T')[0];
+    to = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0];
+  } else if (preset === 'last-30') {
+    const d = new Date(today); d.setDate(d.getDate() - 30);
+    from = d.toISOString().split('T')[0];
+  } else if (preset === 'last-90') {
+    const d = new Date(today); d.setDate(d.getDate() - 90);
+    from = d.toISOString().split('T')[0];
+  }
+  document.getElementById('dateFrom').value = from || '';
+  document.getElementById('dateTo').value = to || '';
+  updateFilterDot();
+}
+function clearFilters() {
+  document.querySelectorAll('.filter-chip, .date-preset').forEach(c => c.classList.remove('on'));
+  document.getElementById('dateFrom').value = '';
+  document.getElementById('dateTo').value = '';
+  updateFilterDot();
+}
+function applyFilters() {
+  updateFilterDot();
+  closeFilter();
+}
+function updateFilterDot() {
+  const anyActive = document.querySelectorAll('.filter-chip.on, .date-preset.on').length > 0
+    || document.getElementById('dateFrom').value
+    || document.getElementById('dateTo').value;
+  document.getElementById('filterDot').classList.toggle('show', !!anyActive);
+}
+
+
+function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+function openPanel() { document.getElementById('panelOverlay').classList.add('open'); document.getElementById('detailPanel').classList.add('open'); document.body.style.overflow='hidden'; }
+function closePanel() { document.getElementById('panelOverlay').classList.remove('open'); document.getElementById('detailPanel').classList.remove('open'); document.body.style.overflow=''; }
+
+function switchTab(name) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function filterStage(stage, el) {
+  document.querySelectorAll('.stage-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.stage-group').forEach(g => {
+    g.style.display = (stage === 'all' || g.dataset.stage === stage) ? 'block' : 'none';
+  });
+}
+
+function addNote() {
+  const text = document.getElementById('newNoteText').value.trim();
+  if (!text) return;
+  const id = 'note-' + noteCounter++;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const html = `<div class="note-item" id="${id}">
+    <div class="note-meta"><span class="note-date">${dateStr}</span><div class="note-actions"><button class="note-btn edit" onclick="editNote('${id}')">Edit</button><button class="note-btn del" onclick="deleteNote('${id}')">Delete</button></div></div>
+    <div class="note-text" id="${id}-text">${text.replace(/</g,'&lt;')}</div>
+    <div class="note-edit-area" id="${id}-edit"><textarea class="note-edit-ta" id="${id}-ta">${text.replace(/</g,'&lt;')}</textarea><div class="note-edit-actions"><button class="btn btn-ghost btn-sm" onclick="cancelEdit('${id}')">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveNote('${id}')">Save</button></div></div>
+  </div>`;
+  document.getElementById('notesList').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('newNoteText').value = '';
+  updateNoteCount();
+}
+
+function editNote(id) {
+  document.getElementById(id+'-text').style.display='none';
+  const ea = document.getElementById(id+'-edit');
+  ea.classList.add('open'); ea.style.display='block';
+  document.getElementById(id+'-ta').focus();
+}
+function cancelEdit(id) {
+  document.getElementById(id+'-text').style.display='';
+  const ea = document.getElementById(id+'-edit');
+  ea.classList.remove('open'); ea.style.display='none';
+}
+function saveNote(id) {
+  const newText = document.getElementById(id+'-ta').value.trim();
+  if (!newText) return;
+  document.getElementById(id+'-text').textContent = newText;
+  cancelEdit(id);
+}
+function deleteNote(id) {
+  const el = document.getElementById(id);
+  el.style.opacity='0'; el.style.transition='opacity 0.18s';
+  setTimeout(()=>{ el.remove(); updateNoteCount(); }, 200);
+}
+function updateNoteCount() {
+  document.getElementById('noteCount').textContent = document.getElementById('notesList').querySelectorAll('.note-item').length;
+}
+</script>
+</body>
+</html>
