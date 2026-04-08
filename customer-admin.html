@@ -242,6 +242,41 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
   .topbar-title { font-size:17px; }
   .search-bar { padding:12px 20px; }
 }
+
+/* ── Contact modal ── */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:500; align-items:center; justify-content:center; padding:20px; }
+.modal-bg.open { display:flex; }
+.modal { background:var(--card); border-radius:14px; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; display:flex; flex-direction:column; }
+.modal-head { padding:18px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; position:sticky; top:0; background:var(--card); z-index:1; border-radius:14px 14px 0 0; }
+.modal-title { font-size:16px; font-weight:600; }
+.modal-close { width:30px; height:30px; border-radius:50%; background:var(--card2); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted2); }
+.modal-body { padding:20px; flex:1; }
+.modal-foot { padding:16px 20px; border-top:1px solid var(--border); display:flex; gap:8px; flex-shrink:0; }
+.modal-foot .btn { flex:1; justify-content:center; }
+.form-group { margin-bottom:14px; }
+.form-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:5px; display:block; }
+.form-input, .form-select { width:100%; padding:9px 11px; border:1px solid var(--border2); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; background:var(--card); color:var(--text); }
+.form-input:focus, .form-select:focus { outline:none; border-color:var(--orange); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-section { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin:18px 0 10px; padding-top:14px; border-top:1px solid var(--border); }
+
+/* ── Delete confirm ── */
+.confirm-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:600; align-items:center; justify-content:center; padding:20px; }
+.confirm-bg.open { display:flex; }
+.confirm-box { background:var(--card); border-radius:14px; width:100%; max-width:380px; padding:24px; text-align:center; }
+.confirm-icon { width:48px; height:48px; border-radius:50%; background:var(--red-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
+.confirm-title { font-size:16px; font-weight:600; margin-bottom:6px; }
+.confirm-body  { font-size:13px; color:var(--muted2); margin-bottom:20px; line-height:1.5; }
+.confirm-foot  { display:flex; gap:8px; }
+.confirm-foot .btn { flex:1; justify-content:center; }
+.btn-danger { background:var(--red); color:#fff; }
+.btn-danger:hover { background:#b83535; }
+
+@media (max-width:768px) {
+  .modal-bg { align-items:flex-end; padding:0; }
+  .modal { border-radius:16px 16px 0 0; max-height:92vh; }
+  .form-row { grid-template-columns:1fr; gap:0; }
+}
 </style>
 </head>
 <body>
@@ -303,7 +338,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
         </div>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-primary" onclick="openMobileProfile()">
+        <button class="btn btn-primary" onclick="openContactModal()">
           <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Add Contact
         </button>
@@ -345,7 +380,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
             </div>
             <div class="cc-meta">
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0198</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>d.henderson@hpm.com</div>
+              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1b7f35737e757f7e696874755b736b7635787476">[email&#160;protected]</a></div>
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>847 Maple Ave, West Jordan, UT 84084</div>
             </div>
             <div class="cc-tags"><span class="cc-tag tag-insurance">Insurance referral</span></div>
@@ -362,7 +397,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
             </div>
             <div class="cc-meta">
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0311</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>r.thompson@gmail.com</div>
+              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dba9f5afb3b4b6aba8b4b59bbcb6bab2b7f5b8b4b6">[email&#160;protected]</a></div>
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>234 Oak St, Salt Lake City, UT 84101</div>
             </div>
             <div class="cc-tags"><span class="cc-tag tag-repeat">Repeat customer</span></div>
@@ -379,7 +414,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
             </div>
             <div class="cc-meta">
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0422</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>m.garcia@garciacommercial.com</div>
+              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f39edd949281909a92b3949281909a92909c9e9e9681909a929fdd909c9e">[email&#160;protected]</a></div>
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>1100 S State St, Salt Lake City, UT 84111</div>
             </div>
             <div class="cc-tags"><span class="cc-tag tag-google">Google</span></div>
@@ -396,7 +431,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
             </div>
             <div class="cc-meta">
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0577</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>c.reyes@reyescommercial.com</div>
+              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d5e134f5844584e7d4f5844584e5e525050584f5e545c51135e5250">[email&#160;protected]</a></div>
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>4400 Highland Dr, Murray, UT 84117</div>
             </div>
             <div class="cc-tags"><span class="cc-tag tag-insurance">Insurance referral</span></div>
@@ -413,7 +448,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
             </div>
             <div class="cc-meta">
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(801) 555-0634</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>linh.nguyen@email.com</div>
+              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5653545214545d4f435f547a5f575b535614595557">[email&#160;protected]</a></div>
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>88 Redwood Rd, West Valley, UT 84119</div>
             </div>
             <div class="cc-tags"><span class="cc-tag tag-wom">Word of mouth</span></div>
@@ -430,7 +465,7 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
             </div>
             <div class="cc-meta">
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>(435) 555-0711</div>
-              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>admin@parkcityllc.com</div>
+              <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1776737a7e79576776657c747e636e7b7b743974787a">[email&#160;protected]</a></div>
               <div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>1200 Park Ave, Park City, UT 84060</div>
             </div>
             <div class="cc-tags"><span class="cc-tag tag-insurance">Insurance referral</span></div>
@@ -450,6 +485,71 @@ html, body { height:100%; background:var(--page-bg); color:var(--text); font-fam
         </div>
       </div>
 
+    </div>
+  </div>
+
+
+  <!-- Add/Edit Contact Modal -->
+  <div class="modal-bg" id="contactModal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="modal-title" id="modalTitle">Add Contact</span>
+        <button class="modal-close" onclick="closeContactModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="modalKey">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First name *</label><input class="form-input" id="fFirstName" placeholder="David"></div>
+          <div class="form-group"><label class="form-label">Last name</label><input class="form-input" id="fLastName" placeholder="Henderson"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Company name</label><input class="form-input" id="fCompany" placeholder="Henderson Property Mgmt"></div>
+        <div class="form-group"><label class="form-label">Customer type</label>
+          <select class="form-select" id="fType">
+            <option value="homeowner">Homeowner</option>
+            <option value="commercial">Commercial</option>
+            <option value="property_management">Property Management</option>
+          </select>
+        </div>
+        <div class="form-section">Contact info</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="fPhone" placeholder="(801) 555-0198" type="tel"></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="fEmail" placeholder="name@email.com" type="email"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="fAddress" placeholder="847 Maple Ave"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" id="fCity" placeholder="Salt Lake City"></div>
+          <div class="form-group"><label class="form-label">Zip</label><input class="form-input" id="fZip" placeholder="84101"></div>
+        </div>
+        <div class="form-section">How they found us</div>
+        <div class="form-group"><label class="form-label">Lead source</label>
+          <select class="form-select" id="fSource">
+            <option value="insurance_referral">Insurance referral</option>
+            <option value="google">Google</option>
+            <option value="word_of_mouth">Word of mouth</option>
+            <option value="repeat_customer">Repeat customer</option>
+            <option value="facebook">Facebook</option>
+            <option value="cold_outreach">Cold outreach</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" onclick="closeContactModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveContact()">Save contact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm -->
+  <div class="confirm-bg" id="deleteConfirm">
+    <div class="confirm-box">
+      <div class="confirm-icon"><svg width="22" height="22" fill="none" stroke="var(--red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
+      <div class="confirm-title">Delete contact?</div>
+      <div class="confirm-body" id="confirmBody">This will permanently remove this contact and all their notes. Jobs linked to them will remain but will be unlinked.</div>
+      <div class="confirm-foot">
+        <button class="btn btn-ghost" onclick="closeDeleteConfirm()">Cancel</button>
+        <button class="btn btn-danger" onclick="executeDelete()">Yes, delete</button>
+      </div>
     </div>
   </div>
 
@@ -633,8 +733,9 @@ function buildProfile(key, targetId) {
         <div class="profile-contact-row"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${c.address}</div>
       </div>
       <div class="profile-actions">
-        <button class="btn btn-ghost btn-sm"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>Edit</button>
-        <button class="btn btn-primary btn-sm"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New job</button>
+        <button class="btn btn-ghost btn-sm" onclick="openContactModal(currentContact)"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>Edit</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red-dim);" onclick="confirmDelete(currentContact)"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Delete</button>
+        <button class="btn btn-primary btn-sm" onclick="alert('New job flow coming soon!')"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New job</button>
       </div>
     </div>
 
@@ -769,25 +870,4 @@ function editNote(id) {
   document.getElementById(id+'-ta').focus();
 }
 function cancelEdit(id) {
-  document.getElementById(id+'-text').style.display='';
-  const w = document.getElementById(id+'-edit');
-  w.classList.remove('open'); w.style.display='none';
-}
-function saveNote(id) {
-  const txt = document.getElementById(id+'-ta').value.trim();
-  if (!txt) return;
-  document.getElementById(id+'-text').textContent = txt;
-  cancelEdit(id);
-}
-function deleteNote(id) {
-  const el = document.getElementById(id);
-  el.style.opacity='0'; el.style.transition='opacity 0.18s';
-  setTimeout(()=>el.remove(), 200);
-}
-
-// Drawer
-function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
-</script>
-</body>
-</html>
+  document.getElementById(id+'-text').style.di
