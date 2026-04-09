@@ -179,6 +179,27 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .field-mono{font-family:'DM Mono',monospace;}
 .field-divider{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);display:block;}
 
+/* Customer search */
+.customer-search-wrap{position:relative;}
+.customer-search-input{width:100%;padding:9px 11px 9px 34px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.12s;}
+.customer-search-input:focus{outline:none;border-color:var(--orange);}
+.customer-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.customer-search-icon svg{width:14px;height:14px;display:block;}
+.customer-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1px solid var(--border2);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.10);z-index:500;max-height:220px;overflow-y:auto;display:none;}
+.customer-dropdown.open{display:block;}
+.customer-dropdown::-webkit-scrollbar{width:3px;}
+.customer-dropdown::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.cust-option{padding:9px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.1s;}
+.cust-option:last-child{border-bottom:none;}
+.cust-option:hover,.cust-option.highlighted{background:var(--orange-dim);}
+.cust-option-name{font-weight:500;}
+.cust-option-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.cust-no-results{padding:12px;font-size:13px;color:var(--muted);text-align:center;}
+.cust-selected-chip{display:flex;align-items:center;gap:8px;background:var(--orange-dim);border:1px solid var(--orange-mid);border-radius:8px;padding:8px 11px;margin-top:6px;}
+.cust-selected-name{font-size:13px;font-weight:500;color:var(--orange);flex:1;}
+.cust-clear{background:none;border:none;cursor:pointer;color:var(--orange);padding:0;display:flex;align-items:center;}
+.cust-clear svg{width:14px;height:14px;}
+
 /* Contact block */
 .contact-block{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:13px;margin-bottom:14px;}
 .contact-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
@@ -328,7 +349,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
       </button>
       <button class="btn btn-primary" onclick="openPanel()">
         <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        Add Lead
+        Add Job
       </button>
     </div>
   </div>
@@ -343,9 +364,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   </div>
 
   <!-- Desktop kanban -->
-  <div class="board-wrap" id="boardWrap">
-    <!-- Rendered by JS -->
-  </div>
+  <div class="board-wrap" id="boardWrap"></div>
 
   <!-- Mobile list -->
   <div class="list-wrap" id="listWrap">
@@ -358,7 +377,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
       <div class="stage-pill" onclick="filterStage('closed_won',this)">Won</div>
       <div class="stage-pill" onclick="filterStage('closed_lost',this)">Lost</div>
     </div>
-    <div id="mobileList"><!-- Rendered by JS --></div>
+    <div id="mobileList"></div>
   </div>
 </div>
 
@@ -367,7 +386,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 <div class="detail-panel" id="detailPanel">
   <div class="panel-head">
     <div>
-      <div class="panel-title" id="panelTitle">New Lead</div>
+      <div class="panel-title" id="panelTitle">New Job</div>
       <div class="panel-subtitle" id="panelSubtitle"> </div>
     </div>
     <button class="panel-x" onclick="closePanel()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
@@ -391,7 +410,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
           <option value="closed_lost">Closed Lost</option>
         </select>
       </div>
-      <span class="field-divider">Deal details</span>
+      <span class="field-divider">Job details</span>
       <div class="field-group"><label class="field-label">Title *</label><input class="field-input" id="pTitle" placeholder="Water damage — 847 Maple Ave"></div>
       <div class="field-row">
         <div class="field-group"><label class="field-label">Job type</label>
@@ -406,10 +425,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
         <div class="field-group"><label class="field-label">Est. value</label><input class="field-input field-mono" id="pValue" placeholder="28000" type="number" min="0"></div>
       </div>
       <div class="field-group"><label class="field-label">Location</label><input class="field-input" id="pLocation" placeholder="West Jordan, UT"></div>
-      <div class="field-row">
-        <div class="field-group"><label class="field-label">Potential start</label><input class="field-input" id="pStart" type="date"></div>
-        <div class="field-group"><label class="field-label">Follow-up date</label><input class="field-input" id="pFollowup" type="date"></div>
-      </div>
+      <div class="field-group"><label class="field-label">Potential start</label><input class="field-input" id="pStart" type="date"></div>
       <div class="field-row">
         <div class="field-group"><label class="field-label">Lead source</label>
           <select class="field-select" id="pSource">
@@ -424,13 +440,29 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
         </div>
         <div class="field-group"><label class="field-label">Insurance claim #</label><input class="field-input field-mono" id="pClaim" placeholder="CLM-2026-4471"></div>
       </div>
+
       <span class="field-divider">Customer contact</span>
       <div class="field-group">
         <label class="field-label">Link to customer</label>
-        <select class="field-select" id="pCustomer">
-          <option value="">— Select customer —</option>
-        </select>
+        <!-- Customer search widget -->
+        <div class="customer-search-wrap" id="custSearchWrap">
+          <div class="customer-search-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/></svg></div>
+          <input class="customer-search-input" id="custSearchInput" placeholder="Search by name or company…" autocomplete="off"
+            oninput="onCustSearch()" onfocus="onCustFocus()" onkeydown="onCustKeydown(event)">
+          <div class="customer-dropdown" id="custDropdown"></div>
+        </div>
+        <!-- Selected chip (shown when a customer is picked) -->
+        <div id="custSelectedChip" class="cust-selected-chip" style="display:none;">
+          <span class="cust-selected-name" id="custSelectedName"></span>
+          <button class="cust-clear" onclick="clearCustomer()" title="Remove">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
       </div>
+
+      <!-- Hidden real value -->
+      <input type="hidden" id="pCustomer">
+
       <div id="customerCard" style="display:none;" class="contact-block">
         <div class="contact-block-head"><span class="contact-block-title">Customer</span><span style="font-size:11px;color:var(--orange);cursor:pointer;font-weight:500;">View →</span></div>
         <div class="contact-name" id="ccName"></div>
@@ -458,7 +490,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   </div>
   <div class="panel-foot">
     <button class="btn btn-ghost" onclick="closePanel()">Cancel</button>
-    <button class="btn btn-primary" id="savePanelBtn" onclick="saveLead()">Save lead</button>
+    <button class="btn btn-primary" id="savePanelBtn" onclick="saveLead()">Save job</button>
   </div>
 </div>
 
@@ -530,11 +562,11 @@ const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ── State ─────────────────────────────────────────────────
 let allLeads     = [];
 let allCustomers = [];
-let currentLead  = null; // lead object open in panel
+let currentLead  = null;
 let mobileStageFilter = 'all';
+let custHighlight = -1;
 
 const STAGES = [
   {key:'prospecting', label:'Prospecting', color:'var(--c-prospect)', tint:'tint-prospect', countCls:'rgba(107,114,128,0.12)', countColor:'var(--c-prospect)'},
@@ -549,7 +581,6 @@ const JOB_TYPE_LABEL = {water_damage:'Water',fire_restoration:'Fire',mold_remedi
 const JOB_TYPE_CLASS  = {water_damage:'type-water',fire_restoration:'type-fire',mold_remediation:'type-mold',inspection:'type-insp',other:'type-other'};
 const SOURCE_LABEL    = {insurance_referral:'Insurance referral',google:'Google',word_of_mouth:'Word of mouth',repeat_customer:'Repeat customer',facebook:'Facebook',cold_outreach:'Cold outreach',other:'Other'};
 
-// ── Helpers ───────────────────────────────────────────────
 function fmt(val){ if(!val&&val!==0)return '—'; return '$'+Number(val).toLocaleString(); }
 function daysAgo(ts){ return Math.floor((Date.now()-new Date(ts))/86400000); }
 function fmtDate(ts){ if(!ts)return '—'; return new Date(ts+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
@@ -566,7 +597,6 @@ function setBtn(id,loading,label){
   b.innerHTML=loading?'<span class="spinner"></span>':label;
 }
 
-// ── Load data ─────────────────────────────────────────────
 async function loadAll(){
   const [leadsRes, customersRes] = await Promise.all([
     db.from('leads').select('*, customers(id,first_name,last_name,company_name,phone,email)').eq('is_active',true).order('created_at',{ascending:false}),
@@ -578,7 +608,6 @@ async function loadAll(){
   updateSummary();
   renderBoard();
   renderMobileList();
-  populateCustomerDropdown();
 }
 
 function updateSummary(){
@@ -589,7 +618,6 @@ function updateSummary(){
   const negot     = allLeads.filter(l=>l.stage==='negotiation');
   const now = new Date();
   const won = allLeads.filter(l=>l.stage==='closed_won'&&new Date(l.updated_at).getMonth()===now.getMonth()&&new Date(l.updated_at).getFullYear()===now.getFullYear());
-
   document.getElementById('sumTotal').textContent       = fmt(total);
   document.getElementById('sumTotalCount').textContent  = active.length+' active opportunities';
   document.getElementById('sumProspect').textContent    = fmt(prospect.reduce((s,l)=>s+(parseFloat(l.estimated_value)||0),0));
@@ -604,7 +632,6 @@ function updateSummary(){
   document.getElementById('sidebarBadge').textContent   = active.length;
 }
 
-// ── Render board (desktop) ────────────────────────────────
 function renderBoard(){
   const board = document.getElementById('boardWrap');
   board.innerHTML = STAGES.map(s=>{
@@ -650,7 +677,6 @@ function jobCardHtml(l,s){
   </div>`;
 }
 
-// ── Render mobile list ────────────────────────────────────
 function renderMobileList(){
   const container = document.getElementById('mobileList');
   const stagesToShow = mobileStageFilter==='all' ? STAGES : STAGES.filter(s=>s.key===mobileStageFilter);
@@ -691,19 +717,87 @@ function filterStage(stage,el){
   renderMobileList();
 }
 
-// ── Customer dropdown ──────────────────────────────────────
-function populateCustomerDropdown(){
-  const sel = document.getElementById('pCustomer');
-  const cur = sel.value;
-  sel.innerHTML='<option value="">— Select customer —</option>'+
-    allCustomers.map(c=>`<option value="${c.id}">${customerName(c)}${c.company_name?' ('+c.company_name+')':''}</option>`).join('');
-  if(cur) sel.value=cur;
-  sel.onchange=updateCustomerCard;
+// ── Customer search ───────────────────────────────────────
+function custLabel(c){
+  return customerName(c)+(c.company_name?' · '+c.company_name:'');
 }
 
-function updateCustomerCard(){
-  const id = document.getElementById('pCustomer').value;
-  const c  = allCustomers.find(x=>x.id===id);
+function filteredCustomers(q){
+  if(!q) return allCustomers.slice(0,12);
+  const lq=q.toLowerCase();
+  return allCustomers.filter(c=>{
+    return customerName(c).toLowerCase().includes(lq)||(c.company_name||'').toLowerCase().includes(lq)||(c.email||'').toLowerCase().includes(lq);
+  }).slice(0,12);
+}
+
+function renderCustDropdown(q){
+  const dd = document.getElementById('custDropdown');
+  const results = filteredCustomers(q);
+  custHighlight = -1;
+  if(!results.length){
+    dd.innerHTML='<div class="cust-no-results">No customers found</div>';
+  } else {
+    dd.innerHTML = results.map((c,i)=>`
+      <div class="cust-option" data-id="${c.id}" data-idx="${i}" onmousedown="selectCustomer('${c.id}')">
+        <div class="cust-option-name">${customerName(c)}</div>
+        ${c.company_name||c.phone?`<div class="cust-option-sub">${[c.company_name,c.phone].filter(Boolean).join(' · ')}</div>`:''}
+      </div>`).join('');
+  }
+  dd.classList.add('open');
+}
+
+function onCustSearch(){
+  const q = document.getElementById('custSearchInput').value;
+  renderCustDropdown(q);
+}
+
+function onCustFocus(){
+  const q = document.getElementById('custSearchInput').value;
+  renderCustDropdown(q);
+}
+
+function onCustKeydown(e){
+  const dd = document.getElementById('custDropdown');
+  const items = dd.querySelectorAll('.cust-option');
+  if(e.key==='ArrowDown'){
+    e.preventDefault();
+    custHighlight=Math.min(custHighlight+1,items.length-1);
+    items.forEach((el,i)=>el.classList.toggle('highlighted',i===custHighlight));
+  } else if(e.key==='ArrowUp'){
+    e.preventDefault();
+    custHighlight=Math.max(custHighlight-1,0);
+    items.forEach((el,i)=>el.classList.toggle('highlighted',i===custHighlight));
+  } else if(e.key==='Enter'&&custHighlight>=0){
+    e.preventDefault();
+    const id=items[custHighlight].dataset.id;
+    selectCustomer(id);
+  } else if(e.key==='Escape'){
+    dd.classList.remove('open');
+  }
+}
+
+function selectCustomer(id){
+  const c = allCustomers.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('pCustomer').value = id;
+  document.getElementById('custSearchInput').value = '';
+  document.getElementById('custDropdown').classList.remove('open');
+  document.getElementById('custSearchWrap').style.display = 'none';
+  document.getElementById('custSelectedChip').style.display = 'flex';
+  document.getElementById('custSelectedName').textContent = custLabel(c);
+  updateCustomerCard(c);
+}
+
+function clearCustomer(){
+  document.getElementById('pCustomer').value = '';
+  document.getElementById('custSearchInput').value = '';
+  document.getElementById('custDropdown').classList.remove('open');
+  document.getElementById('custSearchWrap').style.display = 'block';
+  document.getElementById('custSelectedChip').style.display = 'none';
+  document.getElementById('customerCard').style.display = 'none';
+}
+
+function updateCustomerCard(c){
   const card = document.getElementById('customerCard');
   if(c){
     card.style.display='block';
@@ -715,44 +809,53 @@ function updateCustomerCard(){
   }
 }
 
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e){
+  if(!document.getElementById('custSearchWrap').contains(e.target)){
+    document.getElementById('custDropdown').classList.remove('open');
+  }
+});
+
 // ── Panel open/close ──────────────────────────────────────
 async function openPanel(leadId, defaultStage){
   currentLead = leadId ? allLeads.find(l=>l.id===leadId)||null : null;
   const l = currentLead;
 
-  // Fill form
   document.getElementById('pStage').value    = l ? l.stage : (defaultStage||'prospecting');
   document.getElementById('pTitle').value    = l ? (l.title||'') : '';
   document.getElementById('pJobType').value  = l ? (l.job_type||'water_damage') : 'water_damage';
   document.getElementById('pValue').value    = l ? (l.estimated_value||'') : '';
   document.getElementById('pLocation').value = l ? (l.location||'') : '';
   document.getElementById('pStart').value    = l ? (l.potential_start||'') : '';
-  document.getElementById('pFollowup').value = l ? (l.follow_up_date||'') : '';
   document.getElementById('pSource').value   = l ? (l.lead_source||'insurance_referral') : 'insurance_referral';
   document.getElementById('pClaim').value    = l ? (l.insurance_claim_number||'') : '';
-  document.getElementById('pCustomer').value = l ? (l.customer_id||'') : '';
-  updateCustomerCard();
 
-  // Panel header
+  // Reset customer search UI
+  document.getElementById('pCustomer').value = '';
+  document.getElementById('custSearchInput').value = '';
+  document.getElementById('custDropdown').classList.remove('open');
+  document.getElementById('custSearchWrap').style.display = 'block';
+  document.getElementById('custSelectedChip').style.display = 'none';
+  document.getElementById('customerCard').style.display = 'none';
+
+  if(l && l.customer_id){
+    const c = allCustomers.find(x=>x.id===l.customer_id) || l.customers;
+    if(c) selectCustomer(c.id);
+  }
+
   const cust = l && l.customers ? customerName(l.customers) : '';
-  document.getElementById('panelTitle').textContent    = l ? (cust||l.title||'Lead') : 'New Lead';
+  document.getElementById('panelTitle').textContent    = l ? (cust||l.title||'Job') : 'New Job';
   document.getElementById('panelSubtitle').textContent = l ? (STAGES.find(s=>s.key===l.stage)||{label:''}).label+' · '+(l.job_type?JOB_TYPE_LABEL[l.job_type]:'') : '';
-  document.getElementById('savePanelBtn').textContent  = l ? 'Save changes' : 'Save lead';
+  document.getElementById('savePanelBtn').textContent  = l ? 'Save changes' : 'Save job';
 
-  // Notes + activity
   document.getElementById('notesList').innerHTML    = '';
   document.getElementById('activityList').innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">Loading...</div>';
   document.getElementById('noteCountBadge').textContent = '0';
 
-  if(l){
-    await Promise.all([loadNotes(l.id), loadActivity(l.id)]);
-  } else {
-    document.getElementById('activityList').innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">No activity yet.</div>';
-  }
+  if(l){ await Promise.all([loadNotes(l.id), loadActivity(l.id)]); }
+  else  { document.getElementById('activityList').innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">No activity yet.</div>'; }
 
-  // Switch to details tab
   switchTab('details');
-
   document.getElementById('panelOverlay').classList.add('open');
   document.getElementById('detailPanel').classList.add('open');
   document.body.style.overflow='hidden';
@@ -772,7 +875,6 @@ function switchTab(name){
   document.getElementById('tab-'+name).classList.add('active');
 }
 
-// ── Save lead ──────────────────────────────────────────────
 async function saveLead(){
   const title = document.getElementById('pTitle').value.trim();
   if(!title){ document.getElementById('pTitle').style.borderColor='var(--red)'; document.getElementById('pTitle').focus(); return; }
@@ -781,7 +883,7 @@ async function saveLead(){
   const customerId = document.getElementById('pCustomer').value||null;
   if(!customerId){ showToast('Please link a customer',true); return; }
 
-  setBtn('savePanelBtn',true,'Save lead');
+  setBtn('savePanelBtn',true,'Save job');
 
   const payload={
     customer_id:    customerId,
@@ -791,7 +893,6 @@ async function saveLead(){
     estimated_value:parseFloat(document.getElementById('pValue').value)||null,
     location:       document.getElementById('pLocation').value.trim()||null,
     potential_start:document.getElementById('pStart').value||null,
-    follow_up_date: document.getElementById('pFollowup').value||null,
     lead_source:    document.getElementById('pSource').value,
     insurance_claim_number:document.getElementById('pClaim').value.trim()||null,
     is_active:true
@@ -804,10 +905,10 @@ async function saveLead(){
     ({error}=await db.from('leads').insert([payload]));
   }
 
-  setBtn('savePanelBtn',false, currentLead?'Save changes':'Save lead');
+  setBtn('savePanelBtn',false, currentLead?'Save changes':'Save job');
 
   if(error){ showToast('Error: '+error.message,true); return; }
-  showToast(currentLead?'Lead updated':'Lead added');
+  showToast(currentLead?'Job updated':'Job added');
   closePanel();
   await loadAll();
 }
@@ -822,7 +923,7 @@ async function loadNotes(leadId){
 }
 
 async function addNote(){
-  if(!currentLead){ showToast('Save the lead first',true); return; }
+  if(!currentLead){ showToast('Save the job first',true); return; }
   const text=(document.getElementById('newNoteText').value||'').trim();
   if(!text)return;
   const {data,error}=await db.from('lead_notes').insert([{lead_id:currentLead.id,note_text:text}]).select().single();
@@ -851,66 +952,28 @@ function noteItemHtml(id,createdAt,text){
   </div>`;
 }
 
-function editNote(id){
-  document.getElementById('note-text-'+id).style.display='none';
-  const w=document.getElementById('note-edit-'+id); w.classList.add('open'); w.style.display='block';
-  document.getElementById('note-ta-'+id).focus();
-}
-function cancelEdit(id){
-  document.getElementById('note-text-'+id).style.display='';
-  const w=document.getElementById('note-edit-'+id); w.classList.remove('open'); w.style.display='none';
-}
-async function saveNote(id){
-  const txt=(document.getElementById('note-ta-'+id).value||'').trim(); if(!txt)return;
-  const {error}=await db.from('lead_notes').update({note_text:txt}).eq('id',id);
-  if(error){showToast('Error',true);return;}
-  document.getElementById('note-text-'+id).textContent=txt; cancelEdit(id); showToast('Note updated');
-}
-async function deleteNote(id){
-  const {error}=await db.from('lead_notes').delete().eq('id',id);
-  if(error){showToast('Error',true);return;}
-  const el=document.getElementById('note-'+id);
-  if(el){el.style.transition='opacity 0.18s';el.style.opacity='0';setTimeout(()=>{el.remove();const badge=document.getElementById('noteCountBadge');badge.textContent=Math.max(0,parseInt(badge.textContent||'0')-1);},200);}
-}
+function editNote(id){ document.getElementById('note-text-'+id).style.display='none'; const w=document.getElementById('note-edit-'+id); w.classList.add('open'); w.style.display='block'; document.getElementById('note-ta-'+id).focus(); }
+function cancelEdit(id){ document.getElementById('note-text-'+id).style.display=''; const w=document.getElementById('note-edit-'+id); w.classList.remove('open'); w.style.display='none'; }
+async function saveNote(id){ const txt=(document.getElementById('note-ta-'+id).value||'').trim(); if(!txt)return; const {error}=await db.from('lead_notes').update({note_text:txt}).eq('id',id); if(error){showToast('Error',true);return;} document.getElementById('note-text-'+id).textContent=txt; cancelEdit(id); showToast('Note updated'); }
+async function deleteNote(id){ const {error}=await db.from('lead_notes').delete().eq('id',id); if(error){showToast('Error',true);return;} const el=document.getElementById('note-'+id); if(el){el.style.transition='opacity 0.18s';el.style.opacity='0';setTimeout(()=>{el.remove();const badge=document.getElementById('noteCountBadge');badge.textContent=Math.max(0,parseInt(badge.textContent||'0')-1);},200);} }
 
 // ── Activity ───────────────────────────────────────────────
 async function loadActivity(leadId){
   const {data,error}=await db.from('lead_activity').select('*').eq('lead_id',leadId).order('created_at',{ascending:false});
-  if(error||!data||!data.length){
-    document.getElementById('activityList').innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px 0;">No activity yet.</div>';
-    return;
-  }
-  const iconMap={
-    created:{bg:'var(--amber-dim)',stroke:'var(--amber)'},
-    stage_changed:{bg:'var(--blue-dim)',stroke:'var(--blue)'},
-    note_added:{bg:'var(--green-dim)',stroke:'var(--green)'},
-    note_edited:{bg:'var(--green-dim)',stroke:'var(--green)'},
-    note_deleted:{bg:'var(--red-dim)',stroke:'var(--red)'},
-    converted:{bg:'var(--orange-dim)',stroke:'var(--orange)'}
-  };
+  if(error||!data||!data.length){ document.getElementById('activityList').innerHTML='<div style="font-size:13px;color:var(--muted);padding:12px 0;">No activity yet.</div>'; return; }
+  const iconMap={created:{bg:'var(--amber-dim)',stroke:'var(--amber)'},stage_changed:{bg:'var(--blue-dim)',stroke:'var(--blue)'},note_added:{bg:'var(--green-dim)',stroke:'var(--green)'},note_edited:{bg:'var(--green-dim)',stroke:'var(--green)'},note_deleted:{bg:'var(--red-dim)',stroke:'var(--red)'},converted:{bg:'var(--orange-dim)',stroke:'var(--orange)'}};
   document.getElementById('activityList').innerHTML=data.map(a=>{
     const ic=iconMap[a.event_type]||iconMap.created;
     const d=new Date(a.created_at);
     const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
     const label=a.event_detail||(a.event_type||'').replace(/_/g,' ');
-    return `<div class="act-item">
-      <div class="act-icon" style="background:${ic.bg}"><svg width="13" height="13" fill="none" stroke="${ic.stroke}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-      <div class="act-body"><div class="act-text">${label}</div><div class="act-time">${dateStr}</div></div>
-    </div>`;
+    return `<div class="act-item"><div class="act-icon" style="background:${ic.bg}"><svg width="13" height="13" fill="none" stroke="${ic.stroke}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><div class="act-body"><div class="act-text">${label}</div><div class="act-time">${dateStr}</div></div></div>`;
   }).join('');
 }
 
 // ── Filter drawer ──────────────────────────────────────────
-function openFilter(){
-  document.getElementById('filterDrawer').classList.add('open');
-  document.getElementById('filterOverlay').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeFilter(){
-  document.getElementById('filterDrawer').classList.remove('open');
-  document.getElementById('filterOverlay').classList.remove('open');
-  document.body.style.overflow='';
-}
+function openFilter(){ document.getElementById('filterDrawer').classList.add('open'); document.getElementById('filterOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeFilter(){ document.getElementById('filterDrawer').classList.remove('open'); document.getElementById('filterOverlay').classList.remove('open'); document.body.style.overflow=''; }
 function toggleChip(el){ el.classList.toggle('on'); updateFilterDot(); }
 function setDatePreset(preset,el){
   document.querySelectorAll('.date-preset').forEach(p=>p.classList.remove('on'));
@@ -925,22 +988,12 @@ function setDatePreset(preset,el){
   document.getElementById('dateTo').value=to;
   updateFilterDot();
 }
-function clearFilters(){
-  document.querySelectorAll('.filter-chip,.date-preset').forEach(c=>c.classList.remove('on'));
-  document.getElementById('dateFrom').value='';
-  document.getElementById('dateTo').value='';
-  updateFilterDot();
-}
-function updateFilterDot(){
-  const any=document.querySelectorAll('.filter-chip.on,.date-preset.on').length>0||document.getElementById('dateFrom').value||document.getElementById('dateTo').value;
-  document.getElementById('filterDot').classList.toggle('show',!!any);
-}
+function clearFilters(){ document.querySelectorAll('.filter-chip,.date-preset').forEach(c=>c.classList.remove('on')); document.getElementById('dateFrom').value=''; document.getElementById('dateTo').value=''; updateFilterDot(); }
+function updateFilterDot(){ const any=document.querySelectorAll('.filter-chip.on,.date-preset.on').length>0||document.getElementById('dateFrom').value||document.getElementById('dateTo').value; document.getElementById('filterDot').classList.toggle('show',!!any); }
 
-// ── Drawer ─────────────────────────────────────────────────
 function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
 
-// ── Init ───────────────────────────────────────────────────
 loadAll();
 </script>
 </body>
