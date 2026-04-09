@@ -994,7 +994,19 @@ function updateFilterDot(){ const any=document.querySelectorAll('.filter-chip.on
 function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
 
-loadAll();
+loadAll().then(()=>{
+  const params=new URLSearchParams(window.location.search);
+  const newJobCust=params.get('newjob');
+  if(newJobCust){
+    const url=new URL(window.location);
+    url.searchParams.delete('newjob');
+    window.history.replaceState({},'',url);
+    openPanel(null,'prospecting').then(()=>{
+      const c=allCustomers.find(x=>x.id===newJobCust);
+      if(c) selectCustomer(c.id);
+    });
+  }
+});
 </script>
 </body>
 </html>
