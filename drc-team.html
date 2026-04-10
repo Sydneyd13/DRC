@@ -18,7 +18,7 @@
 html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
 .app{display:flex;height:100vh;overflow:hidden;}
 
-/* Sidebar */
+/* ── Sidebar ── */
 .sidebar{width:220px;flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;}
 .logo{padding:22px 18px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
 .logo-mark{width:32px;height:32px;flex-shrink:0;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;}
@@ -29,7 +29,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82);}
 .nav-item.active{background:var(--orange);color:#fff;}
 .nav-item svg{width:16px;height:16px;flex-shrink:0;}
-.nav-badge{margin-left:auto;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
 .sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.07);}
 .user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;}
 .user-chip:hover{background:rgba(255,255,255,0.06);}
@@ -37,14 +36,14 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .user-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.78);}
 .user-role{font-size:11px;color:rgba(255,255,255,0.32);}
 
-/* Mobile */
+/* ── Mobile ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;opacity:0;transition:opacity 0.2s;}
 .overlay.open{opacity:1;}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:268px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);}
 .drawer.open{transform:translateX(0);}
 .drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
-/* Main */
+/* ── Main ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
 .topbar{padding:13px 16px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .topbar-left{display:flex;align-items:center;gap:11px;}
@@ -52,7 +51,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .topbar-title{font-size:15px;font-weight:600;}
 .topbar-meta{font-size:12px;color:var(--muted);margin-top:1px;}
 
-/* Buttons */
+/* ── Buttons ── */
 .btn{padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all 0.12s;}
 .btn-primary{background:var(--orange);color:#fff;}.btn-primary:hover{background:#cc4f1c;}
 .btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border2);}.btn-ghost:hover{background:var(--card2);color:var(--text);}
@@ -60,12 +59,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .btn-sm{padding:6px 11px;font-size:12px;}
 .btn:disabled{opacity:0.6;cursor:not-allowed;}
 
-/* Content */
-.content{flex:1;overflow-y:auto;padding:20px;}
-.content::-webkit-scrollbar{width:5px;}
-.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-
-/* Search bar */
+/* ── Search ── */
 .search-bar{padding:12px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .search-wrap{flex:1;position:relative;}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
@@ -73,46 +67,91 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .search-input:focus{outline:none;border-color:var(--orange);background:var(--card);}
 .search-input::placeholder{color:var(--muted);}
 
-/* Section header */
-.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.sec-title{font-size:16px;font-weight:600;}
-.sec-meta{font-size:12px;color:var(--muted);}
+/* ── Content split ── */
+.content-area{flex:1;display:flex;overflow:hidden;}
 
-/* Team section */
-.team-section{margin-bottom:28px;}
-.team-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--dark);border-radius:10px 10px 0 0;}
-.team-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.team-name{font-size:14px;font-weight:600;color:#F0EDE8;flex:1;}
-.team-count{font-size:12px;color:rgba(255,255,255,0.45);}
-.team-header-btns{display:flex;gap:6px;}
-.team-header-btn{padding:4px 10px;border-radius:6px;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.team-header-btn.edit{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);}
-.team-header-btn.edit:hover{background:rgba(255,255,255,0.2);}
-.team-header-btn.del{background:rgba(214,64,64,0.25);color:#ff8080;}
-.team-header-btn.del:hover{background:rgba(214,64,64,0.4);}
-.team-body{background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;}
-.team-empty{padding:20px;text-align:center;font-size:13px;color:var(--muted);}
+/* ── Left: team list ── */
+.team-list{width:420px;flex-shrink:0;border-right:1px solid var(--border2);overflow-y:auto;background:var(--page-bg);}
+.team-list::-webkit-scrollbar{width:4px;}.team-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.list-inner{padding:16px;display:flex;flex-direction:column;gap:20px;}
 
-/* Employee row */
-.emp-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);transition:background 0.1s;}
-.emp-row:last-child{border-bottom:none;}
-.emp-row:hover{background:var(--card2);}
-.emp-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;}
-.emp-info{flex:1;min-width:0;}
-.emp-name{font-size:14px;font-weight:600;}
-.emp-role{font-size:12px;color:var(--muted);margin-top:1px;}
-.emp-contact{font-size:12px;color:var(--muted2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.emp-pin{font-family:'DM Mono',monospace;font-size:16px;font-weight:600;letter-spacing:4px;background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:5px 12px;color:var(--text);flex-shrink:0;}
-.emp-badges{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
-.emp-badge{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
-.badge-oncall{background:var(--orange-dim);color:var(--orange);}
-.emp-actions{display:flex;gap:6px;flex-shrink:0;}
+/* ── Crew block ── */
+.crew-block{}
+.crew-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--dark);border-radius:10px 10px 0 0;}
+.crew-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.crew-name{font-size:13px;font-weight:600;color:#F0EDE8;flex:1;}
+.crew-count{font-size:11px;color:rgba(255,255,255,0.4);}
+.crew-header-btns{display:flex;gap:5px;}
+.crew-hbtn{padding:3px 9px;border-radius:5px;border:none;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.1s;}
+.crew-hbtn.edit{background:rgba(255,255,255,0.11);color:rgba(255,255,255,0.7);}.crew-hbtn.edit:hover{background:rgba(255,255,255,0.2);}
+.crew-hbtn.del{background:rgba(214,64,64,0.22);color:#ff8888;}.crew-hbtn.del:hover{background:rgba(214,64,64,0.38);}
+.crew-body{background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;}
+.crew-empty{padding:18px;text-align:center;font-size:12px;color:var(--muted);}
 
-/* Unassigned section */
-.unassigned-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card2);border:1px solid var(--border2);border-radius:10px 10px 0 0;}
+/* ── Unassigned ── */
+.unassigned-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card2);border:1px solid var(--border2);border-radius:10px 10px 0 0;}
 .unassigned-title{font-size:13px;font-weight:600;color:var(--muted2);flex:1;}
 
-/* Modal */
+/* ── Employee row ── */
+.emp-row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s;}
+.emp-row:last-child{border-bottom:none;}
+.emp-row:hover{background:var(--card2);}
+.emp-row.selected{background:var(--orange-dim);border-left:3px solid var(--orange);padding-left:11px;}
+.emp-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;}
+.emp-info{flex:1;min-width:0;}
+.emp-name{font-size:13px;font-weight:600;}
+.emp-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.emp-badges{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;}
+.badge{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-oncall{background:var(--orange-dim);color:var(--orange);}
+.emp-pin-chip{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;letter-spacing:3px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:4px 10px;color:var(--text);flex-shrink:0;}
+
+/* ── Right: detail panel ── */
+.detail-panel{flex:1;overflow-y:auto;background:var(--page-bg);}
+.detail-panel::-webkit-scrollbar{width:4px;}.detail-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);gap:12px;}
+.detail-empty svg{opacity:0.2;}.detail-empty p{font-size:14px;font-weight:500;}
+.detail-inner{padding:22px;max-width:600px;}
+
+/* ── Detail content ── */
+.detail-head{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:20px 22px;margin-bottom:14px;}
+.dh-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.detail-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#fff;}
+.detail-name{font-size:19px;font-weight:600;margin-bottom:3px;}
+.detail-role{font-size:13px;color:var(--muted);margin-bottom:8px;}
+.dh-contact{display:flex;flex-direction:column;gap:3px;}
+.dc-row{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted2);}
+.dc-row svg{width:14px;height:14px;color:var(--muted);flex-shrink:0;}
+.dc-row a{color:var(--blue);text-decoration:none;}.dc-row a:hover{text-decoration:underline;}
+.dh-actions{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap;}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+.info-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
+.info-label{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:4px;}
+.info-value{font-size:15px;font-weight:600;}
+.info-mono{font-family:'DM Mono',monospace;font-size:20px;letter-spacing:4px;}
+
+.sec-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;margin-bottom:14px;overflow:hidden;}
+.sec-head{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sec-title{font-size:14px;font-weight:600;}
+.sec-body{padding:16px 18px;}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-row-label{color:var(--muted);font-size:12px;}
+.detail-row-value{font-weight:500;}
+
+/* ── Skeleton loading ── */
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--border) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-crew{border-radius:10px;overflow:hidden;display:flex;flex-direction:column;}
+
+/* ── Mobile detail slide ── */
+.mobile-detail{display:none;position:fixed;inset:0;z-index:250;background:var(--page-bg);overflow-y:auto;transform:translateX(100%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);}
+.mobile-detail.open{transform:translateX(0);}
+.mob-topbar{padding:13px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--orange);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;}
+
+/* ── Modals ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;padding:20px;}
 .modal-bg.open{display:flex;}
 .modal{background:var(--card);border-radius:14px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
@@ -131,9 +170,12 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .form-check{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;}
 .form-check input{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;}
 .form-divider{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border);display:block;}
-.pin-input{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:8px;text-align:center;max-width:120px;font-weight:600;}
+.pin-input{font-family:'DM Mono',monospace;font-size:22px;letter-spacing:8px;text-align:center;font-weight:600;}
+.color-swatches{display:flex;gap:8px;flex-wrap:wrap;}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border-color 0.1s;}
+.color-swatch.selected{border-color:var(--dark);}
 
-/* Confirm */
+/* ── Confirm dialog ── */
 .confirm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;align-items:center;justify-content:center;padding:20px;}
 .confirm-bg.open{display:flex;}
 .confirm-box{background:var(--card);border-radius:14px;width:100%;max-width:360px;padding:28px 24px;text-align:center;}
@@ -143,21 +185,14 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 .confirm-foot{display:flex;gap:8px;}
 .confirm-foot .btn{flex:1;justify-content:center;}
 
-/* Color picker */
-.color-swatches{display:flex;gap:8px;flex-wrap:wrap;}
-.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border-color 0.1s;}
-.color-swatch.selected{border-color:var(--dark);}
-
-/* Toast */
+/* ── Toast / spinner ── */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{background:var(--red);}
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--border) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* Bottom nav */
+/* ── Bottom nav ── */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);}
 .bnav-inner{display:flex;justify-content:space-around;padding:6px 0 4px;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;}
@@ -167,56 +202,62 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 
 @media(max-width:768px){
   .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
-  .content{padding:14px 14px 100px;}
-  .emp-pin{display:none;}
-  .emp-actions .btn-ghost{display:none;}
+  .team-list{width:100%;border-right:none;}
+  .detail-panel{display:none;}
+  .mobile-detail{display:block;}
+  .list-inner{padding:12px 12px 100px;}
+  .emp-pin-chip{display:none;}
   .modal-bg{align-items:flex-end;padding:0;}
   .modal{border-radius:16px 16px 0 0;max-height:92vh;}
   .form-row{grid-template-columns:1fr;gap:0;}
+  .info-grid{grid-template-columns:1fr 1fr;}
+  .detail-inner{padding:14px 14px 100px;}
 }
 @media(min-width:769px){
   .topbar{padding:15px 24px;}.topbar-title{font-size:17px;}
-  .content{padding:24px;}
 }
 </style>
 </head>
 <body>
 <div class="app">
 
+<!-- Sidebar -->
 <aside class="sidebar">
   <div class="logo"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+    <a class="nav-item" href="drc-dashboard.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+    <a class="nav-item" href="drc-pipeline.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item" href="drc-schedule.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
     <a class="nav-item" href="customer-admin.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
     <div class="nav-section" style="margin-top:6px;">Operations</div>
-    <a class="nav-item active" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
+    <a class="nav-item active" href="drc-team.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
+    <a class="nav-item" href="drc-oncall.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="drc-invoice.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
     <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+    <a class="nav-item" href="drc-reports.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
   </nav>
   <div class="sidebar-footer"><div class="user-chip"><div class="user-avatar">DR</div><div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div></div></div>
 </aside>
 
+<!-- Mobile overlay + drawer -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
   <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
-    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item" href="drc-dashboard.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+    <a class="nav-item" href="drc-pipeline.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item active" href="drc-team.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
     <a class="nav-item" href="customer-admin.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
     <div class="nav-section" style="margin-top:6px;">Operations</div>
-    <a class="nav-item active" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
-    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
-    <a class="nav-item" href="#" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+    <a class="nav-item" href="drc-oncall.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="drc-reports.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
   </nav>
 </div>
 
+<!-- Main -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
@@ -224,13 +265,11 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
       <div><div class="topbar-title">Team</div><div class="topbar-meta" id="topbarMeta">Loading...</div></div>
     </div>
     <div style="display:flex;gap:8px;">
-      <button class="btn btn-ghost" onclick="openTeamModal()">
-        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        Add Crew
+      <button class="btn btn-ghost" onclick="openCrewModal()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Crew
       </button>
       <button class="btn btn-primary" onclick="openEmpModal()">
-        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        Add Employee
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Add Employee
       </button>
     </div>
   </div>
@@ -242,16 +281,50 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
     </div>
   </div>
 
-  <div class="content" id="content">
-    <!-- Loading skeleton -->
-    <div style="display:flex;flex-direction:column;gap:24px;">
-      <div><div class="skeleton" style="height:46px;border-radius:10px 10px 0 0;margin-bottom:0;"></div><div style="background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="skeleton" style="height:38px;border-radius:6px;"></div><div class="skeleton" style="height:38px;border-radius:6px;"></div></div></div>
-      <div><div class="skeleton" style="height:46px;border-radius:10px 10px 0 0;"></div><div style="background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;padding:16px;"><div class="skeleton" style="height:38px;border-radius:6px;"></div></div></div>
+  <div class="content-area">
+    <!-- Left: crew + employee list -->
+    <div class="team-list">
+      <div class="list-inner" id="listInner">
+        <!-- Loading skeleton -->
+        <div class="skel-crew">
+          <div class="skeleton" style="height:42px;border-radius:10px 10px 0 0;"></div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;padding:14px;display:flex;flex-direction:column;gap:10px;">
+            <div class="skeleton" style="height:36px;border-radius:6px;"></div>
+            <div class="skeleton" style="height:36px;border-radius:6px;"></div>
+          </div>
+        </div>
+        <div class="skel-crew">
+          <div class="skeleton" style="height:42px;border-radius:10px 10px 0 0;"></div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-top:none;border-radius:0 0 10px 10px;padding:14px;">
+            <div class="skeleton" style="height:36px;border-radius:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: employee detail -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-empty" id="detailEmpty">
+        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <p>Select an employee to view their profile</p>
+      </div>
+      <div class="detail-inner" id="detailContent" style="display:none;"></div>
     </div>
   </div>
 </div>
 
-<!-- Employee Modal -->
+<!-- Mobile detail slide -->
+<div class="mobile-detail" id="mobileDetail">
+  <div class="mob-topbar">
+    <button class="back-btn" onclick="closeMobileDetail()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      Team
+    </button>
+  </div>
+  <div class="detail-inner" id="mobileDetailContent"></div>
+</div>
+
+<!-- Employee modal -->
 <div class="modal-bg" id="empModal">
   <div class="modal">
     <div class="modal-head">
@@ -270,16 +343,12 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
       <div class="form-row">
         <div class="form-group"><label class="form-label">Role</label>
           <select class="form-select" id="eRole">
-            <option>Technician</option>
-            <option>Team Lead</option>
-            <option>Estimator</option>
-            <option>Project Manager</option>
+            <option>Technician</option><option>Team Lead</option>
+            <option>Estimator</option><option>Project Manager</option>
           </select>
         </div>
-        <div class="form-group"><label class="form-label">Crew / Team</label>
-          <select class="form-select" id="eTeam">
-            <option value="">— Unassigned —</option>
-          </select>
+        <div class="form-group"><label class="form-label">Crew</label>
+          <select class="form-select" id="eTeam"><option value="">— Unassigned —</option></select>
         </div>
       </div>
       <div class="form-row">
@@ -290,10 +359,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
         <div class="form-group"><label class="form-label">Start date</label><input class="form-input" id="eStartDate" type="date"></div>
       </div>
       <div class="form-group" style="margin-top:4px;">
-        <label class="form-check">
-          <input type="checkbox" id="eOncall">
-          On-call eligible
-        </label>
+        <label class="form-check"><input type="checkbox" id="eOncall"> On-call eligible</label>
       </div>
       <span class="form-divider">Emergency contact</span>
       <div class="form-row">
@@ -308,33 +374,30 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   </div>
 </div>
 
-<!-- Team Modal -->
-<div class="modal-bg" id="teamModal">
+<!-- Crew modal -->
+<div class="modal-bg" id="crewModal">
   <div class="modal" style="max-width:380px;">
     <div class="modal-head">
-      <span class="modal-title" id="teamModalTitle">Add Crew</span>
-      <button class="modal-x" onclick="closeTeamModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      <span class="modal-title" id="crewModalTitle">Add Crew</span>
+      <button class="modal-x" onclick="closeCrewModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
       <div class="form-group"><label class="form-label">Crew name *</label><input class="form-input" id="tName" placeholder="Team A"></div>
-      <div class="form-group">
-        <label class="form-label">Color</label>
-        <div class="color-swatches" id="colorSwatches"></div>
-      </div>
+      <div class="form-group"><label class="form-label">Color</label><div class="color-swatches" id="colorSwatches"></div></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeTeamModal()">Cancel</button>
-      <button class="btn btn-primary" id="saveTeamBtn" onclick="saveTeam()">Save crew</button>
+      <button class="btn btn-ghost" onclick="closeCrewModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveCrewBtn" onclick="saveCrew()">Save crew</button>
     </div>
   </div>
 </div>
 
-<!-- Confirm delete -->
+<!-- Confirm dialog -->
 <div class="confirm-bg" id="confirmBg">
   <div class="confirm-box">
     <div class="confirm-icon" style="background:var(--red-dim);"><svg width="22" height="22" fill="none" stroke="var(--red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
     <div class="confirm-title" id="confirmTitle">Delete?</div>
-    <div class="confirm-msg" id="confirmMsg">This action cannot be undone.</div>
+    <div class="confirm-msg" id="confirmMsg">This cannot be undone.</div>
     <div class="confirm-foot">
       <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
       <button class="btn btn-danger" id="confirmBtn">Delete</button>
@@ -344,13 +407,14 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 
 <div class="toast" id="toast"></div>
 
+<!-- Bottom nav -->
 <nav class="bottom-nav">
   <div class="bnav-inner">
-    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
-    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
-    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
+    <div class="bnav-item" onclick="location.href='drc-dashboard.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
+    <div class="bnav-item" onclick="location.href='drc-schedule.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
+    <div class="bnav-item" onclick="location.href='drc-pipeline.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
     <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
-    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></div>
+    <div class="bnav-item" onclick="location.href='drc-oncall.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></div>
   </div>
 </nav>
 
@@ -362,320 +426,490 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── State ─────────────────────────────────────────────────
-let teams     = [];
-let employees = [];
-let searchQ   = '';
-let editingEmpId  = null;
-let editingTeamId = null;
-let selectedColor = '#2D7DD2';
-let pendingConfirm = null;
+let crews        = [];
+let employees    = [];
+let searchQ      = '';
+let currentEmpId = null;
+let editingEmpId = null;
+let editingCrewId= null;
+let selectedColor= '#2D7DD2';
 
 const COLORS = ['#2D7DD2','#D64040','#1A9E65','#C87E18','#7B52D4','#E85A24','#6B7280','#0891B2'];
+const AVATAR_COLORS = ['#2D7DD2','#1A9E65','#C87E18','#D64040','#7B52D4','#E85A24'];
 
 // ── Helpers ───────────────────────────────────────────────
-function getInitials(e){ return ((e.first_name||'')[0]+(e.last_name||'')[0]).toUpperCase(); }
-function getName(e){ return [e.first_name,e.last_name].filter(Boolean).join(' '); }
-function getTeamColor(teamName){ const t=teams.find(x=>x.name===teamName); return t?t.color:'#888480'; }
-
-function showToast(msg,isError){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(isError?' error':'')+' show';
-  setTimeout(()=>t.className='toast',2800);
+function getName(e){ return [e.first_name, e.last_name].filter(Boolean).join(' '); }
+function getInitials(e){ return ((e.first_name||'')[0]+(e.last_name||'')[0]||'').toUpperCase(); }
+function getCrewColor(name){
+  const c = crews.find(x => x.name === name);
+  return c ? c.color : '#888480';
 }
-function setBtn(id,loading,label){
-  const b=document.getElementById(id); if(!b)return;
-  b.disabled=loading;
-  b.innerHTML=loading?'<span class="spinner"></span>':label;
+function avatarColor(id){
+  let s = 0; for(let c of (id||'')) s += c.charCodeAt(0);
+  return AVATAR_COLORS[s % AVATAR_COLORS.length];
+}
+
+function showToast(msg, isErr){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr ? ' error' : '') + ' show';
+  setTimeout(() => t.className = 'toast', 2800);
+}
+function setBtn(id, loading, label){
+  const b = document.getElementById(id); if(!b) return;
+  b.disabled = loading;
+  b.innerHTML = loading ? '<span class="spinner"></span>' : label;
 }
 
 // ── Load ──────────────────────────────────────────────────
 async function loadAll(){
-  const [tr,er]=await Promise.all([
-    db.from('teams').select('*').eq('is_active',true).order('sort_order').order('name'),
-    db.from('employees').select('*').eq('is_active',true).order('first_name')
+  const [cr, er] = await Promise.all([
+    db.from('teams').select('*').eq('is_active', true).order('sort_order').order('name'),
+    db.from('employees').select('*').eq('is_active', true).order('first_name')
   ]);
-  if(tr.error){ showToast('Error loading teams: '+tr.error.message,true); return; }
-  if(er.error){ showToast('Error loading employees: '+er.error.message,true); return; }
-  teams     = tr.data||[];
-  employees = er.data||[];
-  render();
-  populateTeamDropdown();
-  document.getElementById('topbarMeta').textContent=employees.length+' employee'+(employees.length!==1?'s':'')+' · '+teams.length+' crew'+(teams.length!==1?'s':'');
+
+  if(cr.error){
+    showToast('Error loading crews: ' + cr.error.message, true);
+    document.getElementById('listInner').innerHTML =
+      '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Could not load data. Check your connection.</div>';
+    return;
+  }
+  if(er.error){
+    showToast('Error loading employees: ' + er.error.message, true);
+    return;
+  }
+
+  crews    = cr.data || [];
+  employees= er.data || [];
+
+  renderList();
+  populateCrewDropdown();
+
+  document.getElementById('topbarMeta').textContent =
+    employees.length + ' employee' + (employees.length !== 1 ? 's' : '') +
+    ' · ' + crews.length + ' crew' + (crews.length !== 1 ? 's' : '');
 }
 
-// ── Render ────────────────────────────────────────────────
-function render(){
-  const q=searchQ.toLowerCase();
-  const filtered=employees.filter(e=>!q||getName(e).toLowerCase().includes(q)||(e.role||'').toLowerCase().includes(q)||(e.phone||'').includes(q));
+// ── Render list ───────────────────────────────────────────
+function renderList(){
+  const q = searchQ.toLowerCase();
+  const filtered = employees.filter(e =>
+    !q ||
+    getName(e).toLowerCase().includes(q) ||
+    (e.role || '').toLowerCase().includes(q) ||
+    (e.phone || '').includes(q)
+  );
 
-  let html='';
+  let html = '';
 
-  // Teams
-  teams.forEach(t=>{
-    const emps=filtered.filter(e=>e.team===t.name);
-    const all=employees.filter(e=>e.team===t.name);
-    html+=`<div class="team-section">
-      <div class="team-header">
-        <div class="team-dot" style="background:${t.color||'#888'}"></div>
-        <div class="team-name">${t.name}</div>
-        <div class="team-count">${all.length} member${all.length!==1?'s':''}</div>
-        <div class="team-header-btns">
-          <button class="team-header-btn edit" onclick="openTeamModal('${t.id}')">Edit</button>
-          <button class="team-header-btn del" onclick="confirmDeleteTeam('${t.id}','${t.name}')">Delete</button>
+  // Crew sections
+  crews.forEach(crew => {
+    const members = filtered.filter(e => e.team === crew.name);
+    const total   = employees.filter(e => e.team === crew.name).length;
+
+    html += `<div class="crew-block">
+      <div class="crew-header">
+        <div class="crew-dot" style="background:${crew.color || '#888'}"></div>
+        <div class="crew-name">${crew.name}</div>
+        <div class="crew-count">${total} member${total !== 1 ? 's' : ''}</div>
+        <div class="crew-header-btns">
+          <button class="crew-hbtn edit" onclick="event.stopPropagation();openCrewModal('${crew.id}')">Edit</button>
+          <button class="crew-hbtn del" onclick="event.stopPropagation();confirmDeleteCrew('${crew.id}','${crew.name.replace(/'/g,"\\'")}')">Delete</button>
         </div>
       </div>
-      <div class="team-body">
-        ${emps.length ? emps.map(e=>empRowHtml(e,t.color)).join('') : `<div class="team-empty">No${q?' matching':''} employees in ${t.name}</div>`}
+      <div class="crew-body">
+        ${members.length
+          ? members.map(e => empRowHtml(e, crew.color)).join('')
+          : `<div class="crew-empty">No${q ? ' matching' : ''} members in ${crew.name}</div>`
+        }
       </div>
     </div>`;
   });
 
   // Unassigned
-  const unassigned=filtered.filter(e=>!e.team||!teams.find(t=>t.name===e.team));
+  const unassigned = filtered.filter(e => !e.team || !crews.find(c => c.name === e.team));
   if(unassigned.length){
-    html+=`<div class="team-section">
+    html += `<div class="crew-block">
       <div class="unassigned-header">
-        <div class="team-dot" style="background:#888480"></div>
+        <div class="crew-dot" style="background:#888480"></div>
         <div class="unassigned-title">Unassigned</div>
-        <div class="team-count" style="font-size:12px;color:var(--muted);">${unassigned.length} employee${unassigned.length!==1?'s':''}</div>
+        <div class="crew-count" style="font-size:12px;color:var(--muted);">${unassigned.length} employee${unassigned.length !== 1 ? 's' : ''}</div>
       </div>
-      <div class="team-body">${unassigned.map(e=>empRowHtml(e,'#888480')).join('')}</div>
+      <div class="crew-body">${unassigned.map(e => empRowHtml(e, '#888480')).join('')}</div>
     </div>`;
   }
 
   if(!html){
-    html=`<div style="text-align:center;padding:60px 20px;color:var(--muted);">
-      <p style="font-size:14px;font-weight:500;">${q?'No employees match your search.':'No employees yet — add your first one above.'}</p>
+    html = `<div style="text-align:center;padding:60px 20px;color:var(--muted);">
+      <p style="font-size:14px;font-weight:500;">${q ? 'No employees match your search.' : 'No employees yet — add your first one above.'}</p>
     </div>`;
   }
 
-  document.getElementById('content').innerHTML=html;
+  document.getElementById('listInner').innerHTML = html;
 }
 
-function empRowHtml(e,teamColor){
-  const color=teamColor||getTeamColor(e.team)||'#888480';
-  const initials=getInitials(e);
-  return `<div class="emp-row">
-    <div class="emp-avatar" style="background:${color}">${initials}</div>
+function empRowHtml(e, crewColor){
+  const color = crewColor || getCrewColor(e.team) || '#888480';
+  return `<div class="emp-row${currentEmpId === e.id ? ' selected' : ''}" onclick="selectEmployee('${e.id}')">
+    <div class="emp-avatar" style="background:${color}">${getInitials(e)}</div>
     <div class="emp-info">
       <div class="emp-name">${getName(e)}</div>
-      <div class="emp-role">${e.role||''}${e.team?' · '+e.team:''}</div>
-      ${e.phone||e.email?`<div class="emp-contact">${[e.phone,e.email].filter(Boolean).join(' · ')}</div>`:''}
+      <div class="emp-sub">${e.role || ''}${e.team ? ' · ' + e.team : ''}</div>
       <div class="emp-badges">
-        ${e.oncall_eligible?'<span class="emp-badge badge-oncall">On-Call</span>':''}
+        ${e.oncall_eligible ? '<span class="badge badge-oncall">On-Call</span>' : ''}
       </div>
     </div>
-    <div class="emp-pin">${e.pin_code||'—'}</div>
-    <div class="emp-actions">
-      <button class="btn btn-ghost btn-sm" onclick="openEmpModal('${e.id}')">Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="confirmDeleteEmp('${e.id}','${getName(e).replace(/'/g,"\\'")}')">Delete</button>
-    </div>
+    <div class="emp-pin-chip">${e.pin_code || '—'}</div>
   </div>`;
 }
 
-function doSearch(q){ searchQ=q; render(); }
+function doSearch(q){ searchQ = q; renderList(); }
 
-// ── Team dropdown ──────────────────────────────────────────
-function populateTeamDropdown(){
-  const sel=document.getElementById('eTeam');
-  const cur=sel.value;
-  sel.innerHTML='<option value="">— Unassigned —</option>'+teams.map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
-  if(cur) sel.value=cur;
+// ── Select employee ───────────────────────────────────────
+function selectEmployee(id){
+  currentEmpId = id;
+  renderList();
+  const e = employees.find(x => x.id === id);
+  if(!e) return;
+  const html = buildDetail(e);
+  if(window.innerWidth <= 768){
+    document.getElementById('mobileDetailContent').innerHTML = html;
+    document.getElementById('mobileDetail').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.getElementById('detailEmpty').style.display = 'none';
+    const dc = document.getElementById('detailContent');
+    dc.style.display = 'block';
+    dc.innerHTML = html;
+  }
 }
 
-// ── Employee modal ─────────────────────────────────────────
-function openEmpModal(id){
-  editingEmpId=id||null;
-  document.getElementById('empModalTitle').textContent=id?'Edit Employee':'Add Employee';
-  populateTeamDropdown();
+function closeMobileDetail(){
+  document.getElementById('mobileDetail').classList.remove('open');
+  document.body.style.overflow = '';
+  currentEmpId = null;
+  renderList();
+}
 
+function refreshDetail(){
+  if(!currentEmpId) return;
+  const e = employees.find(x => x.id === currentEmpId);
+  if(!e){
+    // Employee was deleted — clear the panel
+    document.getElementById('detailEmpty').style.display = '';
+    document.getElementById('detailContent').style.display = 'none';
+    document.getElementById('mobileDetailContent').innerHTML = '';
+    return;
+  }
+  const html = buildDetail(e);
+  if(window.innerWidth <= 768) document.getElementById('mobileDetailContent').innerHTML = html;
+  else document.getElementById('detailContent').innerHTML = html;
+}
+
+// ── Build detail panel ────────────────────────────────────
+function buildDetail(e){
+  const color    = getCrewColor(e.team) || '#888480';
+  const initials = getInitials(e);
+  const name     = getName(e);
+
+  const startDateFmt = e.start_date
+    ? new Date(e.start_date + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})
+    : '—';
+
+  const SVG_PHONE = `<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>`;
+  const SVG_MAIL  = `<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`;
+  const SVG_EDIT  = `<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`;
+  const SVG_TRASH = `<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`;
+
+  return `
+    <div class="detail-head">
+      <div class="dh-top">
+        <div class="detail-avatar" style="background:${color}">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="detail-name">${name}</div>
+          <div class="detail-role">${e.role || ''}${e.team ? ' · ' + e.team : ''}</div>
+          <div class="dh-contact">
+            ${e.phone ? `<div class="dc-row">${SVG_PHONE}<a href="tel:${e.phone}">${e.phone}</a></div>` : ''}
+            ${e.email ? `<div class="dc-row">${SVG_MAIL}<a href="mailto:${e.email}">${e.email}</a></div>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="dh-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openEmpModal('${e.id}')">${SVG_EDIT} Edit</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:rgba(214,64,64,0.25);" onclick="confirmDeleteEmp('${e.id}','${name.replace(/'/g, "\\'")}')">${SVG_TRASH} Delete</button>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-label">PIN</div>
+        <div class="info-value info-mono">${e.pin_code || '—'}</div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">On-Call</div>
+        <div class="info-value" style="color:${e.oncall_eligible ? 'var(--orange)' : 'var(--muted)'};">
+          ${e.oncall_eligible ? 'Eligible' : 'Not eligible'}
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-label">Start Date</div>
+        <div class="info-value" style="font-size:13px;margin-top:4px;">${startDateFmt}</div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title">Employment</div></div>
+      <div class="sec-body" style="padding:0 18px;">
+        <div class="detail-row">
+          <span class="detail-row-label">Role</span>
+          <span class="detail-row-value">${e.role || '—'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-row-label">Crew</span>
+          <span class="detail-row-value" style="display:flex;align-items:center;gap:7px;">
+            ${e.team
+              ? `<span style="width:9px;height:9px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0;"></span>${e.team}`
+              : 'Unassigned'
+            }
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-row-label">Start Date</span>
+          <span class="detail-row-value">${startDateFmt}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title">Emergency Contact</div></div>
+      <div class="sec-body" style="padding:0 18px;">
+        <div class="detail-row">
+          <span class="detail-row-label">Name</span>
+          <span class="detail-row-value">${e.emergency_contact_name || '—'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-row-label">Phone</span>
+          <span class="detail-row-value">
+            ${e.emergency_contact_phone
+              ? `<a href="tel:${e.emergency_contact_phone}" style="color:var(--blue);text-decoration:none;">${e.emergency_contact_phone}</a>`
+              : '—'
+            }
+          </span>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Crew dropdown ─────────────────────────────────────────
+function populateCrewDropdown(){
+  const sel = document.getElementById('eTeam');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Unassigned —</option>' +
+    crews.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+  if(cur) sel.value = cur;
+}
+
+// ── Employee modal ────────────────────────────────────────
+function openEmpModal(id){
+  editingEmpId = id || null;
+  document.getElementById('empModalTitle').textContent = id ? 'Edit Employee' : 'Add Employee';
+  populateCrewDropdown();
   if(id){
-    const e=employees.find(x=>x.id===id);
+    const e = employees.find(x => x.id === id);
     if(e){
-      document.getElementById('eFirst').value=e.first_name||'';
-      document.getElementById('eLast').value=e.last_name||'';
-      document.getElementById('ePhone').value=e.phone||'';
-      document.getElementById('eEmail').value=e.email||'';
-      document.getElementById('eRole').value=e.role||'Technician';
-      document.getElementById('eTeam').value=e.team||'';
-      document.getElementById('ePin').value=e.pin_code||'';
-      document.getElementById('eStartDate').value=e.start_date||'';
-      document.getElementById('eOncall').checked=!!e.oncall_eligible;
-      document.getElementById('eEmergName').value=e.emergency_contact_name||'';
-      document.getElementById('eEmergPhone').value=e.emergency_contact_phone||'';
+      document.getElementById('eFirst').value     = e.first_name || '';
+      document.getElementById('eLast').value      = e.last_name || '';
+      document.getElementById('ePhone').value     = e.phone || '';
+      document.getElementById('eEmail').value     = e.email || '';
+      document.getElementById('eRole').value      = e.role || 'Technician';
+      document.getElementById('eTeam').value      = e.team || '';
+      document.getElementById('ePin').value       = e.pin_code || '';
+      document.getElementById('eStartDate').value = e.start_date || '';
+      document.getElementById('eOncall').checked  = !!e.oncall_eligible;
+      document.getElementById('eEmergName').value = e.emergency_contact_name || '';
+      document.getElementById('eEmergPhone').value= e.emergency_contact_phone || '';
     }
   } else {
-    ['eFirst','eLast','ePhone','eEmail','ePin','eStartDate','eEmergName','eEmergPhone'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('eRole').value='Technician';
-    document.getElementById('eTeam').value='';
-    document.getElementById('eOncall').checked=false;
-    // Auto-generate PIN suggestion
-    document.getElementById('ePin').value=String(Math.floor(100+Math.random()*900));
+    ['eFirst','eLast','ePhone','eEmail','ePin','eStartDate','eEmergName','eEmergPhone']
+      .forEach(i => document.getElementById(i).value = '');
+    document.getElementById('eRole').value = 'Technician';
+    document.getElementById('eTeam').value = '';
+    document.getElementById('eOncall').checked = false;
+    // Suggest a random PIN
+    document.getElementById('ePin').value = String(Math.floor(100 + Math.random() * 900));
   }
-
   document.getElementById('empModal').classList.add('open');
-  document.body.style.overflow='hidden';
-  setTimeout(()=>document.getElementById('eFirst').focus(),120);
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('eFirst').focus(), 120);
 }
 
 function closeEmpModal(){
   document.getElementById('empModal').classList.remove('open');
-  document.body.style.overflow='';
-  ['eFirst','eLast','ePin'].forEach(i=>document.getElementById(i).classList.remove('err'));
-  editingEmpId=null;
+  document.body.style.overflow = '';
+  ['eFirst','eLast','ePin'].forEach(i => document.getElementById(i).classList.remove('err'));
+  editingEmpId = null;
 }
 
 async function saveEmployee(){
-  const fn=document.getElementById('eFirst').value.trim();
-  const ln=document.getElementById('eLast').value.trim();
-  const pin=document.getElementById('ePin').value.trim();
+  const fn  = document.getElementById('eFirst').value.trim();
+  const ln  = document.getElementById('eLast').value.trim();
+  const pin = document.getElementById('ePin').value.trim();
 
-  let valid=true;
-  if(!fn){ document.getElementById('eFirst').classList.add('err'); valid=false; }
-  else document.getElementById('eFirst').classList.remove('err');
-  if(!ln){ document.getElementById('eLast').classList.add('err'); valid=false; }
-  else document.getElementById('eLast').classList.remove('err');
-  if(!/^\d{3}$/.test(pin)){ document.getElementById('ePin').classList.add('err'); showToast('PIN must be exactly 3 digits',true); valid=false; }
-  else document.getElementById('ePin').classList.remove('err');
+  let valid = true;
+  if(!fn)             { document.getElementById('eFirst').classList.add('err'); valid = false; }
+  else                  document.getElementById('eFirst').classList.remove('err');
+  if(!ln)             { document.getElementById('eLast').classList.add('err');  valid = false; }
+  else                  document.getElementById('eLast').classList.remove('err');
+  if(!/^\d{3}$/.test(pin)){ document.getElementById('ePin').classList.add('err'); showToast('PIN must be exactly 3 digits', true); valid = false; }
+  else                  document.getElementById('ePin').classList.remove('err');
   if(!valid){ if(!fn) document.getElementById('eFirst').focus(); return; }
 
-  setBtn('saveEmpBtn',true,'Save employee');
+  setBtn('saveEmpBtn', true, 'Save employee');
 
-  const payload={
-    first_name:fn, last_name:ln,
-    phone:document.getElementById('ePhone').value.trim()||null,
-    email:document.getElementById('eEmail').value.trim()||null,
-    role:document.getElementById('eRole').value,
-    team:document.getElementById('eTeam').value||null,
-    pin_code:pin,
-    start_date:document.getElementById('eStartDate').value||null,
-    oncall_eligible:document.getElementById('eOncall').checked,
-    emergency_contact_name:document.getElementById('eEmergName').value.trim()||null,
-    emergency_contact_phone:document.getElementById('eEmergPhone').value.trim()||null,
-    is_active:true
+  const payload = {
+    first_name:              fn,
+    last_name:               ln,
+    phone:                   document.getElementById('ePhone').value.trim()      || null,
+    email:                   document.getElementById('eEmail').value.trim()      || null,
+    role:                    document.getElementById('eRole').value,
+    team:                    document.getElementById('eTeam').value              || null,
+    pin_code:                pin,
+    start_date:              document.getElementById('eStartDate').value         || null,
+    oncall_eligible:         document.getElementById('eOncall').checked,
+    emergency_contact_name:  document.getElementById('eEmergName').value.trim() || null,
+    emergency_contact_phone: document.getElementById('eEmergPhone').value.trim()|| null,
+    is_active:               true
   };
 
   let error;
   if(editingEmpId){
-    ({error}=await db.from('employees').update(payload).eq('id',editingEmpId));
+    ({ error } = await db.from('employees').update(payload).eq('id', editingEmpId));
   } else {
-    ({error}=await db.from('employees').insert([payload]));
+    ({ error } = await db.from('employees').insert([payload]));
   }
 
-  setBtn('saveEmpBtn',false,'Save employee');
+  setBtn('saveEmpBtn', false, 'Save employee');
 
   if(error){
-    if(error.code==='23505') showToast('PIN already in use — try a different one',true);
-    else showToast('Error: '+error.message,true);
+    if(error.code === '23505') showToast('PIN already in use — try a different one', true);
+    else showToast('Error: ' + error.message, true);
     return;
   }
 
-  showToast(editingEmpId?'Employee updated':'Employee added');
+  showToast(editingEmpId ? 'Employee updated' : 'Employee added');
   closeEmpModal();
   await loadAll();
+  if(editingEmpId && currentEmpId === editingEmpId) refreshDetail();
 }
 
-// ── Team modal ─────────────────────────────────────────────
+// ── Crew modal ────────────────────────────────────────────
 function renderColorSwatches(){
-  document.getElementById('colorSwatches').innerHTML=COLORS.map(c=>`
-    <div class="color-swatch${selectedColor===c?' selected':''}" style="background:${c}" onclick="selectColor('${c}')"></div>
-  `).join('');
+  document.getElementById('colorSwatches').innerHTML = COLORS.map(c =>
+    `<div class="color-swatch${selectedColor === c ? ' selected' : ''}" style="background:${c}" onclick="selectColor('${c}')"></div>`
+  ).join('');
 }
+function selectColor(c){ selectedColor = c; renderColorSwatches(); }
 
-function selectColor(c){
-  selectedColor=c;
-  renderColorSwatches();
-}
-
-function openTeamModal(id){
-  editingTeamId=id||null;
-  document.getElementById('teamModalTitle').textContent=id?'Edit Crew':'Add Crew';
+function openCrewModal(id){
+  editingCrewId = id || null;
+  document.getElementById('crewModalTitle').textContent = id ? 'Edit Crew' : 'Add Crew';
   if(id){
-    const t=teams.find(x=>x.id===id);
-    if(t){ document.getElementById('tName').value=t.name; selectedColor=t.color||COLORS[0]; }
+    const c = crews.find(x => x.id === id);
+    if(c){ document.getElementById('tName').value = c.name; selectedColor = c.color || COLORS[0]; }
   } else {
-    document.getElementById('tName').value='';
-    selectedColor=COLORS[teams.length%COLORS.length];
+    document.getElementById('tName').value = '';
+    selectedColor = COLORS[crews.length % COLORS.length];
   }
   renderColorSwatches();
-  document.getElementById('teamModal').classList.add('open');
-  document.body.style.overflow='hidden';
-  setTimeout(()=>document.getElementById('tName').focus(),120);
+  document.getElementById('crewModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('tName').focus(), 120);
 }
 
-function closeTeamModal(){
-  document.getElementById('teamModal').classList.remove('open');
-  document.body.style.overflow='';
-  editingTeamId=null;
+function closeCrewModal(){
+  document.getElementById('crewModal').classList.remove('open');
+  document.body.style.overflow = '';
+  editingCrewId = null;
 }
 
-async function saveTeam(){
-  const name=document.getElementById('tName').value.trim();
+async function saveCrew(){
+  const name = document.getElementById('tName').value.trim();
   if(!name){ document.getElementById('tName').classList.add('err'); document.getElementById('tName').focus(); return; }
   document.getElementById('tName').classList.remove('err');
 
-  setBtn('saveTeamBtn',true,'Save crew');
-
+  setBtn('saveCrewBtn', true, 'Save crew');
   let error;
-  if(editingTeamId){
-    const old=teams.find(t=>t.id===editingTeamId);
-    ({error}=await db.from('teams').update({name,color:selectedColor}).eq('id',editingTeamId));
-    // If name changed, update employees
-    if(!error&&old&&old.name!==name){
-      await db.from('employees').update({team:name}).eq('team',old.name);
+
+  if(editingCrewId){
+    const old = crews.find(c => c.id === editingCrewId);
+    ({ error } = await db.from('teams').update({ name, color: selectedColor }).eq('id', editingCrewId));
+    // If name changed, cascade update to employees
+    if(!error && old && old.name !== name){
+      await db.from('employees').update({ team: name }).eq('team', old.name);
     }
   } else {
-    ({error}=await db.from('teams').insert([{name,color:selectedColor}]));
+    ({ error } = await db.from('teams').insert([{ name, color: selectedColor }]));
   }
 
-  setBtn('saveTeamBtn',false,'Save crew');
+  setBtn('saveCrewBtn', false, 'Save crew');
 
-  if(error){ showToast('Error: '+error.message,true); return; }
-  showToast(editingTeamId?'Crew updated':'Crew added');
-  closeTeamModal();
+  if(error){ showToast('Error: ' + error.message, true); return; }
+  showToast(editingCrewId ? 'Crew updated' : 'Crew added');
+  closeCrewModal();
   await loadAll();
 }
 
-// ── Delete confirms ────────────────────────────────────────
-function confirmDeleteEmp(id,name){
-  document.getElementById('confirmTitle').textContent='Delete employee?';
-  document.getElementById('confirmMsg').textContent=`This will permanently remove ${name} from the team.`;
-  pendingConfirm=async()=>{
-    const {error}=await db.from('employees').update({is_active:false}).eq('id',id);
-    if(error){ showToast('Error: '+error.message,true); return; }
+// ── Delete confirms ───────────────────────────────────────
+function confirmDeleteEmp(id, name){
+  document.getElementById('confirmTitle').textContent = 'Delete employee?';
+  document.getElementById('confirmMsg').textContent   = `This will permanently remove ${name} from the team.`;
+  document.getElementById('confirmBtn').onclick = async () => {
+    const { error } = await db.from('employees').update({ is_active: false }).eq('id', id);
+    if(error){ showToast('Error: ' + error.message, true); return; }
     showToast('Employee removed');
-    closeConfirm(); await loadAll();
+    if(currentEmpId === id) currentEmpId = null;
+    closeConfirm();
+    await loadAll();
+    refreshDetail();
   };
-  document.getElementById('confirmBtn').onclick=()=>pendingConfirm();
   document.getElementById('confirmBg').classList.add('open');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
 
-function confirmDeleteTeam(id,name){
-  document.getElementById('confirmTitle').textContent='Delete crew?';
-  document.getElementById('confirmMsg').textContent=`This will remove "${name}". Employees in this crew will become unassigned.`;
-  pendingConfirm=async()=>{
-    const {error}=await db.from('teams').update({is_active:false}).eq('id',id);
-    if(error){ showToast('Error: '+error.message,true); return; }
+function confirmDeleteCrew(id, name){
+  document.getElementById('confirmTitle').textContent = 'Delete crew?';
+  document.getElementById('confirmMsg').textContent   = `"${name}" will be removed. Employees in this crew will become unassigned.`;
+  document.getElementById('confirmBtn').onclick = async () => {
+    const { error } = await db.from('teams').update({ is_active: false }).eq('id', id);
+    if(error){ showToast('Error: ' + error.message, true); return; }
+    // Also unassign employees from this crew
+    await db.from('employees').update({ team: null }).eq('team', name);
     showToast('Crew removed');
-    closeConfirm(); await loadAll();
+    closeConfirm();
+    await loadAll();
   };
-  document.getElementById('confirmBtn').onclick=()=>pendingConfirm();
   document.getElementById('confirmBg').classList.add('open');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
 
 function closeConfirm(){
   document.getElementById('confirmBg').classList.remove('open');
-  document.body.style.overflow='';
-  pendingConfirm=null;
+  document.body.style.overflow = '';
 }
 
-// ── Drawer ─────────────────────────────────────────────────
-function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+// ── Drawer ────────────────────────────────────────────────
+function openDrawer(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
-// ── Init ───────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────
 loadAll();
 </script>
 </body>
