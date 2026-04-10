@@ -5,236 +5,260 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DRC — On-Call Schedule</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --orange:#E85A24;--orange-dim:rgba(232,90,36,0.10);--orange-mid:rgba(232,90,36,0.22);
-  --dark:#1A1A1A;--sidebar-bg:#1E1E1E;--page-bg:#F2F0EC;--card:#FFFFFF;--card2:#F7F5F2;
-  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.11);--text:#1A1A1A;--muted:#888480;--muted2:#6B6864;
-  --green:#1A9E65;--green-dim:rgba(26,158,101,0.10);--red:#D64040;--red-dim:rgba(214,64,64,0.10);
-  --blue:#2D7DD2;--blue-dim:rgba(45,125,210,0.10);--amber:#C87E18;--amber-dim:rgba(200,126,24,0.10);
-  --purple:#7B52D4;--purple-dim:rgba(123,82,212,0.10);
+  --orange:#E85A24;--orange-dim:rgba(232,90,36,0.10);--orange-mid:rgba(232,90,36,0.18);
+  --orange-grad:linear-gradient(135deg,#F4723A 0%,#E04E18 100%);
+  --sidebar-bg:#FFFFFF;--sidebar-border:rgba(0,0,0,0.07);
+  --page-bg:#F1F4F8;--card:#FFFFFF;--card2:#F7F9FC;
+  --dark:#0F1117;--text:#0F1117;--text2:#374151;--muted:#8B95A5;--muted2:#6B7685;
+  --border:rgba(0,0,0,0.06);--border2:rgba(0,0,0,0.09);
+  --green:#16A066;--green-dim:rgba(22,160,102,0.10);
+  --red:#D63B3B;--red-dim:rgba(214,59,59,0.10);
+  --blue:#2563EB;--blue-dim:rgba(37,99,235,0.10);
+  --amber:#C07010;--amber-dim:rgba(192,112,16,0.10);
+  --purple:#6D40D4;--purple-dim:rgba(109,64,212,0.10);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.10),0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.04);
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
+html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;line-height:1.5;}
 .app{display:flex;height:100vh;overflow:hidden;}
-
-/* ── Sidebar ── */
-.sidebar{width:220px;flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;}
-.logo{padding:22px 18px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
-.logo-mark{width:32px;height:32px;flex-shrink:0;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;}
-.logo-text{font-size:14px;font-weight:600;color:#F0EDE8;}.logo-sub{font-size:11px;color:rgba(255,255,255,0.32);margin-top:1px;}
-.nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:1px;overflow-y:auto;}
-.nav-section{padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.28);}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;color:rgba(255,255,255,0.42);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;transition:background 0.12s,color 0.12s;}
-.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82);}
-.nav-item.active{background:var(--orange);color:#fff;}
-.nav-item svg{width:16px;height:16px;flex-shrink:0;}
-.sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.07);}
-.user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;}
-.user-chip:hover{background:rgba(255,255,255,0.06);}
-.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--orange);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;}
-.user-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.78);}
-.user-role{font-size:11px;color:rgba(255,255,255,0.32);}
-
-/* ── Mobile ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;opacity:0;transition:opacity 0.2s;}
+.sidebar{width:232px;flex-shrink:0;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;}
+.logo{padding:22px 18px 18px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:12px;}
+.logo-mark{width:36px;height:36px;flex-shrink:0;background:var(--orange-grad);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;box-shadow:0 3px 8px rgba(232,90,36,0.35);}
+.logo-text{font-size:16px;font-weight:800;color:var(--dark);letter-spacing:-0.02em;}
+.logo-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:500;}
+.nav{padding:10px 10px;flex:1;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-section{padding:14px 8px 5px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);color:var(--muted2);font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;transition:background 0.14s,color 0.14s;}
+.nav-item:hover{background:var(--page-bg);color:var(--text);}
+.nav-item.active{background:var(--orange);color:#fff;box-shadow:0 3px 10px rgba(232,90,36,0.28);}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;}
+.sidebar-footer{padding:14px 10px;border-top:1px solid var(--sidebar-border);}
+.user-chip{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:background 0.14s;}
+.user-chip:hover{background:var(--page-bg);}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--orange-grad);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.user-name{font-size:13px;font-weight:700;color:var(--text);}
+.user-role{font-size:11px;color:var(--muted);font-weight:500;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;opacity:0;transition:opacity 0.2s;}
 .overlay.open{opacity:1;}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:268px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-right:1px solid var(--sidebar-border);box-shadow:4px 0 24px rgba(0,0,0,0.10);}
 .drawer.open{transform:translateX(0);}
-.drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-
-/* ── Main ── */
+.drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--page-bg);border:none;color:var(--muted2);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.topbar{padding:13px 16px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px;}
-.topbar-left{display:flex;align-items:center;gap:11px;min-width:0;}
-.menu-btn{width:36px;height:36px;flex-shrink:0;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
-.topbar-title{font-size:15px;font-weight:600;}
-.topbar-meta{font-size:12px;color:var(--muted);margin-top:1px;}
-
-/* ── Buttons ── */
-.btn{padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all 0.12s;}
-.btn-primary{background:var(--orange);color:#fff;}.btn-primary:hover{background:#cc4f1c;}
-.btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border2);}.btn-ghost:hover{background:var(--card2);color:var(--text);}
-.btn-sm{padding:6px 11px;font-size:12px;}
-.btn:disabled{opacity:0.6;cursor:not-allowed;}
-
-/* ── Control bar ── */
-.control-bar{padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;}
-.search-wrap{position:relative;flex:1;min-width:180px;}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
-.search-input{width:100%;padding:8px 10px 8px 32px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text);}
-.search-input:focus{outline:none;border-color:var(--orange);background:var(--card);}
+.topbar{padding:16px 24px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow-sm);gap:10px;}
+.topbar-left{display:flex;align-items:center;gap:13px;min-width:0;}
+.menu-btn{width:38px;height:38px;flex-shrink:0;background:transparent;border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
+.topbar-title{font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--dark);}
+.topbar-meta{font-size:13px;color:var(--muted);margin-top:1px;font-weight:500;}
+.btn{padding:10px 18px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;letter-spacing:-0.01em;}
+.btn-primary{background:var(--orange-grad);color:#fff;box-shadow:0 3px 10px rgba(232,90,36,0.30);}
+.btn-primary:hover{box-shadow:0 5px 18px rgba(232,90,36,0.40);transform:translateY(-1px);}
+.btn-ghost{background:var(--card);color:var(--text2);border:1.5px solid var(--border2);box-shadow:var(--shadow-sm);}
+.btn-ghost:hover{background:var(--card2);border-color:rgba(0,0,0,0.14);}
+.btn-danger{background:var(--red);color:#fff;}.btn-danger:hover{background:#bf3030;}
+.btn-sm{padding:8px 14px;font-size:13px;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;}
+.control-bar{padding:10px 18px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:9px;flex-shrink:0;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:160px;}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-input{width:100%;padding:10px 12px 10px 36px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card2);color:var(--text);font-weight:500;}
+.search-input:focus{outline:none;border-color:var(--orange);background:var(--card);box-shadow:0 0 0 3px var(--orange-dim);}
 .search-input::placeholder{color:var(--muted);}
-.filter-select{padding:8px 10px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text);cursor:pointer;}
+.filter-select{padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card2);color:var(--text);cursor:pointer;font-weight:500;}
 .filter-select:focus{outline:none;border-color:var(--orange);}
-.filter-pills{display:flex;gap:6px;flex-shrink:0;}
-.fpill{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border2);background:var(--card);color:var(--muted2);white-space:nowrap;cursor:pointer;transition:all 0.12s;}
-.fpill.active{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
-
-/* ── Stats bar ── */
-.stats-toggle{width:100%;padding:9px 16px;background:var(--card2);border:none;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted2);cursor:pointer;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;}
+.filter-pills{display:flex;gap:6px;flex-shrink:0;overflow-x:auto;}
+.filter-pills::-webkit-scrollbar{display:none;}
+.fpill{padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);white-space:nowrap;cursor:pointer;transition:all 0.14s;box-shadow:var(--shadow-sm);flex-shrink:0;}
+.fpill.active{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 10px rgba(232,90,36,0.28);}
+.stats-toggle{width:100%;padding:10px 18px;background:var(--card2);border:none;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted2);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;}
 .stats-toggle svg{transition:transform 0.2s;}
 .stats-toggle.open svg{transform:rotate(180deg);}
 .stats-bar{background:var(--card);border-bottom:1px solid var(--border2);flex-shrink:0;overflow:hidden;transition:max-height 0.28s cubic-bezier(0.4,0,0.2,1);max-height:0;}
 .stats-bar.expanded{max-height:400px;}
-.stats-inner{padding:12px 16px 14px;display:flex;gap:8px;overflow-x:auto;}
+.stats-inner{padding:14px 18px;display:flex;gap:10px;overflow-x:auto;}
 .stats-inner::-webkit-scrollbar{display:none;}
-.stat-chip{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;min-width:160px;}
-.stat-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;}
+.stat-chip{background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;min-width:190px;box-shadow:var(--shadow-sm);}
+.stat-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
 .stat-info{flex:1;min-width:0;}
-.stat-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.stat-role{font-size:11px;color:var(--muted);}
-.stat-num{font-family:'DM Mono',monospace;font-size:20px;font-weight:600;color:var(--orange);flex-shrink:0;}
-
-/* ── Legend ── */
-.legend-bar{padding:8px 16px;background:var(--card2);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:14px;flex-shrink:0;overflow-x:auto;}
+.stat-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat-role{font-size:11px;color:var(--muted);font-weight:500;}
+.stat-num{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--orange);flex-shrink:0;}
+.legend-bar{padding:9px 18px;background:var(--card2);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;flex-shrink:0;overflow-x:auto;flex-wrap:wrap;row-gap:5px;}
 .legend-bar::-webkit-scrollbar{display:none;}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted2);white-space:nowrap;flex-shrink:0;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted2);white-space:nowrap;flex-shrink:0;font-weight:500;}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .legend-sep{width:1px;height:12px;background:var(--border2);flex-shrink:0;}
-
-/* ── Schedule scroll ── */
-.schedule-scroll{flex:1;overflow-y:auto;padding:20px 16px 60px;}
+.schedule-scroll{flex:1;overflow-y:auto;padding:20px 18px 80px;-webkit-overflow-scrolling:touch;}
 .schedule-scroll::-webkit-scrollbar{width:4px;}.schedule-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-
-/* ── Month ── */
 .month-block{margin-bottom:28px;}
-.month-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.month-title{font-size:17px;font-weight:700;letter-spacing:-0.01em;}
-.month-stats{font-size:12px;color:var(--muted);}
-.day-grid{display:flex;flex-direction:column;gap:5px;}
-
-/* ── Day card ── */
-.day-card{background:var(--card);border:1px solid var(--border2);border-radius:10px;display:flex;align-items:stretch;overflow:hidden;cursor:pointer;transition:box-shadow 0.12s,border-color 0.12s;}
-.day-card:hover{box-shadow:0 2px 10px rgba(0,0,0,0.07);}
-.day-card.is-holiday{border-color:rgba(123,82,212,0.35);background:var(--purple-dim);}
-.day-card.is-skipped{opacity:0.5;}
+.month-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap;}
+.month-title{font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--dark);}
+.month-meta{display:flex;align-items:center;gap:10px;}
+.month-stats{font-size:13px;color:var(--muted);font-weight:500;}
+.month-save-btn{padding:7px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:var(--card);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:var(--shadow-sm);transition:all 0.14s;display:inline-flex;align-items:center;gap:6px;}
+.month-save-btn:hover{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 10px rgba(232,90,36,0.28);}
+.day-grid{display:flex;flex-direction:column;gap:6px;}
+.day-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);display:flex;align-items:stretch;overflow:hidden;cursor:pointer;transition:box-shadow 0.15s,border-color 0.15s,transform 0.15s;box-shadow:var(--shadow-sm);min-height:56px;}
+.day-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:rgba(0,0,0,0.14);}
+.day-card:active{transform:translateY(0);}
+.day-card.is-holiday{border-color:rgba(109,64,212,0.3);background:rgba(109,64,212,0.03);}
 .day-card.is-today .day-num{color:var(--orange);}
-.day-card.is-override{border-color:rgba(45,125,210,0.35);}
-
-.day-left{width:54px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-right:1px solid var(--border2);gap:1px;}
-.day-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
-.day-num{font-size:21px;font-weight:700;line-height:1;font-family:'DM Mono',monospace;}
-.day-hol-mark{font-size:9px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;}
-
-.day-mid{flex:1;padding:9px 13px;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;}
-.day-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
-.day-person{font-size:13px;font-weight:600;}
-.day-empty{font-size:12px;color:var(--muted);font-style:italic;}
-.day-skipped-txt{font-size:12px;color:var(--muted);font-style:italic;}
-.day-tags{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
-.dtag{padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
+.day-card.is-override{border-color:rgba(37,99,235,0.3);}
+.day-card.needs-coverage{border-color:rgba(192,112,16,0.4);background:rgba(192,112,16,0.04);}
+.day-card.is-draft{background:var(--card2);border-style:dashed;border-color:var(--border2);box-shadow:none;opacity:0.85;}
+.day-card.is-draft:hover{opacity:1;border-color:var(--orange);border-style:solid;box-shadow:var(--shadow-sm);}
+.day-left{width:58px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;border-right:1px solid var(--border2);gap:1px;}
+.day-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);}
+.day-num{font-size:22px;font-weight:800;line-height:1;font-family:'DM Mono',monospace;color:var(--dark);}
+.day-hol-mark{font-size:9px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
+.day-mid{flex:1;padding:10px 15px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;}
+.day-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);}
+.day-person{font-size:14px;font-weight:700;color:var(--dark);letter-spacing:-0.01em;}
+.day-person-draft{font-size:14px;font-weight:600;color:var(--muted2);}
+.day-empty{font-size:13px;color:var(--muted);font-style:italic;font-weight:500;}
+.day-tags{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;}
+.dtag{padding:3px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
 .dtag-holiday{background:var(--purple-dim);color:var(--purple);}
 .dtag-override{background:var(--blue-dim);color:var(--blue);}
-.dtag-skipped{background:var(--border);color:var(--muted);}
+.dtag-draft{background:rgba(0,0,0,0.06);color:var(--muted2);}
 .dtag-manual{background:var(--amber-dim);color:var(--amber);}
-.day-note{font-size:11px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
-
-.day-right{display:flex;align-items:center;padding:0 12px;flex-shrink:0;gap:8px;}
-.day-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;flex-shrink:0;}
-.day-skip-icon{width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--muted);}
-
-/* ── Side panel ── */
-.panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:300;}
+.dtag-needs{background:var(--amber-dim);color:var(--amber);}
+.dtag-skipped{background:rgba(0,0,0,0.06);color:var(--muted2);}
+.day-note{font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.day-right{display:flex;align-items:center;padding:0 14px;flex-shrink:0;gap:8px;}
+.day-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.day-avatar-draft{width:32px;height:32px;border-radius:50%;border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;}
+.day-lock{color:var(--muted);opacity:0.4;}
+.panel-overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:300;backdrop-filter:blur(3px);}
 .panel-overlay.open{display:block;}
-.side-panel{position:fixed;top:0;right:0;bottom:0;width:360px;background:var(--card);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 28px rgba(0,0,0,0.11);}
+.side-panel{position:fixed;top:0;right:0;bottom:0;width:400px;background:var(--card);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
 .side-panel.open{transform:translateX(0);}
-.panel-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
-.panel-title{font-size:16px;font-weight:600;}
-.panel-sub{font-size:12px;color:var(--muted);margin-top:3px;}
-.panel-x{width:30px;height:30px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);flex-shrink:0;}
-.panel-body{flex:1;overflow-y:auto;padding:20px;}
-.panel-section{margin-bottom:20px;}
-.panel-section-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
-.panel-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.panel-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.panel-title{font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--dark);}
+.panel-sub{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500;}
+.panel-x{width:34px;height:34px;border-radius:50%;background:var(--page-bg);border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);flex-shrink:0;margin-left:12px;transition:all 0.14s;}
+.panel-x:hover{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.panel-body{flex:1;overflow-y:auto;padding:22px;background:var(--page-bg);}
+.panel-section{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.panel-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;}
+.panel-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:9px;flex-shrink:0;background:var(--card);}
 .panel-foot .btn{flex:1;justify-content:center;}
-
-/* ── Form ── */
-.form-group{margin-bottom:13px;}
-.form-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px;display:block;}
-.form-input,.form-select,.form-textarea{width:100%;padding:9px 11px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.12s;}
-.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--orange);}
-.form-textarea{resize:vertical;min-height:68px;line-height:1.5;}
-.form-check{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px 0;}
+.needs-banner{background:var(--amber-dim);border:1.5px solid rgba(192,112,16,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.needs-banner-text{font-size:13px;font-weight:700;color:var(--amber);}
+.needs-banner-btn{padding:7px 13px;border-radius:var(--radius-sm);border:none;background:var(--amber);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;display:block;}
+.form-input,.form-select,.form-textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.15s,box-shadow 0.15s;font-weight:500;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.form-textarea{resize:vertical;min-height:72px;line-height:1.6;}
+.form-check{display:flex;align-items:center;gap:9px;font-size:14px;cursor:pointer;padding:6px 0;font-weight:500;}
 .form-check input{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;}
-
-/* ── Holiday modal ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.manual-note{font-size:12px;color:var(--amber);padding:9px 12px;background:var(--amber-dim);border-radius:var(--radius-xs);margin-top:6px;font-weight:600;display:none;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
 .modal-bg.open{display:flex;}
-.modal{background:var(--card);border-radius:14px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
-.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;background:var(--card);z-index:1;border-radius:14px 14px 0 0;}
-.modal-title{font-size:16px;font-weight:600;}
-.modal-x{width:30px;height:30px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);}
-.modal-body{padding:20px;flex:1;}
-.modal-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.modal{background:var(--card);border-radius:var(--radius);width:100%;max-width:460px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;background:var(--card);z-index:1;border-radius:var(--radius) var(--radius) 0 0;}
+.modal-title{font-size:17px;font-weight:800;letter-spacing:-0.02em;}
+.modal-x{width:32px;height:32px;border-radius:50%;background:var(--page-bg);border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);}
+.modal-x:hover{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.modal-body{padding:22px;flex:1;}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:9px;flex-shrink:0;}
 .modal-foot .btn{flex:1;justify-content:center;}
-
-/* ── Holiday list ── */
-.hl-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.hl-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
 .hl-item:last-child{border-bottom:none;}
-.hl-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:84px;flex-shrink:0;}
-.hl-name{flex:1;font-size:13px;font-weight:500;}
-.hl-badge{font-size:10px;font-weight:600;text-transform:uppercase;padding:2px 6px;border-radius:4px;flex-shrink:0;}
+.hl-date{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);width:88px;flex-shrink:0;}
+.hl-name{flex:1;font-size:14px;font-weight:600;}
+.hl-badge{font-size:10px;font-weight:700;text-transform:uppercase;padding:3px 8px;border-radius:var(--radius-xs);flex-shrink:0;}
 .hl-federal{background:var(--purple-dim);color:var(--purple);}
 .hl-custom{background:var(--amber-dim);color:var(--amber);}
-.hl-del{background:none;border:none;cursor:pointer;color:var(--muted);padding:3px;border-radius:4px;display:flex;}
+.hl-del{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;border-radius:var(--radius-xs);display:flex;}
 .hl-del:hover{color:var(--red);background:var(--red-dim);}
-
-/* ── Warning / empty ── */
-.warn-box{background:var(--amber-dim);border:1px solid rgba(200,126,24,0.3);border-radius:10px;padding:13px 15px;font-size:13px;color:var(--amber);display:flex;align-items:center;gap:10px;margin-bottom:18px;}
-.warn-box a{color:var(--amber);text-decoration:underline;}
-.no-results{text-align:center;padding:50px 20px;color:var(--muted);font-size:13px;}
-.manual-note{font-size:12px;color:var(--amber);padding:8px 10px;background:var(--amber-dim);border-radius:7px;margin-top:-4px;margin-bottom:8px;display:none;}
-
-/* ── Toast / spinner ── */
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;}
+.warn-box{background:var(--amber-dim);border:1.5px solid rgba(192,112,16,0.3);border-radius:var(--radius);padding:14px 16px;font-size:14px;color:var(--amber);display:flex;align-items:center;gap:12px;margin-bottom:20px;font-weight:600;}
+.warn-box a{color:var(--amber);}
+.no-results{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;font-weight:600;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark);color:#fff;padding:12px 22px;border-radius:var(--radius);font-size:14px;font-weight:700;z-index:999;opacity:0;transition:all 0.22s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-lg);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{background:var(--red);}
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+.spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Bottom nav ── */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.bnav-inner{display:flex;justify-content:space-around;padding:6px 0 4px;}
-.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.07);}
+.bnav-inner{display:flex;justify-content:space-around;padding:8px 0 5px;}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;transition:color 0.14s;}
 .bnav-item.active{color:var(--orange);}
 .bnav-item svg{width:22px;height:22px;}
-.bnav-item span{font-size:10px;font-weight:500;}
-
+.bnav-item span{font-size:10px;font-weight:700;}
+input,select,textarea{font-size:16px !important;}
+@media(min-width:769px){input,select,textarea{font-size:14px !important;}}
 @media(max-width:768px){
+  /* Layout */
   .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
+
+  /* Topbar — icon-only Holidays button */
+  .topbar{padding:12px 14px;gap:8px;}
+  .topbar-title{font-size:17px;}
+  .btn-label-hide{display:none;}
+
+  /* Control bar — pills wrap to second row */
+  .control-bar{gap:7px;padding:10px 12px;flex-wrap:wrap;}
+  .search-wrap{min-width:0;flex:1;}
+  .filter-select{flex-shrink:0;}
+  .filter-pills{width:100%;order:3;overflow-x:auto;padding-bottom:2px;}
+
+  /* Schedule */
   .schedule-scroll{padding:14px 12px 100px;}
-  .side-panel{width:100%;}
-  .control-bar{gap:6px;}
-  .filter-pills{display:none;}
-  .modal-bg{align-items:flex-end;padding:0;}
-  .modal{border-radius:16px 16px 0 0;max-height:92vh;}
+
+  /* Month header */
+  .month-title{font-size:16px;}
+  .month-save-btn{font-size:11px;padding:6px 11px;}
+
+  /* Day card — tighter on small screens */
+  .day-left{width:52px;}
+  .day-num{font-size:20px;}
+  .day-mid{padding:10px 12px;}
+  .day-person{font-size:13px;}
+
+  /* Side panel — bottom sheet */
+  .side-panel{width:100%;border-left:none;top:auto;height:93vh;border-radius:20px 20px 0 0;transform:translateY(100%);box-shadow:0 -8px 40px rgba(0,0,0,0.15);}
+  .side-panel.open{transform:translateY(0);}
+
+  /* Stats chips scroll */
+  .stats-inner{-webkit-overflow-scrolling:touch;padding:12px 12px;}
+  .stat-chip{min-width:170px;}
+
+  /* Legend wrap tighter */
+  .legend-bar{padding:8px 12px;gap:8px;}
+
+  /* Modals — bottom sheet */
+  .modal-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
+  .modal{border-radius:20px 20px 0 0;max-height:93vh;}
+
+  /* Holiday modal form */
+  .modal-body > div[style*="display:flex"]{flex-wrap:wrap;}
 }
 @media(min-width:769px){
-  .topbar{padding:15px 24px;}.topbar-title{font-size:17px;}
-  .schedule-scroll{padding:20px 24px 60px;}
+  .topbar{padding:18px 28px;}.topbar-title{font-size:22px;}
+  .schedule-scroll{padding:22px 28px 80px;}
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- Sidebar -->
 <aside class="sidebar">
   <div class="logo"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <a class="nav-item" href="drc-dashboard.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
     <a class="nav-item" href="drc-pipeline.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
     <a class="nav-item" href="drc-schedule.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
     <a class="nav-item" href="customer-admin.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
     <div class="nav-section" style="margin-top:6px;">Operations</div>
     <a class="nav-item" href="drc-team.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
     <a class="nav-item active" href="drc-oncall.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
-    <a class="nav-item" href="drc-invoice.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
-    <a class="nav-item" href="drc-reports.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
   </nav>
   <div class="sidebar-footer"><div class="user-chip"><div class="user-avatar">DR</div><div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div></div></div>
 </aside>
@@ -245,79 +269,69 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <a class="nav-item" href="drc-dashboard.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
     <a class="nav-item" href="drc-pipeline.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
-    <a class="nav-item active" href="drc-oncall.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
+    <a class="nav-item" href="drc-schedule.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
+    <a class="nav-item" href="customer-admin.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
+    <div class="nav-section" style="margin-top:6px;">Operations</div>
     <a class="nav-item" href="drc-team.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
-    <a class="nav-item" href="drc-reports.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
+    <a class="nav-item active" href="drc-oncall.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
   </nav>
 </div>
 
-<!-- Main -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
       <button class="menu-btn" onclick="openDrawer()"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-      <div><div class="topbar-title">On-Call Schedule</div><div class="topbar-meta" id="topbarMeta">Loading...</div></div>
+      <div><div class="topbar-title">On-Call</div><div class="topbar-meta" id="topbarMeta">Loading...</div></div>
     </div>
-    <div style="display:flex;gap:8px;flex-shrink:0;">
-      <button class="btn btn-ghost btn-sm" onclick="openHolidayModal()">
-        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        Holidays
-      </button>
-      <button class="btn btn-primary btn-sm" onclick="confirmRegenerate()">
-        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-        Regenerate
-      </button>
-    </div>
+    <button class="btn btn-ghost btn-sm" onclick="openHolidayModal()">
+      <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <span class="btn-label-hide">Holidays</span>
+    </button>
   </div>
 
-  <!-- Filters -->
   <div class="control-bar">
     <div class="search-wrap">
       <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-      <input class="search-input" id="searchInput" placeholder="Search by name or date (e.g. Jul 4)..." oninput="renderSchedule()">
+      <input class="search-input" id="searchInput" placeholder="Search name or date..." oninput="renderSchedule()">
     </div>
     <select class="filter-select" id="personFilter" onchange="renderSchedule()">
       <option value="">All employees</option>
     </select>
     <div class="filter-pills">
-      <div class="fpill active" id="pill-all"      onclick="setPill('all')">All days</div>
-      <div class="fpill"        id="pill-holiday"  onclick="setPill('holiday')">Holidays</div>
-      <div class="fpill"        id="pill-override" onclick="setPill('override')">Edited</div>
-      <div class="fpill"        id="pill-unassigned" onclick="setPill('unassigned')">Unassigned</div>
+      <div class="fpill active" id="pill-all"     onclick="setPill('all')">All</div>
+      <div class="fpill"        id="pill-draft"   onclick="setPill('draft')">Draft</div>
+      <div class="fpill"        id="pill-locked"  onclick="setPill('locked')">Locked</div>
+      <div class="fpill"        id="pill-holiday" onclick="setPill('holiday')">Holidays</div>
+      <div class="fpill"        id="pill-needs"   onclick="setPill('needs')">Needs coverage</div>
     </div>
   </div>
 
-  <!-- Stats toggle -->
   <button class="stats-toggle" id="statsToggle" onclick="toggleStats()">
     <span>Shift counts by employee</span>
     <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
   </button>
-  <div class="stats-bar" id="statsBar">
-    <div class="stats-inner" id="statsInner"></div>
-  </div>
+  <div class="stats-bar" id="statsBar"><div class="stats-inner" id="statsInner"></div></div>
 
-  <!-- Legend -->
   <div class="legend-bar">
     <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Holiday</div>
     <div class="legend-sep"></div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Manually edited</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Locked</div>
     <div class="legend-sep"></div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Fill-in (not in rotation)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div>Draft</div>
     <div class="legend-sep"></div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--muted)"></div>Skipped</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Needs coverage</div>
     <div class="legend-sep"></div>
     <div class="legend-item" style="color:var(--muted);">
       <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-      Click any day to edit
+      Tap to edit
     </div>
   </div>
 
   <div class="schedule-scroll" id="scheduleScroll">
     <div style="text-align:center;padding:60px 20px;color:var(--muted);">
       <div class="spinner" style="border-top-color:var(--orange);margin:0 auto 14px;width:24px;height:24px;border-width:3px;"></div>
-      <p style="font-size:13px;">Building schedule...</p>
+      <p style="font-size:14px;font-weight:600;">Building schedule...</p>
     </div>
   </div>
 </div>
@@ -333,36 +347,38 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
     <button class="panel-x" onclick="closePanel()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
   </div>
   <div class="panel-body">
+    <div id="panelNeedsBanner" style="display:none;">
+      <div class="needs-banner"><div class="needs-banner-text">⚠ Previous person no longer active — needs reassignment.</div></div>
+    </div>
     <div class="panel-section" id="panelHolSection" style="display:none;">
       <div class="panel-section-title">Holiday</div>
-      <div id="panelHolName" style="font-size:14px;font-weight:600;color:var(--purple);margin-bottom:4px;"></div>
+      <div id="panelHolName" style="font-size:15px;font-weight:700;color:var(--purple);"></div>
     </div>
     <div class="panel-section">
       <div class="panel-section-title">On-Call Assignment</div>
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom:8px;">
         <label class="form-label">Assigned person</label>
-        <select class="form-select" id="panelPerson" onchange="onPersonChange()">
-          <option value="">— Unassigned —</option>
-        </select>
+        <select class="form-select" id="panelPerson" onchange="onPersonChange()"><option value="">— Unassigned —</option></select>
       </div>
-      <div class="manual-note" id="panelManualNote">⚠ This person is not in the on-call rotation — they'll be marked as a manual fill-in.</div>
+      <div class="manual-note" id="panelManualNote">⚠ Not in rotation — will be marked as manual fill-in.</div>
     </div>
     <div class="panel-section">
       <div class="panel-section-title">Day Settings</div>
-      <label class="form-check">
-        <input type="checkbox" id="panelSkipped">
-        Skip this day (no on-call coverage)
-      </label>
+      <label class="form-check"><input type="checkbox" id="panelSkipped"> Skip this day (no on-call coverage)</label>
     </div>
     <div class="panel-section">
       <div class="panel-section-title">Note</div>
-      <textarea class="form-textarea" id="panelNote" placeholder="Add a note for this day..."></textarea>
+      <textarea class="form-textarea" id="panelNote" placeholder="Add a note..."></textarea>
     </div>
+    <div id="panelStatusNote" style="font-size:12px;color:var(--muted);font-weight:500;text-align:center;padding:4px 0 8px;"></div>
   </div>
   <div class="panel-foot">
-    <button class="btn btn-ghost btn-sm" id="panelClearBtn" onclick="clearDayOverride()" style="flex:0;display:none;">Clear override</button>
+    <button class="btn btn-ghost btn-sm" id="panelUnlockBtn" onclick="unlockDay()" style="display:none;">Unlock</button>
     <button class="btn btn-ghost" onclick="closePanel()">Cancel</button>
-    <button class="btn btn-primary" id="panelSaveBtn" onclick="saveDay()">Save</button>
+    <button class="btn btn-primary" id="panelSaveBtn" onclick="saveDay()">
+      <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v-3m0 0V9m0 3H9m3 0h3M5 20h14a2 2 0 002-2V7l-5-5H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+      Save &amp; Lock
+    </button>
   </div>
 </div>
 
@@ -374,29 +390,46 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
       <button class="modal-x" onclick="closeHolidayModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--muted2);margin-bottom:16px;line-height:1.6;">US federal holidays are auto-detected. Add custom ones below — if they fall on Fri/Sat/Sun they'll appear on the schedule automatically.</p>
-      <div style="display:flex;gap:8px;margin-bottom:20px;">
-        <input class="form-input" id="hDate" type="date" style="flex:0 0 140px;">
-        <input class="form-input" id="hName" placeholder="Custom holiday name" style="flex:1;">
+      <p style="font-size:14px;color:var(--muted2);margin-bottom:18px;line-height:1.6;font-weight:500;">US federal holidays are auto-detected. Add custom ones — if they fall on Fri/Sat/Sun they appear on the schedule automatically.</p>
+      <div style="display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;">
+        <input class="form-input" id="hDate" type="date" style="flex:0 0 150px;">
+        <input class="form-input" id="hName" placeholder="Holiday name" style="flex:1;min-width:120px;">
         <button class="btn btn-primary btn-sm" onclick="addCustomHoliday()">Add</button>
       </div>
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">Upcoming (next 12 months)</div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;">Upcoming (next 12 months)</div>
       <div id="holidayListEl"></div>
     </div>
-    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeHolidayModal()">Close</button></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeHolidayModal()">Done</button></div>
+  </div>
+</div>
+
+<!-- Redistribute modal -->
+<div class="modal-bg" id="redistributeModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <span class="modal-title">Redistribute Days</span>
+      <button class="modal-x" onclick="closeRedistributeModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--muted2);margin-bottom:16px;line-height:1.6;font-weight:500;">Reassign all "Needs Coverage" future days to the active rotation using round robin. Already locked days without the flag are untouched.</p>
+      <div style="background:var(--amber-dim);border:1.5px solid rgba(192,112,16,0.3);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--amber);font-weight:700;" id="redistributeCount"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeRedistributeModal()">Cancel</button>
+      <button class="btn btn-primary" id="redistributeBtn" onclick="doRedistribute()">Reassign all</button>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- Bottom nav -->
 <nav class="bottom-nav">
   <div class="bnav-inner">
-    <div class="bnav-item" onclick="location.href='drc-dashboard.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
     <div class="bnav-item" onclick="location.href='drc-schedule.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
     <div class="bnav-item" onclick="location.href='drc-pipeline.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
     <div class="bnav-item" onclick="location.href='drc-team.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
     <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span>On-Call</span></div>
+    <div class="bnav-item" onclick="location.href='customer-admin.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Customers</span></div>
   </div>
 </nav>
 
@@ -407,573 +440,411 @@ const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ── State ─────────────────────────────────────────────────
-let rotationPool  = [];  // oncall_eligible employees only
-let allEmployees  = [];  // all active employees (for manual fill-ins)
-let scheduleData  = {};  // { [YYYY-MM-DD]: oncall_schedule row }
-let customHols    = {};  // { [YYYY-MM-DD]: name }
-let allDays       = [];  // computed schedule days
+let rotationPool  = [];
+let allEmployees  = [];
+let lockedDays    = {};  // DB rows — locked/committed
+let draftDays     = {};  // computed round-robin previews — NOT saved
+let customHols    = {};
+let allOnCallDays = [];
 let activePill    = 'all';
 let statsOpen     = false;
 let panelDateKey  = null;
 
-const TODAY       = new Date();
-const AVATAR_COLORS = ['#2D7DD2','#1A9E65','#C87E18','#D64040','#7B52D4','#E85A24'];
+const TODAY    = new Date();
+const TODAYKEY = fmtKey(TODAY);
+const AVATAR_COLORS = ['#2563EB','#16A066','#C07010','#D63B3B','#6D40D4','#E85A24'];
 const DAY_NAMES   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ── Helpers ───────────────────────────────────────────────
-function getName(e){ return [e.first_name, e.last_name].filter(Boolean).join(' '); }
+function getName(e){ return [e.first_name,e.last_name].filter(Boolean).join(' '); }
 function getInitials(name){ const p=(name||'').trim().split(' '); return ((p[0]||'')[0]+(p[1]||'')[0]||'').toUpperCase(); }
 function avatarColor(id){ let s=0; for(let c of(id||''))s+=c.charCodeAt(0); return AVATAR_COLORS[s%AVATAR_COLORS.length]; }
-function todayKey(){ return fmtKey(TODAY); }
 function fmtKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function fromKey(k){ const[y,m,d]=k.split('-').map(Number); return new Date(y,m-1,d); }
+function showToast(msg,isErr){ const t=document.getElementById('toast'); t.textContent=msg; t.className='toast'+(isErr?' error':'')+' show'; setTimeout(()=>t.className='toast',2800); }
+function setBtn(id,loading,label){ const b=document.getElementById(id); if(!b)return; b.disabled=loading; b.innerHTML=loading?'<span class="spinner"></span>':label; }
 
-function showToast(msg, isErr){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(isErr?' error':'')+' show';
-  setTimeout(()=>t.className='toast',2800);
-}
-function setBtn(id, loading, label){
-  const b=document.getElementById(id); if(!b)return;
-  b.disabled=loading; b.innerHTML=loading?'<span class="spinner"></span>':label;
-}
-
-// ── Federal holidays (rule-based, no API needed) ──────────
+// Federal holidays
 function getFedHols(year){
   const h={};
   const add=(m,d,name)=>{ h[`${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`]=name; };
   const nth=(yr,mo,dow,n)=>{ let d=new Date(yr,mo-1,1),cnt=0; while(true){if(d.getDay()===dow){cnt++;if(cnt===n)return d.getDate();} d.setDate(d.getDate()+1);} };
   const last=(yr,mo,dow)=>{ let d=new Date(yr,mo,0); while(d.getDay()!==dow)d.setDate(d.getDate()-1); return d.getDate(); };
-  add(1,1,"New Year's Day");
-  add(1,nth(year,1,1,3),"MLK Jr. Day");
-  add(2,nth(year,2,1,3),"Presidents' Day");
-  add(5,last(year,5,1),"Memorial Day");
-  add(6,19,"Juneteenth");
-  add(7,4,"Independence Day");
-  add(9,nth(year,9,1,1),"Labor Day");
-  add(11,nth(year,11,4,4),"Thanksgiving");
-  add(11,nth(year,11,4,4)+1,"Day after Thanksgiving");
-  add(12,25,"Christmas Day");
+  add(1,1,"New Year's Day"); add(1,nth(year,1,1,3),"MLK Jr. Day"); add(2,nth(year,2,1,3),"Presidents' Day");
+  add(5,last(year,5,1),"Memorial Day"); add(6,19,"Juneteenth"); add(7,4,"Independence Day");
+  add(9,nth(year,9,1,1),"Labor Day"); add(11,nth(year,11,4,4),"Thanksgiving");
+  add(11,nth(year,11,4,4)+1,"Day after Thanksgiving"); add(12,25,"Christmas Day");
   return h;
 }
-function getAllHols(year){
-  return {
-    ...getFedHols(year),
-    ...Object.fromEntries(
-      Object.entries(customHols).filter(([k])=>k.startsWith(year+'-'))
-    )
-  };
-}
+function getAllHols(year){ return {...getFedHols(year),...Object.fromEntries(Object.entries(customHols).filter(([k])=>k.startsWith(year+'-')))}; }
 
-// ── Init ──────────────────────────────────────────────────
 async function init(){
-  const [poolRes, allRes, schedRes, holRes] = await Promise.all([
-    // Rotation pool: on-call eligible only
-    db.from('employees').select('id,first_name,last_name,role').eq('is_active',true).eq('oncall_eligible',true).order('first_name'),
-    // All employees: for manual fill-in option
-    db.from('employees').select('id,first_name,last_name,role').eq('is_active',true).order('first_name'),
-    // Saved schedule
+  const [poolRes,allRes,schedRes,holRes] = await Promise.all([
+    db.from('employees').select('id,first_name,last_name,role,oncall_start_date').eq('is_active',true).eq('oncall_eligible',true).order('first_name'),
+    db.from('employees').select('id,first_name,last_name,role,oncall_start_date').eq('is_active',true).order('first_name'),
     db.from('oncall_schedule').select('*'),
-    // Custom holidays
     db.from('oncall_custom_holidays').select('date_key,name')
   ]);
-
-  if(poolRes.error){ showToast('Error loading employees: '+poolRes.error.message,true); return; }
-  if(schedRes.error){ showToast('Error loading schedule: '+schedRes.error.message,true); return; }
-
-  rotationPool = poolRes.data || [];
-  allEmployees = allRes.data || [];
-
-  // Build scheduleData map
-  scheduleData = {};
-  (schedRes.data||[]).forEach(r=>{ scheduleData[r.date_key]=r; });
-
-  // Build customHols map
-  customHols = {};
+  if(poolRes.error){ showToast('Error: '+poolRes.error.message,true); return; }
+  allEmployees = allRes.data||[];
+  // Only include employees whose rotation start date has arrived (or is null)
+  rotationPool = (poolRes.data||[]).filter(e=>!e.oncall_start_date||e.oncall_start_date<=TODAYKEY);
+  lockedDays={};
+  (schedRes.data||[]).forEach(r=>{ lockedDays[r.date_key]=r; });
+  customHols={};
   (holRes.data||[]).forEach(r=>{ customHols[r.date_key]=r.name; });
-
-  buildAllDays();
-  applyRoundRobin();
+  buildOnCallDays();
+  buildDraftDays();
   populatePersonFilter();
   renderStats();
   renderSchedule();
-
-  document.getElementById('topbarMeta').textContent =
-    rotationPool.length+' in rotation · '+allDays.length+' on-call days in 12 months';
+  updateMeta();
 }
 
-// ── Build day list (Fri/Sat/Sun + holiday weekdays) ───────
-function buildAllDays(){
-  allDays = [];
-  const start = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
-  const end   = new Date(start); end.setMonth(end.getMonth()+12);
-
-  for(let d=new Date(start); d<end; d.setDate(d.getDate()+1)){
-    const dow     = d.getDay();
-    const key     = fmtKey(d);
-    const hols    = getAllHols(d.getFullYear());
-    const holName = hols[key] || null;
-    const isWeekend   = dow===0||dow===5||dow===6;
-    const isHolWeekday= holName && dow>=1 && dow<=4;
-    if(isWeekend||isHolWeekday){
-      allDays.push({ dateKey:key, date:new Date(d), dow, holName, isToday:key===todayKey() });
-    }
+function buildOnCallDays(){
+  allOnCallDays=[];
+  const start=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
+  const end=new Date(start); end.setMonth(end.getMonth()+12);
+  for(let d=new Date(start);d<end;d.setDate(d.getDate()+1)){
+    const dow=d.getDay(), key=fmtKey(d);
+    const hols=getAllHols(d.getFullYear()), holName=hols[key]||null;
+    const isWeekend=dow===0||dow===5||dow===6;
+    const isHolWeekday=holName&&dow>=1&&dow<=4;
+    if(isWeekend||isHolWeekday) allOnCallDays.push({dateKey:key,date:new Date(d),dow,holName,isToday:key===TODAYKEY});
   }
 }
 
-// ── Round robin ───────────────────────────────────────────
-function applyRoundRobin(){
+function buildDraftDays(){
+  draftDays={};
   if(!rotationPool.length) return;
-  let idx = 0;
-  allDays.forEach(day=>{
-    const saved = scheduleData[day.dateKey];
-    if(!saved){
-      // Auto-assign
-      const emp = rotationPool[idx % rotationPool.length];
-      scheduleData[day.dateKey] = {
-        date_key:      day.dateKey,
-        employee_id:   emp.id,
-        employee_name: getName(emp),
-        is_skipped:    false,
-        is_override:   false,
-        is_manual_fill:false,
-        holiday_name:  day.holName,
-        note:          null
-      };
+  // Walk all on-call days; for locked days, advance the rotation counter to maintain sequence
+  let idx=0;
+  allOnCallDays.forEach(day=>{
+    const locked=lockedDays[day.dateKey];
+    if(locked){
+      if(!locked.is_skipped&&locked.employee_id){
+        // Find this person in the pool and advance past them
+        const pos=rotationPool.findIndex(e=>e.id===locked.employee_id);
+        if(pos!==-1) idx=pos+1;
+        else idx++; // unknown person, still advance
+      }
+      return;
+    }
+    // Only show drafts for future/today unassigned days
+    if(day.dateKey>=TODAYKEY){
+      const emp=rotationPool[idx%rotationPool.length];
+      draftDays[day.dateKey]={employee_id:emp.id,employee_name:getName(emp)};
       idx++;
-    } else if(!saved.is_skipped && saved.employee_id){
-      idx++; // advance counter to keep rotation fair
     }
   });
 }
 
-// ── Person filter dropdown ────────────────────────────────
-function populatePersonFilter(){
-  const seen    = new Set();
-  const options = ['<option value="">All employees</option>'];
-
-  // Rotation pool first
-  rotationPool.forEach(e=>{
-    seen.add(e.id);
-    options.push(`<option value="${e.id}">${getName(e)} (rotation)</option>`);
-  });
-
-  // Anyone who appears in schedule data but isn't in rotation pool
-  Object.values(scheduleData).forEach(s=>{
-    if(s.employee_id && !seen.has(s.employee_id)){
-      seen.add(s.employee_id);
-      const emp = allEmployees.find(e=>e.id===s.employee_id);
-      const name= s.employee_name || (emp?getName(emp):'Unknown');
-      options.push(`<option value="${s.employee_id}">${name}</option>`);
-    }
-  });
-
-  document.getElementById('personFilter').innerHTML = options.join('');
+function updateMeta(){
+  const lockedCount=Object.values(lockedDays).filter(d=>!d.is_skipped&&d.employee_id).length;
+  const needsCount=Object.values(lockedDays).filter(d=>d.needs_coverage).length;
+  let meta=`${rotationPool.length} in rotation · ${lockedCount} locked`;
+  if(needsCount) meta+=` · ⚠ ${needsCount} need coverage`;
+  document.getElementById('topbarMeta').textContent=meta;
 }
 
-// ── Stats ─────────────────────────────────────────────────
 function renderStats(){
-  const counts = {};
-  allDays.forEach(day=>{
-    const s = scheduleData[day.dateKey];
-    if(s && !s.is_skipped && s.employee_id){
-      if(!counts[s.employee_id]) counts[s.employee_id]={ name:s.employee_name, count:0 };
-      counts[s.employee_id].count++;
+  const counts={};
+  allOnCallDays.forEach(day=>{
+    const s=lockedDays[day.dateKey];
+    if(s&&!s.is_skipped&&s.employee_id){
+      if(!counts[s.employee_id]) counts[s.employee_id]={name:s.employee_name||'?',locked:0,draft:0};
+      counts[s.employee_id].locked++;
+    }
+    const dr=draftDays[day.dateKey];
+    if(dr){
+      if(!counts[dr.employee_id]) counts[dr.employee_id]={name:dr.employee_name||'?',locked:0,draft:0};
+      counts[dr.employee_id].draft++;
     }
   });
-
-  const sorted = Object.entries(counts).sort((a,b)=>b[1].count-a[1].count);
-
-  document.getElementById('statsInner').innerHTML = sorted.length
-    ? sorted.map(([id,{name,count}])=>`
-        <div class="stat-chip">
-          <div class="stat-avatar" style="background:${avatarColor(id)}">${getInitials(name)}</div>
-          <div class="stat-info">
-            <div class="stat-name">${name}</div>
-            <div class="stat-role">shift${count!==1?'s':''} assigned</div>
-          </div>
-          <div class="stat-num">${count}</div>
-        </div>`).join('')
-    : '<div style="font-size:13px;color:var(--muted);padding:10px;">No assignments yet.</div>';
+  const sorted=Object.entries(counts).sort((a,b)=>(b[1].locked+b[1].draft)-(a[1].locked+a[1].draft));
+  document.getElementById('statsInner').innerHTML=sorted.length
+    ?sorted.map(([id,{name,locked,draft}])=>`
+      <div class="stat-chip">
+        <div class="stat-avatar" style="background:${avatarColor(id)}">${getInitials(name)}</div>
+        <div class="stat-info"><div class="stat-name">${name}</div><div class="stat-role">${locked} locked · ${draft} draft</div></div>
+        <div class="stat-num">${locked+draft}</div>
+      </div>`).join('')
+    :'<div style="font-size:14px;color:var(--muted);padding:10px;font-weight:500;">No assignments yet.</div>';
 }
 
 function toggleStats(){
-  statsOpen = !statsOpen;
-  document.getElementById('statsBar').className   = 'stats-bar'+(statsOpen?' expanded':'');
-  document.getElementById('statsToggle').className= 'stats-toggle'+(statsOpen?' open':'');
+  statsOpen=!statsOpen;
+  document.getElementById('statsBar').className='stats-bar'+(statsOpen?' expanded':'');
+  document.getElementById('statsToggle').className='stats-toggle'+(statsOpen?' open':'');
 }
 
-// ── Filters ───────────────────────────────────────────────
+function populatePersonFilter(){
+  const seen=new Set(), opts=['<option value="">All employees</option>'];
+  if(rotationPool.length){
+    opts.push('<optgroup label="Rotation">');
+    rotationPool.forEach(e=>{seen.add(e.id);opts.push(`<option value="${e.id}">${getName(e)}</option>`);});
+    opts.push('</optgroup>');
+  }
+  const extras=[];
+  Object.values(lockedDays).forEach(s=>{
+    if(s.employee_id&&!seen.has(s.employee_id)){
+      seen.add(s.employee_id);
+      const emp=allEmployees.find(e=>e.id===s.employee_id);
+      extras.push({id:s.employee_id,name:s.employee_name||(emp?getName(emp):'Unknown')});
+    }
+  });
+  if(extras.length){
+    opts.push('<optgroup label="Other / former">');
+    extras.forEach(e=>opts.push(`<option value="${e.id}">${e.name}</option>`));
+    opts.push('</optgroup>');
+  }
+  document.getElementById('personFilter').innerHTML=opts.join('');
+}
+
 function setPill(pill){
-  activePill = pill;
+  activePill=pill;
   document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
   document.getElementById('pill-'+pill).classList.add('active');
   renderSchedule();
 }
 
 function getFilteredDays(){
-  const q        = (document.getElementById('searchInput').value||'').toLowerCase().trim();
-  const personId = document.getElementById('personFilter').value;
-
-  return allDays.filter(day=>{
-    const s = scheduleData[day.dateKey]||{};
-
-    // Pill filter
-    if(activePill==='holiday'    && !day.holName)         return false;
-    if(activePill==='override'   && !s.is_override)       return false;
-    if(activePill==='unassigned' && (s.is_skipped||s.employee_id)) return false;
-
-    // Person dropdown
-    if(personId && s.employee_id!==personId) return false;
-
-    // Text search — name, date string, or holiday name
+  const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
+  const personId=document.getElementById('personFilter').value;
+  return allOnCallDays.filter(day=>{
+    const locked=lockedDays[day.dateKey], draft=draftDays[day.dateKey];
+    const isDraft=!locked&&!!draft, isLocked=!!locked, needsCov=locked?.needs_coverage;
+    if(activePill==='draft'  &&!isDraft)   return false;
+    if(activePill==='locked' &&!isLocked)  return false;
+    if(activePill==='holiday'&&!day.holName) return false;
+    if(activePill==='needs'  &&!needsCov)  return false;
+    if(personId){const empId=locked?.employee_id||draft?.employee_id; if(empId!==personId)return false;}
     if(q){
-      const empName  = (s.employee_name||'').toLowerCase();
-      const dateStr  = day.date.toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
-      const fullDate = day.date.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}).toLowerCase();
-      const holLower = (day.holName||'').toLowerCase();
-      if(!empName.includes(q)&&!dateStr.includes(q)&&!fullDate.includes(q)&&!holLower.includes(q)) return false;
+      const name=(locked?.employee_name||draft?.employee_name||'').toLowerCase();
+      const ds=day.date.toLocaleDateString('en-US',{month:'short',day:'numeric'}).toLowerCase();
+      const hol=(day.holName||'').toLowerCase();
+      if(!name.includes(q)&&!ds.includes(q)&&!hol.includes(q))return false;
     }
-
     return true;
   });
 }
 
-// ── Render schedule ───────────────────────────────────────
 function renderSchedule(){
-  const filtered = getFilteredDays();
-
-  if(!filtered.length){
-    document.getElementById('scheduleScroll').innerHTML =
-      '<div class="no-results">No days match your filters.</div>';
-    return;
+  const filtered=getFilteredDays();
+  if(!filtered.length){ document.getElementById('scheduleScroll').innerHTML='<div class="no-results">No days match your filters.</div>'; return; }
+  const needsDays=allOnCallDays.filter(d=>lockedDays[d.dateKey]?.needs_coverage&&d.dateKey>=TODAYKEY);
+  let html='';
+  if(!rotationPool.length){
+    html+=`<div class="warn-box"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>No on-call eligible employees. Go to <a href="drc-team.html">Team</a> and check "On-call eligible."</div>`;
   }
-
-  // Group by month
-  const months = {};
+  if(needsDays.length){
+    html+=`<div class="needs-banner" style="margin-bottom:20px;"><div class="needs-banner-text">⚠ ${needsDays.length} future day${needsDays.length!==1?'s':''} need coverage.</div><button class="needs-banner-btn" onclick="openRedistributeModal()">Redistribute all</button></div>`;
+  }
+  const months={};
   filtered.forEach(day=>{
-    const mk = `${day.date.getFullYear()}-${day.date.getMonth()}`;
-    if(!months[mk]) months[mk]={ year:day.date.getFullYear(), month:day.date.getMonth(), days:[] };
+    const mk=`${day.date.getFullYear()}-${day.date.getMonth()}`;
+    if(!months[mk]) months[mk]={year:day.date.getFullYear(),month:day.date.getMonth(),days:[]};
     months[mk].days.push(day);
   });
-
-  let html = '';
-
-  if(!rotationPool.length){
-    html += `<div class="warn-box">
-      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-      No on-call eligible employees found. Go to <a href="drc-team.html">Team</a> and mark employees as on-call eligible.
-    </div>`;
-  }
-
   Object.values(months).forEach(({year,month,days:mdays})=>{
-    const covered = mdays.filter(d=>{ const s=scheduleData[d.dateKey]; return s&&!s.is_skipped&&s.employee_id; }).length;
-    html += `<div class="month-block">
+    const lockedCt=mdays.filter(d=>{const s=lockedDays[d.dateKey];return s&&!s.is_skipped&&s.employee_id;}).length;
+    const hasDrafts=mdays.some(d=>draftDays[d.dateKey]&&draftDays[d.dateKey].employee_id);
+    html+=`<div class="month-block">
       <div class="month-header">
         <div class="month-title">${MONTH_NAMES[month]} ${year}</div>
-        <div class="month-stats">${covered}/${mdays.length} covered</div>
+        <div class="month-meta">
+          <div class="month-stats">${lockedCt}/${mdays.length} locked</div>
+          ${hasDrafts?`<button class="month-save-btn" onclick="saveMonth(${year},${month})"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>Lock month</button>`:''}
+        </div>
       </div>
       <div class="day-grid">${mdays.map(day=>dayCardHtml(day)).join('')}</div>
     </div>`;
   });
-
-  document.getElementById('scheduleScroll').innerHTML = html;
+  document.getElementById('scheduleScroll').innerHTML=html;
 }
 
 function dayCardHtml(day){
-  const s          = scheduleData[day.dateKey]||{};
-  const isSkipped  = s.is_skipped||false;
-  const isOverride = s.is_override||false;
-  const isManual   = s.is_manual_fill||false;
-  const empName    = s.employee_name||null;
-  const color      = s.employee_id ? avatarColor(s.employee_id) : '#888480';
-
-  let cardClass = 'day-card';
-  if(day.holName) cardClass += ' is-holiday';
-  if(isSkipped)   cardClass += ' is-skipped';
-  if(day.isToday) cardClass += ' is-today';
-  if(isOverride)  cardClass += ' is-override';
-
-  const tags = [];
-  if(day.holName)                     tags.push(`<span class="dtag dtag-holiday">${day.holName}</span>`);
-  if(isOverride && !isManual && !isSkipped) tags.push('<span class="dtag dtag-override">Edited</span>');
-  if(isManual)                        tags.push('<span class="dtag dtag-manual">Fill-in</span>');
-  if(isSkipped)                       tags.push('<span class="dtag dtag-skipped">No coverage</span>');
-
-  return `<div class="${cardClass}" onclick="openPanel('${day.dateKey}')">
-    <div class="day-left">
-      <div class="day-name">${DAY_NAMES[day.dow]}</div>
-      <div class="day-num">${day.date.getDate()}</div>
-      ${day.holName?'<div class="day-hol-mark">Hol</div>':''}
-    </div>
-    <div class="day-mid">
-      ${isSkipped
-        ? '<div class="day-skipped-txt">No on-call coverage</div>'
-        : empName
-          ? `<div class="day-label">On-Call</div><div class="day-person">${empName}</div>`
-          : '<div class="day-empty">Unassigned</div>'
-      }
-      ${tags.length ? `<div class="day-tags">${tags.join('')}</div>` : ''}
-      ${s.note ? `<div class="day-note">📝 ${s.note}</div>` : ''}
-    </div>
-    <div class="day-right">
-      ${isSkipped
-        ? `<div class="day-skip-icon"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg></div>`
-        : empName
-          ? `<div class="day-avatar" style="background:${color}">${getInitials(empName)}</div>`
-          : ''
-      }
-    </div>
+  const locked=lockedDays[day.dateKey], draft=draftDays[day.dateKey];
+  const isDraft=!locked&&!!draft;
+  const needsCov=locked?.needs_coverage||false;
+  const isSkipped=locked?.is_skipped||false;
+  const isManual=locked?.is_manual_fill||false;
+  const isOverride=locked?.is_override||false;
+  const empId=locked?.employee_id||draft?.employee_id||null;
+  const empName=locked?.employee_name||draft?.employee_name||null;
+  const color=empId?avatarColor(empId):'#8B95A5';
+  let cls='day-card';
+  if(isDraft)cls+=' is-draft'; if(day.holName)cls+=' is-holiday';
+  if(day.isToday)cls+=' is-today'; if(isOverride&&!isDraft)cls+=' is-override';
+  if(needsCov)cls+=' needs-coverage';
+  const tags=[];
+  if(day.holName) tags.push(`<span class="dtag dtag-holiday">${day.holName}</span>`);
+  if(isDraft)     tags.push('<span class="dtag dtag-draft">Draft</span>');
+  if(isManual)    tags.push('<span class="dtag dtag-manual">Fill-in</span>');
+  if(isOverride&&!isDraft&&!isManual) tags.push('<span class="dtag dtag-override">Edited</span>');
+  if(needsCov)    tags.push('<span class="dtag dtag-needs">Needs coverage</span>');
+  if(isSkipped)   tags.push('<span class="dtag dtag-skipped">No coverage</span>');
+  const avHtml=isDraft
+    ?`<div class="day-avatar-draft">${empName?getInitials(empName):'?'}</div>`
+    :empId?`<div class="day-avatar" style="background:${color}">${getInitials(empName||'')}</div>`:'';
+  const lockHtml=!isDraft&&locked?`<svg class="day-lock" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>`:'';
+  const personHtml=isSkipped
+    ?'<div class="day-empty">No on-call coverage</div>'
+    :empName
+      ?isDraft
+        ?`<div class="day-label">On-Call (draft)</div><div class="day-person-draft">${empName}</div>`
+        :`<div class="day-label">On-Call</div><div class="day-person">${empName}</div>`
+      :'<div class="day-empty">Unassigned</div>';
+  return `<div class="${cls}" onclick="openPanel('${day.dateKey}')">
+    <div class="day-left"><div class="day-name">${DAY_NAMES[day.dow]}</div><div class="day-num">${day.date.getDate()}</div>${day.holName?'<div class="day-hol-mark">HOL</div>':''}</div>
+    <div class="day-mid">${personHtml}${tags.length?`<div class="day-tags">${tags.join('')}</div>`:''}${locked?.note?`<div class="day-note">📝 ${locked.note}</div>`:''}</div>
+    <div class="day-right">${avHtml}${lockHtml}</div>
   </div>`;
 }
 
-// ── Panel ─────────────────────────────────────────────────
+async function saveMonth(year,month){
+  const toSave=allOnCallDays.filter(d=>d.date.getFullYear()===year&&d.date.getMonth()===month&&draftDays[d.dateKey]?.employee_id);
+  if(!toSave.length){showToast('No assigned drafts to lock in this month',true);return;}
+  const rows=toSave.map(d=>{
+    const dr=draftDays[d.dateKey];
+    return{date_key:d.dateKey,employee_id:dr.employee_id,employee_name:dr.employee_name,is_skipped:false,is_override:false,is_manual_fill:false,needs_coverage:false,holiday_name:getAllHols(year)[d.dateKey]||null,note:null};
+  });
+  const{error}=await db.from('oncall_schedule').upsert(rows,{onConflict:'date_key'});
+  if(error){showToast('Error: '+error.message,true);return;}
+  rows.forEach(r=>{lockedDays[r.date_key]=r;delete draftDays[r.date_key];});
+  buildDraftDays(); renderStats(); renderSchedule(); updateMeta();
+  showToast(`${rows.length} day${rows.length!==1?'s':''} locked for ${MONTH_NAMES[month]}`);
+}
+
 function openPanel(dateKey){
-  panelDateKey = dateKey;
-  const [y,m,d] = dateKey.split('-').map(Number);
-  const dateObj  = new Date(y,m-1,d);
-  const s        = scheduleData[dateKey]||{};
-  const holName  = getAllHols(y)[dateKey]||null;
-
-  document.getElementById('panelTitle').textContent =
-    DAY_NAMES[dateObj.getDay()]+', '+MONTH_NAMES[m-1]+' '+d+', '+y;
-  document.getElementById('panelSub').textContent = holName||'';
-
-  // Holiday section
-  if(holName){
-    document.getElementById('panelHolSection').style.display = '';
-    document.getElementById('panelHolName').textContent = holName;
-  } else {
-    document.getElementById('panelHolSection').style.display = 'none';
-  }
-
-  // Populate assignee dropdown — rotation pool first, then others
-  const sel = document.getElementById('panelPerson');
-  sel.innerHTML = '<option value="">— Unassigned —</option>';
-
+  panelDateKey=dateKey;
+  const[y,m,d]=dateKey.split('-').map(Number);
+  const dateObj=new Date(y,m-1,d);
+  const locked=lockedDays[dateKey],draft=draftDays[dateKey];
+  const holName=getAllHols(y)[dateKey]||null;
+  document.getElementById('panelTitle').textContent=DAY_NAMES[dateObj.getDay()]+', '+MONTH_NAMES[m-1]+' '+d+', '+y;
+  document.getElementById('panelSub').textContent=locked?'🔒 Locked — saved to database':'✏️ Draft — round robin preview, not saved yet';
+  document.getElementById('panelNeedsBanner').style.display=locked?.needs_coverage?'':'none';
+  if(holName){document.getElementById('panelHolSection').style.display='';document.getElementById('panelHolName').textContent=holName;}
+  else document.getElementById('panelHolSection').style.display='none';
+  const sel=document.getElementById('panelPerson');
+  sel.innerHTML='<option value="">— Unassigned —</option>';
   if(rotationPool.length){
-    const og = document.createElement('optgroup');
-    og.label = 'Rotation (auto)';
-    rotationPool.forEach(e=>{
-      const o = document.createElement('option');
-      o.value = e.id; o.textContent = getName(e);
-      if(s.employee_id === e.id) o.selected = true;
-      og.appendChild(o);
-    });
+    const og=document.createElement('optgroup');og.label='Rotation (auto)';
+    rotationPool.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=getName(e);const cur=locked?.employee_id||draft?.employee_id;if(cur===e.id)o.selected=true;og.appendChild(o);});
     sel.appendChild(og);
   }
-
-  const others = allEmployees.filter(e => !rotationPool.some(r=>r.id===e.id));
+  const others=allEmployees.filter(e=>!rotationPool.some(r=>r.id===e.id));
   if(others.length){
-    const og = document.createElement('optgroup');
-    og.label = 'Other employees (manual fill-in)';
-    others.forEach(e=>{
-      const o = document.createElement('option');
-      o.value = e.id; o.textContent = getName(e);
-      if(s.employee_id === e.id) o.selected = true;
-      og.appendChild(o);
-    });
+    const og=document.createElement('optgroup');og.label='Other (manual fill-in)';
+    others.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=getName(e);const cur=locked?.employee_id||draft?.employee_id;if(cur===e.id)o.selected=true;og.appendChild(o);});
     sel.appendChild(og);
   }
-
-  // Manual warning state
   updateManualNote();
-
-  document.getElementById('panelSkipped').checked = !!s.is_skipped;
-  document.getElementById('panelNote').value       = s.note||'';
-
-  // Show "clear override" only if a saved override exists
-  document.getElementById('panelClearBtn').style.display = s.is_override ? '' : 'none';
-
+  document.getElementById('panelSkipped').checked=locked?.is_skipped||false;
+  document.getElementById('panelNote').value=locked?.note||'';
+  document.getElementById('panelUnlockBtn').style.display=locked?'':'none';
+  document.getElementById('panelStatusNote').textContent=locked?'🔒 Changes will overwrite the saved assignment.':'✏️ Save & Lock to commit this day to the database.';
   document.getElementById('sidePanel').classList.add('open');
   document.getElementById('panelOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow='hidden';
 }
-
-function onPersonChange(){ updateManualNote(); }
-
+function onPersonChange(){updateManualNote();}
 function updateManualNote(){
-  const empId = document.getElementById('panelPerson').value;
-  const isInRotation = rotationPool.some(e=>e.id===empId);
-  document.getElementById('panelManualNote').style.display =
-    empId && !isInRotation ? 'block' : 'none';
+  const empId=document.getElementById('panelPerson').value;
+  document.getElementById('panelManualNote').style.display=empId&&!rotationPool.some(e=>e.id===empId)?'block':'none';
 }
-
 function closePanel(){
   document.getElementById('sidePanel').classList.remove('open');
   document.getElementById('panelOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-  panelDateKey = null;
+  document.body.style.overflow='';panelDateKey=null;
 }
 
 async function saveDay(){
-  if(!panelDateKey) return;
-  setBtn('panelSaveBtn',true,'Save');
-
-  const empId    = document.getElementById('panelPerson').value;
-  const isSkipped= document.getElementById('panelSkipped').checked;
-  const note     = document.getElementById('panelNote').value.trim()||null;
-  const emp      = allEmployees.find(e=>e.id===empId);
-  const isManual = empId && !rotationPool.some(e=>e.id===empId);
-  const holName  = getAllHols(parseInt(panelDateKey))[panelDateKey]||null;
-
-  const payload = {
-    date_key:       panelDateKey,
-    employee_id:    empId||null,
-    employee_name:  emp ? getName(emp) : null,
-    is_skipped:     isSkipped,
-    note,
-    is_override:    true,
-    is_manual_fill: isManual,
-    holiday_name:   holName
-  };
-
-  const { error } = await db.from('oncall_schedule')
-    .upsert([payload], { onConflict: 'date_key' });
-
-  if(error){
-    showToast('Error saving: '+error.message, true);
-    setBtn('panelSaveBtn',false,'Save');
-    return;
-  }
-
-  scheduleData[panelDateKey] = payload;
-  setBtn('panelSaveBtn',false,'Save');
-  showToast('Day updated');
-  closePanel();
-  populatePersonFilter();
-  renderStats();
-  renderSchedule();
+  if(!panelDateKey)return;
+  const empId=document.getElementById('panelPerson').value;
+  const isSkipped=document.getElementById('panelSkipped').checked;
+  const note=document.getElementById('panelNote').value.trim()||null;
+  if(!empId&&!isSkipped){showToast('Assign someone or mark as skipped before locking',true);return;}
+  setBtn('panelSaveBtn',true,'Saving...');
+  const[y]=panelDateKey.split('-').map(Number);
+  const emp=allEmployees.find(e=>e.id===empId);
+  const isManual=empId&&!rotationPool.some(e=>e.id===empId);
+  const existing=lockedDays[panelDateKey];
+  const payload={date_key:panelDateKey,employee_id:empId||null,employee_name:emp?getName(emp):null,is_skipped:isSkipped,note,is_override:!!existing,is_manual_fill:!!isManual,needs_coverage:false,holiday_name:getAllHols(y)[panelDateKey]||null};
+  const{error}=await db.from('oncall_schedule').upsert([payload],{onConflict:'date_key'});
+  setBtn('panelSaveBtn',false,'<svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v-3m0 0V9m0 3H9m3 0h3M5 20h14a2 2 0 002-2V7l-5-5H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg> Save &amp; Lock');
+  if(error){showToast('Error: '+error.message,true);return;}
+  lockedDays[panelDateKey]=payload; delete draftDays[panelDateKey];
+  buildDraftDays(); showToast('Day locked ✓'); closePanel();
+  populatePersonFilter(); renderStats(); renderSchedule(); updateMeta();
 }
 
-async function clearDayOverride(){
-  if(!panelDateKey) return;
-
-  const { error } = await db.from('oncall_schedule')
-    .delete().eq('date_key', panelDateKey);
-
-  if(error){ showToast('Error clearing: '+error.message, true); return; }
-
-  delete scheduleData[panelDateKey];
-
-  // Rerun round robin to fill this slot back in
-  applyRoundRobin();
-  showToast('Override cleared — round robin restored');
-  closePanel();
-  populatePersonFilter();
-  renderStats();
-  renderSchedule();
+async function unlockDay(){
+  if(!panelDateKey)return;
+  if(!confirm('Remove this saved assignment? The day will return to a draft preview.'))return;
+  const{error}=await db.from('oncall_schedule').delete().eq('date_key',panelDateKey);
+  if(error){showToast('Error: '+error.message,true);return;}
+  delete lockedDays[panelDateKey]; buildDraftDays();
+  showToast('Unlocked — returned to draft'); closePanel();
+  populatePersonFilter(); renderStats(); renderSchedule(); updateMeta();
 }
 
-// ── Regenerate ────────────────────────────────────────────
-async function confirmRegenerate(){
-  if(!confirm('This clears ALL manual overrides and rebuilds the round robin from scratch. Continue?')) return;
-
-  // Delete all saved schedule rows
-  const { error } = await db.from('oncall_schedule').delete().gte('date_key','0000-00-00');
-  if(error){ showToast('Error: '+error.message, true); return; }
-
-  scheduleData = {};
-  applyRoundRobin();
-  populatePersonFilter();
-  renderStats();
-  renderSchedule();
-  showToast('Schedule regenerated');
-}
-
-// ── Holiday modal ─────────────────────────────────────────
-function openHolidayModal(){
-  renderHolidayList();
-  document.getElementById('holidayModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeHolidayModal(){
-  document.getElementById('holidayModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function renderHolidayList(){
-  const now = new Date();
-  const end = new Date(now); end.setMonth(end.getMonth()+12);
-  let items = [];
-
-  [now.getFullYear(), now.getFullYear()+1].forEach(y=>{
-    Object.entries(getFedHols(y)).forEach(([k,name])=>{
-      const d = new Date(k+'T12:00:00');
-      if(d>=now && d<=end) items.push({dateKey:k, name, type:'federal'});
-    });
-  });
-
-  Object.entries(customHols).forEach(([k,name])=>{
-    const d = new Date(k+'T12:00:00');
-    if(d>=now && d<=end) items.push({dateKey:k, name, type:'custom'});
-  });
-
-  items.sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
-
-  document.getElementById('holidayListEl').innerHTML = items.length
-    ? items.map(h=>`
-        <div class="hl-item">
-          <div class="hl-date">${h.dateKey}</div>
-          <div class="hl-name">${h.name}</div>
-          <span class="hl-badge ${h.type==='federal'?'hl-federal':'hl-custom'}">${h.type}</span>
-          ${h.type==='custom'
-            ? `<button class="hl-del" onclick="deleteCustomHol('${h.dateKey}')"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>`
-            : ''}
-        </div>`).join('')
-    : '<div style="font-size:13px;color:var(--muted);padding:10px 0;">No holidays in the next 12 months.</div>';
-}
-
-async function addCustomHoliday(){
-  const date = document.getElementById('hDate').value;
-  const name = document.getElementById('hName').value.trim();
-  if(!date||!name){ showToast('Date and name required', true); return; }
-
-  const { error } = await db.from('oncall_custom_holidays')
-    .upsert([{date_key:date, name}], {onConflict:'date_key'});
-  if(error){ showToast('Error: '+error.message, true); return; }
-
-  customHols[date] = name;
-  document.getElementById('hDate').value = '';
-  document.getElementById('hName').value = '';
-
-  buildAllDays();
-  applyRoundRobin();
-  renderHolidayList();
-  renderStats();
-  renderSchedule();
-  showToast('Holiday added');
-}
-
-async function deleteCustomHol(dateKey){
-  const { error } = await db.from('oncall_custom_holidays')
-    .delete().eq('date_key', dateKey);
-  if(error){ showToast('Error: '+error.message, true); return; }
-
-  delete customHols[dateKey];
-  buildAllDays();
-  applyRoundRobin();
-  renderHolidayList();
-  renderStats();
-  renderSchedule();
-  showToast('Holiday removed');
-}
-
-// ── Drawer ────────────────────────────────────────────────
-function openDrawer(){
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('overlay').classList.add('open');
+function openRedistributeModal(){
+  const n=allOnCallDays.filter(d=>lockedDays[d.dateKey]?.needs_coverage&&d.dateKey>=TODAYKEY).length;
+  document.getElementById('redistributeCount').textContent=`${n} future day${n!==1?'s':''} will be reassigned using the active rotation.`;
+  document.getElementById('redistributeModal').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function closeDrawer(){
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('overlay').classList.remove('open');
-  document.body.style.overflow='';
+function closeRedistributeModal(){document.getElementById('redistributeModal').classList.remove('open');document.body.style.overflow='';}
+
+async function doRedistribute(){
+  if(!rotationPool.length){showToast('No rotation members',true);return;}
+  setBtn('redistributeBtn',true,'Reassigning...');
+  const needsDays=allOnCallDays.filter(d=>lockedDays[d.dateKey]?.needs_coverage&&d.dateKey>=TODAYKEY).sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
+  if(!needsDays.length){setBtn('redistributeBtn',false,'Reassign all');closeRedistributeModal();return;}
+  let idx=0;
+  const rows=needsDays.map(day=>{
+    const emp=rotationPool[idx%rotationPool.length];idx++;
+    return{date_key:day.dateKey,employee_id:emp.id,employee_name:getName(emp),is_skipped:false,is_override:true,is_manual_fill:false,needs_coverage:false,holiday_name:getAllHols(parseInt(day.dateKey))[day.dateKey]||null,note:lockedDays[day.dateKey]?.note||null};
+  });
+  const{error}=await db.from('oncall_schedule').upsert(rows,{onConflict:'date_key'});
+  setBtn('redistributeBtn',false,'Reassign all');
+  if(error){showToast('Error: '+error.message,true);return;}
+  rows.forEach(r=>{lockedDays[r.date_key]=r;}); buildDraftDays();
+  closeRedistributeModal(); populatePersonFilter(); renderStats(); renderSchedule(); updateMeta();
+  showToast(`${rows.length} day${rows.length!==1?'s':''} reassigned ✓`);
 }
 
-// ── Boot ──────────────────────────────────────────────────
+function openHolidayModal(){renderHolidayList();document.getElementById('holidayModal').classList.add('open');document.body.style.overflow='hidden';}
+function closeHolidayModal(){document.getElementById('holidayModal').classList.remove('open');document.body.style.overflow='';}
+function renderHolidayList(){
+  const now=new Date(),end=new Date(now);end.setMonth(end.getMonth()+12);
+  let items=[];
+  [now.getFullYear(),now.getFullYear()+1].forEach(y=>{Object.entries(getFedHols(y)).forEach(([k,name])=>{const d=new Date(k+'T12:00:00');if(d>=now&&d<=end)items.push({dateKey:k,name,type:'federal'});});});
+  Object.entries(customHols).forEach(([k,name])=>{const d=new Date(k+'T12:00:00');if(d>=now&&d<=end)items.push({dateKey:k,name,type:'custom'});});
+  items.sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
+  document.getElementById('holidayListEl').innerHTML=items.length
+    ?items.map(h=>`<div class="hl-item"><div class="hl-date">${h.dateKey}</div><div class="hl-name">${h.name}</div><span class="hl-badge ${h.type==='federal'?'hl-federal':'hl-custom'}">${h.type}</span>${h.type==='custom'?`<button class="hl-del" onclick="deleteCustomHol('${h.dateKey}')"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>`:''}</div>`).join('')
+    :'<div style="font-size:14px;color:var(--muted);padding:10px;font-weight:500;">No holidays in next 12 months.</div>';
+}
+async function addCustomHoliday(){
+  const date=document.getElementById('hDate').value,name=document.getElementById('hName').value.trim();
+  if(!date||!name){showToast('Date and name required',true);return;}
+  const{error}=await db.from('oncall_custom_holidays').upsert([{date_key:date,name}],{onConflict:'date_key'});
+  if(error){showToast('Error: '+error.message,true);return;}
+  customHols[date]=name;document.getElementById('hDate').value='';document.getElementById('hName').value='';
+  buildOnCallDays();buildDraftDays();renderHolidayList();renderStats();renderSchedule();showToast('Holiday added');
+}
+async function deleteCustomHol(dateKey){
+  const{error}=await db.from('oncall_custom_holidays').delete().eq('date_key',dateKey);
+  if(error){showToast('Error: '+error.message,true);return;}
+  delete customHols[dateKey];buildOnCallDays();buildDraftDays();renderHolidayList();renderStats();renderSchedule();showToast('Holiday removed');
+}
+
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+
 init();
 </script>
 </body>
