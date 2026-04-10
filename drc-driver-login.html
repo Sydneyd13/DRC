@@ -350,16 +350,26 @@ async function submitPin(){
 
   setLoading(true);
 
-  const { data, error } = await db
+  // Fetch all active employees and match PIN client-side.
+  // This handles type mismatches (int vs text) and any whitespace issues.
+  const { data: allEmps, error } = await db
     .from('employees')
-    .select('id,first_name,last_name,role,team,oncall_eligible,pin_code,oncall_start_date')
-    .eq('pin_code', pin)
-    .eq('is_active', true)
-    .maybeSingle();
+    .select('id,first_name,last_name,role,team,oncall_eligible,pin_code,oncall_start_date,emergency_contact_name,emergency_contact_phone,start_date')
+    .eq('is_active', true);
 
   setLoading(false);
 
-  if(error || !data){
+  if(error){
+    showError('Connection error — please try again');
+    return;
+  }
+
+  // Compare as trimmed strings to handle any int/text storage difference
+  const data = (allEmps || []).find(e =>
+    String(e.pin_code).trim() === pin.trim()
+  ) || null;
+
+  if(!data){
     showError('Incorrect PIN — please try again');
     return;
   }
