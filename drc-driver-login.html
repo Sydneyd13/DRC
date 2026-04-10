@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DRC Field App</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#0F1117;font-family:'Plus Jakarta Sans',sans-serif;overscroll-behavior:none;}
+
+/* ── Desktop centering ── */
+.app-shell{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0F1117;
+  padding:20px;
+}
+.app-frame{
+  width:100%;
+  max-width:400px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+@media(min-height:700px){
+  .app-frame{min-height:auto;padding:40px 0;}
+}
+
+/* ── Logo ── */
+.logo-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  margin-bottom:36px;
+}
+.logo-img{
+  width:96px;
+  height:96px;
+  object-fit:contain;
+  border-radius:22px;
+  background:#fff;
+  padding:8px;
+}
+.app-name{
+  color:#fff;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-0.03em;
+}
+.app-sub{
+  color:#8B95A5;
+  font-size:14px;
+  font-weight:500;
+  margin-top:-8px;
+  text-align:center;
+}
+
+/* ── PIN display ── */
+.pin-section{
+  width:100%;
+  max-width:320px;
+  margin-bottom:28px;
+}
+.pin-label{
+  color:#8B95A5;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.09em;
+  margin-bottom:12px;
+  text-align:center;
+}
+.pin-boxes{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+.pin-box{
+  width:72px;
+  height:76px;
+  border-radius:14px;
+  border:2px solid rgba(255,255,255,0.10);
+  background:rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:border-color 0.15s, background 0.15s;
+}
+.pin-box.filled{
+  border-color:rgba(232,90,36,0.5);
+  background:rgba(232,90,36,0.08);
+}
+.pin-box.active{
+  border-color:#E85A24;
+  background:rgba(232,90,36,0.10);
+}
+.pin-dot{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#E85A24;
+  display:none;
+}
+.pin-box.filled .pin-dot,
+.pin-box.active.filled .pin-dot{
+  display:block;
+}
+
+/* Shake animation for wrong PIN */
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  15%{transform:translateX(-8px);}
+  30%{transform:translateX(8px);}
+  45%{transform:translateX(-6px);}
+  60%{transform:translateX(6px);}
+  75%{transform:translateX(-3px);}
+  90%{transform:translateX(3px);}
+}
+.pin-boxes.shake{animation:shake 0.45s ease;}
+
+/* Error message */
+.pin-error{
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+  color:#D63B3B;
+  margin-top:10px;
+  min-height:20px;
+  transition:opacity 0.2s;
+}
+
+/* ── Numpad ── */
+.numpad{
+  width:100%;
+  max-width:320px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+.numkey{
+  height:64px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.05);
+  color:#fff;
+  font-size:24px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  user-select:none;
+  font-family:'DM Mono',monospace;
+  transition:background 0.1s, transform 0.08s;
+  -webkit-tap-highlight-color:transparent;
+}
+.numkey:active{
+  background:rgba(255,255,255,0.14);
+  transform:scale(0.95);
+}
+.numkey.del{
+  background:rgba(255,255,255,0.04);
+  font-size:14px;
+}
+.numkey.del:active{background:rgba(255,255,255,0.09);}
+.numkey.empty{
+  background:transparent;
+  border-color:transparent;
+  cursor:default;
+  pointer-events:none;
+}
+
+/* ── Login button ── */
+.login-btn{
+  width:100%;
+  max-width:320px;
+  height:58px;
+  border-radius:14px;
+  border:none;
+  background:linear-gradient(135deg,#F4723A 0%,#E04E18 100%);
+  color:#fff;
+  font-size:16px;
+  font-weight:800;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;
+  letter-spacing:-0.01em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:0 4px 16px rgba(232,90,36,0.35);
+  transition:box-shadow 0.15s, transform 0.1s, opacity 0.15s;
+}
+.login-btn:active{
+  transform:scale(0.98);
+  box-shadow:0 2px 8px rgba(232,90,36,0.25);
+}
+.login-btn:disabled{
+  opacity:0.35;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+/* ── Spinner ── */
+.spinner{
+  width:18px;
+  height:18px;
+  border:2.5px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Desktop background ── */
+@media(min-width:500px){
+  .app-shell{
+    background:radial-gradient(ellipse at center, #1a1d26 0%, #0F1117 70%);
+  }
+  .app-frame{
+    background:#0F1117;
+    border-radius:36px;
+    border:1px solid rgba(255,255,255,0.07);
+    padding:44px 40px;
+    min-height:auto;
+    box-shadow:0 24px 60px rgba(0,0,0,0.5);
+  }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="app-frame">
+
+    <div class="logo-wrap">
+      <img class="logo-img" src="https://i.postimg.cc/WzrXfwJ9/DRCLOGO.png" alt="DRC Logo">
+      <div class="app-name">DRC Field App</div>
+      <div class="app-sub">Enter your 3-digit crew PIN</div>
+    </div>
+
+    <div class="pin-section">
+      <div class="pin-label">Your PIN</div>
+      <div class="pin-boxes" id="pinBoxes">
+        <div class="pin-box" id="box0"><div class="pin-dot"></div></div>
+        <div class="pin-box" id="box1"><div class="pin-dot"></div></div>
+        <div class="pin-box" id="box2"><div class="pin-dot"></div></div>
+      </div>
+      <div class="pin-error" id="pinError"></div>
+    </div>
+
+    <div class="numpad">
+      <div class="numkey" onclick="pressKey('1')">1</div>
+      <div class="numkey" onclick="pressKey('2')">2</div>
+      <div class="numkey" onclick="pressKey('3')">3</div>
+      <div class="numkey" onclick="pressKey('4')">4</div>
+      <div class="numkey" onclick="pressKey('5')">5</div>
+      <div class="numkey" onclick="pressKey('6')">6</div>
+      <div class="numkey" onclick="pressKey('7')">7</div>
+      <div class="numkey" onclick="pressKey('8')">8</div>
+      <div class="numkey" onclick="pressKey('9')">9</div>
+      <div class="numkey empty"></div>
+      <div class="numkey" onclick="pressKey('0')">0</div>
+      <div class="numkey del" onclick="pressDelete()">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"/>
+        </svg>
+      </div>
+    </div>
+
+    <button class="login-btn" id="loginBtn" onclick="submitPin()" disabled>
+      <div class="spinner" id="spinner"></div>
+      <span id="loginBtnText">Log in</span>
+    </button>
+
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let pin = '';
+
+// ── Check if already logged in ────────────────────────────
+(function checkSession(){
+  try {
+    const saved = localStorage.getItem('drc_driver');
+    if(saved){
+      const emp = JSON.parse(saved);
+      if(emp && emp.id && emp.first_name){
+        window.location.replace('drc-driver-home.html');
+      }
+    }
+  } catch(e){}
+})();
+
+// ── PIN input logic ───────────────────────────────────────
+function pressKey(digit){
+  if(pin.length >= 3) return;
+  clearError();
+  pin += digit;
+  updateBoxes();
+  if(pin.length === 3){
+    document.getElementById('loginBtn').disabled = false;
+  }
+}
+
+function pressDelete(){
+  if(!pin.length) return;
+  pin = pin.slice(0, -1);
+  clearError();
+  updateBoxes();
+  document.getElementById('loginBtn').disabled = true;
+}
+
+function updateBoxes(){
+  for(let i = 0; i < 3; i++){
+    const box = document.getElementById('box'+i);
+    box.classList.remove('filled','active');
+    if(i < pin.length)  box.classList.add('filled');
+    if(i === pin.length && pin.length < 3) box.classList.add('active');
+  }
+  // highlight next empty box
+  if(pin.length === 0) document.getElementById('box0').classList.add('active');
+}
+
+// Mark first box as active on load
+document.getElementById('box0').classList.add('active');
+
+// ── Keyboard support ──────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key >= '0' && e.key <= '9') pressKey(e.key);
+  else if(e.key === 'Backspace')   pressDelete();
+  else if(e.key === 'Enter' && pin.length === 3) submitPin();
+});
+
+// ── Submit ────────────────────────────────────────────────
+async function submitPin(){
+  if(pin.length !== 3) return;
+
+  setLoading(true);
+
+  const { data, error } = await db
+    .from('employees')
+    .select('id,first_name,last_name,role,team,oncall_eligible,pin_code,oncall_start_date')
+    .eq('pin_code', pin)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  setLoading(false);
+
+  if(error || !data){
+    showError('Incorrect PIN — please try again');
+    return;
+  }
+
+  // Save session
+  localStorage.setItem('drc_driver', JSON.stringify(data));
+
+  // Go to home
+  window.location.replace('drc-driver-home.html');
+}
+
+// ── UI helpers ────────────────────────────────────────────
+function setLoading(on){
+  const btn     = document.getElementById('loginBtn');
+  const spinner = document.getElementById('spinner');
+  const txt     = document.getElementById('loginBtnText');
+  btn.disabled     = on;
+  spinner.style.display = on ? 'block' : 'none';
+  txt.style.display     = on ? 'none'  : 'block';
+}
+
+function showError(msg){
+  document.getElementById('pinError').textContent = msg;
+  // Shake
+  const boxes = document.getElementById('pinBoxes');
+  boxes.classList.remove('shake');
+  void boxes.offsetWidth; // reflow to restart animation
+  boxes.classList.add('shake');
+  // Clear PIN
+  setTimeout(()=>{
+    pin = '';
+    updateBoxes();
+    document.getElementById('loginBtn').disabled = true;
+    boxes.classList.remove('shake');
+  }, 480);
+}
+
+function clearError(){
+  document.getElementById('pinError').textContent = '';
+}
+</script>
+</body>
+</html>
