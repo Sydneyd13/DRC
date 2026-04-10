@@ -5,247 +5,436 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DRC — Schedule</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --orange:#E85A24;--orange-dim:rgba(232,90,36,0.10);--orange-mid:rgba(232,90,36,0.22);
-  --dark:#1A1A1A;--sidebar-bg:#1E1E1E;--page-bg:#F2F0EC;--card:#FFFFFF;--card2:#F7F5F2;
-  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.11);--text:#1A1A1A;--muted:#888480;--muted2:#6B6864;
-  --green:#1A9E65;--green-dim:rgba(26,158,101,0.10);--red:#D64040;--red-dim:rgba(214,64,64,0.10);
-  --blue:#2D7DD2;--blue-dim:rgba(45,125,210,0.10);--amber:#C87E18;--amber-dim:rgba(200,126,24,0.10);
-  --purple:#7B52D4;--purple-dim:rgba(123,82,212,0.10);
+  --orange:#E85A24;--orange-dim:rgba(232,90,36,0.10);--orange-mid:rgba(232,90,36,0.18);
+  --orange-grad:linear-gradient(135deg,#F4723A 0%,#E04E18 100%);
+  --sidebar-bg:#FFFFFF;--sidebar-border:rgba(0,0,0,0.07);
+  --page-bg:#F1F4F8;--card:#FFFFFF;--card2:#F7F9FC;
+  --dark:#0F1117;--text:#0F1117;--text2:#374151;--muted:#8B95A5;--muted2:#6B7685;
+  --border:rgba(0,0,0,0.06);--border2:rgba(0,0,0,0.09);
+  --green:#16A066;--green-dim:rgba(22,160,102,0.10);
+  --red:#D63B3B;--red-dim:rgba(214,59,59,0.10);
+  --blue:#2563EB;--blue-dim:rgba(37,99,235,0.10);
+  --amber:#C07010;--amber-dim:rgba(192,112,16,0.10);
+  --purple:#6D40D4;--purple-dim:rgba(109,64,212,0.10);
+  --c-prospect:#8B95A5;--c-qualified:#2563EB;--c-proposal:#C07010;
+  --c-negot:#E85A24;--c-won:#16A066;--c-lost:#D63B3B;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.10),0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.04);
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
+html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;line-height:1.5;}
 .app{display:flex;height:100vh;overflow:hidden;}
 
-/* ── Sidebar ── */
-.sidebar{width:220px;flex-shrink:0;background:var(--sidebar-bg);display:flex;flex-direction:column;}
-.logo{padding:22px 18px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
-.logo-mark{width:32px;height:32px;flex-shrink:0;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;}
-.logo-text{font-size:14px;font-weight:600;color:#F0EDE8;}.logo-sub{font-size:11px;color:rgba(255,255,255,0.32);margin-top:1px;}
-.nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:1px;overflow-y:auto;}
-.nav-section{padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.28);}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;color:rgba(255,255,255,0.42);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;transition:background 0.12s,color 0.12s;}
-.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82);}
-.nav-item.active{background:var(--orange);color:#fff;}
-.nav-item svg{width:16px;height:16px;flex-shrink:0;}
-.sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.07);}
-.user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;}
-.user-chip:hover{background:rgba(255,255,255,0.06);}
-.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--orange);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;}
-.user-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.78);}
-.user-role{font-size:11px;color:rgba(255,255,255,0.32);}
+/* SIDEBAR — white with orange pill */
+.sidebar{width:232px;flex-shrink:0;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;}
+.logo{padding:22px 18px 18px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:12px;}
+.logo-mark{width:36px;height:36px;flex-shrink:0;background:var(--orange-grad);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;box-shadow:0 3px 8px rgba(232,90,36,0.35);}
+.logo-text{font-size:16px;font-weight:800;color:var(--dark);letter-spacing:-0.02em;}
+.logo-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:500;}
+.nav{padding:10px 10px;flex:1;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-section{padding:14px 8px 5px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);color:var(--muted2);font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;transition:background 0.14s,color 0.14s;}
+.nav-item:hover{background:var(--page-bg);color:var(--text);}
+.nav-item.active{background:var(--orange);color:#fff;box-shadow:0 3px 10px rgba(232,90,36,0.28);}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:rgba(232,90,36,0.12);color:var(--orange);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.nav-item.active .nav-badge{background:rgba(255,255,255,0.25);color:#fff;}
+.sidebar-footer{padding:14px 10px;border-top:1px solid var(--sidebar-border);}
+.user-chip{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:background 0.14s;}
+.user-chip:hover{background:var(--page-bg);}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--orange-grad);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;box-shadow:0 2px 6px rgba(232,90,36,0.3);}
+.user-name{font-size:13px;font-weight:700;color:var(--text);}
+.user-role{font-size:11px;color:var(--muted);font-weight:500;}
 
-/* ── Mobile ── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;opacity:0;transition:opacity 0.2s;}
+/* Mobile drawer — same light style */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;opacity:0;transition:opacity 0.2s;}
 .overlay.open{opacity:1;}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:268px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-right:1px solid var(--sidebar-border);box-shadow:4px 0 24px rgba(0,0,0,0.10);}
 .drawer.open{transform:translateX(0);}
-.drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--page-bg);border:none;color:var(--muted2);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
-/* ── Main ── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.topbar{padding:13px 16px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px;}
-.topbar-left{display:flex;align-items:center;gap:11px;min-width:0;}
-.menu-btn{width:36px;height:36px;flex-shrink:0;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
-.topbar-title{font-size:15px;font-weight:600;}
-.topbar-meta{font-size:12px;color:var(--muted);margin-top:1px;}
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--page-bg);}
+.topbar{padding:16px 24px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow-sm);}
+.topbar-left{display:flex;align-items:center;gap:13px;}
+.menu-btn{width:38px;height:38px;flex-shrink:0;background:transparent;border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
+.topbar-title{font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--dark);}
+.topbar-meta{font-size:13px;color:var(--muted);margin-top:1px;font-weight:500;}
 
-/* ── Buttons ── */
-.btn{padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all 0.12s;}
-.btn-primary{background:var(--orange);color:#fff;}.btn-primary:hover{background:#cc4f1c;}
-.btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border2);}.btn-ghost:hover{background:var(--card2);color:var(--text);}
-.btn-sm{padding:6px 11px;font-size:12px;}
-.btn:disabled{opacity:0.6;cursor:not-allowed;}
+/* Buttons */
+.btn{padding:10px 18px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;letter-spacing:-0.01em;}
+.btn-primary{background:var(--orange-grad);color:#fff;box-shadow:0 3px 10px rgba(232,90,36,0.30);}
+.btn-primary:hover{box-shadow:0 5px 18px rgba(232,90,36,0.40);transform:translateY(-1px);}
+.btn-primary:active{transform:translateY(0);}
+.btn-ghost{background:var(--card);color:var(--text2);border:1.5px solid var(--border2);box-shadow:var(--shadow-sm);}
+.btn-ghost:hover{background:var(--card2);border-color:rgba(0,0,0,0.14);}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-danger:hover{background:#bf3030;}
+.btn-sm{padding:8px 14px;font-size:13px;}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
 
-/* ── Search ── */
-.search-bar{padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+/* Summary strip */
+.summary-strip{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border2);flex-shrink:0;overflow-x:auto;box-shadow:var(--shadow-sm);}
+.summary-strip::-webkit-scrollbar{display:none;}
+.sum-cell{padding:16px 24px;border-right:1px solid var(--border2);flex-shrink:0;display:flex;flex-direction:column;gap:3px;min-width:150px;}
+.sum-cell:last-child{border-right:none;}
+.sum-cell.featured{background:linear-gradient(135deg,rgba(232,90,36,0.06) 0%,rgba(232,90,36,0.02) 100%);}
+.sum-label{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);}
+.sum-value{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--dark);letter-spacing:-0.03em;line-height:1;}
+.sum-cell.featured .sum-value{color:var(--orange);}
+.sum-count{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
+
+/* Kanban board */
+.board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding:20px 22px;display:flex;gap:14px;}
+.board-wrap::-webkit-scrollbar{height:5px;}
+.board-wrap::-webkit-scrollbar-track{background:transparent;}
+.board-wrap::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.10);border-radius:3px;}
+.col{width:272px;flex-shrink:0;display:flex;flex-direction:column;}
+.col-head{padding:0 4px 12px;display:flex;align-items:center;justify-content:space-between;}
+.col-title-wrap{display:flex;align-items:center;gap:9px;}
+.col-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.col-title{font-size:16px;font-weight:800;letter-spacing:-0.02em;color:var(--dark);}
+.col-count{font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.col-add{width:30px;height:30px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;transition:all 0.12s;box-shadow:var(--shadow-sm);}
+.col-add:hover{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 3px 8px rgba(232,90,36,0.25);}
+.col-cards{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:9px;min-height:80px;padding:1px;}
+.col-cards::-webkit-scrollbar{width:3px;}
+.col-cards::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:2px;}
+.col-empty{padding:28px 14px;text-align:center;font-size:13px;font-weight:600;color:var(--muted);border:2px dashed var(--border2);border-radius:var(--radius);}
+.tint-prospect,.tint-qualified,.tint-proposal,.tint-negot,.tint-won,.tint-lost{}
+
+/* Job cards */
+.job-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:0;cursor:pointer;transition:box-shadow 0.18s,transform 0.18s,border-color 0.18s;display:flex;overflow:hidden;box-shadow:var(--shadow-sm);}
+.job-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:rgba(0,0,0,0.14);}
+.job-card:active{transform:translateY(0);box-shadow:var(--shadow-sm);}
+.job-card-bar{width:4px;flex-shrink:0;}
+.job-card-body{flex:1;padding:14px 15px 12px;min-width:0;}
+.card-prospect .job-card-bar{background:var(--c-prospect);}
+.card-qualified .job-card-bar{background:var(--c-qualified);}
+.card-proposal .job-card-bar{background:var(--c-proposal);}
+.card-negotiation .job-card-bar{background:var(--c-negot);}
+.card-won .job-card-bar{background:var(--c-won);}
+.card-lost .job-card-bar{background:var(--c-lost);}
+.jc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;}
+.jc-customer{font-size:15px;font-weight:800;line-height:1.3;letter-spacing:-0.02em;color:var(--dark);}
+.jc-type{padding:3px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;margin-top:2px;}
+.type-water{background:var(--blue-dim);color:var(--blue);}
+.type-fire{background:var(--red-dim);color:var(--red);}
+.type-mold{background:var(--green-dim);color:var(--green);}
+.type-insp{background:var(--purple-dim);color:var(--purple);}
+.type-other{background:rgba(0,0,0,0.06);color:var(--muted2);}
+.jc-value{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;margin-bottom:9px;color:var(--dark);letter-spacing:-0.02em;}
+.jc-meta{display:flex;flex-direction:column;gap:4px;margin-bottom:11px;}
+.jc-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted2);font-weight:500;}
+.jc-row svg{width:12px;height:12px;flex-shrink:0;opacity:0.6;}
+.jc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);}
+.jc-link{font-size:12px;font-weight:700;color:var(--orange);display:flex;align-items:center;gap:3px;}
+.jc-age{font-size:12px;color:var(--muted);font-weight:500;}
+
+/* Mobile list */
+.list-wrap{display:none;flex:1;overflow-y:auto;padding:16px 14px 100px;}
+.list-wrap::-webkit-scrollbar{width:4px;}
+.list-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.stage-pills{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:18px;}
+.stage-pills::-webkit-scrollbar{display:none;}
+.stage-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all 0.14s;box-shadow:var(--shadow-sm);}
+.stage-pill.active{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 10px rgba(232,90,36,0.28);}
+.stage-group{margin-bottom:24px;}
+.stage-group-head{display:flex;align-items:center;gap:9px;margin-bottom:12px;padding:0 2px;}
+.stage-group-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.stage-group-title{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
+.stage-group-count{font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.stage-group-add{margin-left:auto;font-size:13px;color:var(--orange);font-weight:700;cursor:pointer;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;}
+.list-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);display:flex;align-items:stretch;cursor:pointer;margin-bottom:9px;overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow 0.14s,transform 0.14s;}
+.list-card:active{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.list-card-bar{width:4px;flex-shrink:0;}
+.list-card-body{flex:1;padding:13px 15px;min-width:0;}
+.list-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.list-card-name{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.02em;}
+.list-card-value{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;flex-shrink:0;color:var(--dark);}
+.list-card-sub{display:flex;align-items:center;gap:8px;}
+.list-card-type{padding:3px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
+.list-card-loc{font-size:12px;color:var(--muted2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-card-arrow{color:var(--muted);flex-shrink:0;padding:0 14px;display:flex;align-items:center;}
+
+/* Detail panel */
+.panel-overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:300;backdrop-filter:blur(3px);}
+.panel-overlay.open{display:block;}
+.detail-panel{position:fixed;top:0;right:0;bottom:0;width:480px;background:var(--card);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.26s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
+.detail-panel.open{transform:translateX(0);}
+.panel-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.panel-title{font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--dark);}
+.panel-subtitle{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500;}
+.panel-x{width:34px;height:34px;border-radius:50%;background:var(--page-bg);border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);flex-shrink:0;margin-left:12px;transition:all 0.14s;}
+.panel-x:hover{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;padding:0 6px;}
+.ptab{padding:12px 16px;font-size:14px;font-weight:700;color:var(--muted2);cursor:pointer;border-bottom:2.5px solid transparent;transition:all 0.14s;}
+.ptab.active{color:var(--orange);border-bottom-color:var(--orange);}
+.panel-body{flex:1;overflow-y:auto;background:var(--page-bg);}
+.panel-body::-webkit-scrollbar{width:4px;}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.tab-pane{display:none;padding:22px;}
+.tab-pane.active{display:block;}
+.panel-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:var(--card);}
+.panel-foot .btn{flex:1;justify-content:center;}
+
+/* Form */
+.field-group{margin-bottom:16px;}
+.field-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;display:block;}
+.field-input,.field-select{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.15s,box-shadow 0.15s;font-weight:500;}
+.field-input:focus,.field-select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.field-input.err{border-color:var(--red);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.field-mono{font-family:'DM Mono',monospace;}
+.field-divider{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin:20px 0 14px;padding-top:16px;border-top:1px solid var(--border);display:block;}
+
+/* Customer search */
+.cust-search-wrap{position:relative;}
+.cust-search-input{width:100%;padding:11px 13px 11px 38px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);font-weight:500;transition:border-color 0.15s,box-shadow 0.15s;}
+.cust-search-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.cust-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.cust-dropdown{position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:500;max-height:240px;overflow-y:auto;display:none;}
+.cust-dropdown.open{display:block;}
+.cust-option{padding:11px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.1s;}
+.cust-option:last-child{border-bottom:none;}
+.cust-option:hover,.cust-option.hl{background:var(--orange-dim);}
+.cust-option-name{font-weight:700;}
+.cust-option-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;}
+.cust-no-results{padding:16px;font-size:14px;color:var(--muted);text-align:center;font-weight:500;}
+.cust-chip{display:flex;align-items:center;gap:10px;background:var(--orange-dim);border:1.5px solid var(--orange-mid);border-radius:var(--radius-sm);padding:10px 14px;margin-top:8px;}
+.cust-chip-name{font-size:14px;font-weight:700;color:var(--orange);flex:1;}
+.cust-chip-clear{background:none;border:none;cursor:pointer;color:var(--orange);padding:0;display:flex;align-items:center;opacity:0.7;}
+.cust-chip-clear:hover{opacity:1;}
+
+/* Contact block */
+.contact-block{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-sm);}
+.contact-block-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;display:block;}
+.contact-name{font-size:16px;font-weight:800;margin-bottom:7px;letter-spacing:-0.02em;color:var(--dark);}
+.contact-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted2);margin-bottom:4px;font-weight:500;}
+.contact-row svg{width:13px;height:13px;color:var(--muted);flex-shrink:0;}
+.contact-row a{color:var(--blue);text-decoration:none;font-weight:600;}
+
+/* Notes */
+.add-note-box{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:15px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.add-note-ta{width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;resize:vertical;min-height:76px;line-height:1.6;background:var(--page-bg);color:var(--text);font-weight:500;}
+.add-note-ta:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.add-note-foot{display:flex;justify-content:flex-end;gap:9px;margin-top:10px;}
+.note-item{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.note-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.note-date{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
+.note-acts{display:flex;gap:6px;}
+.nbtn{background:none;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:3px 8px;border-radius:var(--radius-xs);}
+.nbtn.edit{color:var(--blue);}.nbtn.edit:hover{background:var(--blue-dim);}
+.nbtn.del{color:var(--red);}.nbtn.del:hover{background:var(--red-dim);}
+.note-text{font-size:14px;line-height:1.7;color:var(--text2);font-weight:500;}
+.note-edit-wrap{display:none;}.note-edit-wrap.open{display:block;}
+.note-edit-ta{width:100%;padding:10px 12px;border:1.5px solid var(--orange);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;resize:vertical;min-height:64px;line-height:1.6;color:var(--text);font-weight:500;background:var(--card);}
+.note-edit-ta:focus{outline:none;}
+.note-edit-foot{display:flex;gap:8px;margin-top:8px;}
+
+/* Filter drawer */
+.filter-overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.25);z-index:399;backdrop-filter:blur(2px);}
+.filter-overlay.open{display:block;}
+.filter-drawer{position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--card);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
+.filter-drawer.open{transform:translateX(0);}
+.filter-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.filter-title{font-size:18px;font-weight:800;letter-spacing:-0.03em;}
+.filter-body{flex:1;overflow-y:auto;padding:20px 22px;}
+.filter-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:9px;}
+.filter-foot .btn{flex:1;justify-content:center;}
+.filter-section{margin-bottom:26px;}
+.filter-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:12px;display:block;}
+.filter-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.filter-chip{padding:8px 15px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);cursor:pointer;transition:all 0.14s;user-select:none;box-shadow:var(--shadow-sm);}
+.filter-chip.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);font-weight:700;}
+.filter-dot{display:none;width:7px;height:7px;border-radius:50%;background:var(--orange);margin-left:4px;vertical-align:middle;}
+.filter-dot.show{display:inline-block;}
+.date-presets{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.date-preset{padding:9px 10px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);cursor:pointer;text-align:center;transition:all 0.14s;box-shadow:var(--shadow-sm);}
+.date-preset.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);font-weight:700;}
+.date-custom{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,rgba(0,0,0,0.05) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-sm);}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Toast / spinner */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark);color:#fff;padding:12px 22px;border-radius:var(--radius);font-size:14px;font-weight:700;z-index:999;opacity:0;transition:all 0.22s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-lg);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--red);}
+.spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.07);}
+.bnav-inner{display:flex;justify-content:space-around;padding:8px 0 5px;}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;transition:color 0.14s;}
+.bnav-item.active{color:var(--orange);}
+.bnav-item svg{width:22px;height:22px;}
+.bnav-item span{font-size:10px;font-weight:700;}
+
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
+  .board-wrap{display:none;}.list-wrap{display:block;}
+  .detail-panel{width:100%;border-left:none;top:auto;height:93vh;border-radius:20px 20px 0 0;transform:translateY(100%);box-shadow:0 -8px 40px rgba(0,0,0,0.15);}
+  .detail-panel.open{transform:translateY(0);}
+  .filter-drawer{width:100%;border-left:none;top:auto;height:86vh;border-radius:20px 20px 0 0;transform:translateY(100%);}
+  .filter-drawer.open{transform:translateY(0);}
+  .field-row{grid-template-columns:1fr;gap:0;}
+  .btn-ghost-hide{display:none;}
+  .sum-cell{padding:13px 16px;min-width:130px;}
+  .sum-value{font-size:19px;}
+}
+@media(min-width:769px){
+  .topbar{padding:18px 28px;}.topbar-title{font-size:22px;}
+  .board-wrap{padding:22px 26px;}
+}
+
+/* ── Schedule-specific ── */
+.search-bar{padding:12px 24px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:10px;flex-shrink:0;box-shadow:var(--shadow-sm);}
 .search-wrap{position:relative;flex:1;}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
-.search-input{width:100%;padding:8px 10px 8px 32px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text);}
-.search-input:focus{outline:none;border-color:var(--orange);background:var(--card);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.search-input{width:100%;padding:10px 12px 10px 36px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card2);color:var(--text);font-weight:500;transition:border-color 0.15s,box-shadow 0.15s;}
+.search-input:focus{outline:none;border-color:var(--orange);background:var(--card);box-shadow:0 0 0 3px var(--orange-dim);}
 .search-input::placeholder{color:var(--muted);}
-.filter-select{padding:8px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text);cursor:pointer;flex-shrink:0;}
+.filter-select{padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);cursor:pointer;flex-shrink:0;font-weight:600;box-shadow:var(--shadow-sm);}
 .filter-select:focus{outline:none;border-color:var(--orange);}
-
-/* ── Content split ── */
 .content-area{flex:1;display:flex;overflow:hidden;}
-
-/* ── Job list (left) ── */
-.job-list{width:360px;flex-shrink:0;border-right:1px solid var(--border2);overflow-y:auto;background:var(--page-bg);}
+.job-list{width:368px;flex-shrink:0;border-right:1px solid var(--border2);overflow-y:auto;background:var(--page-bg);}
 .job-list::-webkit-scrollbar{width:4px;}.job-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.list-inner{padding:14px;display:flex;flex-direction:column;gap:8px;}
-
-/* ── Job card ── */
-.jcard{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px;cursor:pointer;transition:all 0.12s;position:relative;overflow:hidden;}
-.jcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.jcard:hover{box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+.list-inner{padding:16px;display:flex;flex-direction:column;gap:9px;}
+.jcard{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:0;cursor:pointer;transition:all 0.15s;overflow:hidden;display:flex;box-shadow:var(--shadow-sm);}
+.jcard-bar{width:4px;flex-shrink:0;}
+.jcard-body{flex:1;padding:14px 14px 12px;min-width:0;}
+.jcard:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:rgba(0,0,0,0.14);}
 .jcard.selected{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
-.jcard.jt-water::before{background:var(--blue);}
-.jcard.jt-fire::before{background:var(--red);}
-.jcard.jt-mold::before{background:var(--green);}
-.jcard.jt-insp::before{background:var(--purple);}
-.jcard.jt-other::before{background:var(--muted);}
-.jc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;}
-.jc-name{font-size:13px;font-weight:600;line-height:1.3;}
-.jtype{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;flex-shrink:0;}
+.jcard.jt-water .jcard-bar{background:var(--blue);}
+.jcard.jt-fire .jcard-bar{background:var(--red);}
+.jcard.jt-mold .jcard-bar{background:var(--green);}
+.jcard.jt-insp .jcard-bar{background:var(--purple);}
+.jcard.jt-other .jcard-bar{background:var(--muted);}
+.jc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;}
+.jc-name{font-size:15px;font-weight:800;line-height:1.3;letter-spacing:-0.02em;color:var(--dark);}
+.jtype{padding:3px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;margin-top:2px;}
 .jtype-water{background:var(--blue-dim);color:var(--blue);}
 .jtype-fire{background:var(--red-dim);color:var(--red);}
 .jtype-mold{background:var(--green-dim);color:var(--green);}
 .jtype-insp{background:var(--purple-dim);color:var(--purple);}
-.jtype-other{background:var(--border);color:var(--muted2);}
-.jc-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;margin-bottom:6px;color:var(--green);}
-.jc-meta{font-size:11px;color:var(--muted2);display:flex;flex-direction:column;gap:3px;margin-bottom:8px;}
+.jtype-other{background:rgba(0,0,0,0.06);color:var(--muted2);}
+.jc-val{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;margin-bottom:8px;color:var(--dark);letter-spacing:-0.02em;}
+.jc-meta{font-size:12px;color:var(--muted2);display:flex;flex-direction:column;gap:3px;margin-bottom:9px;font-weight:500;}
 .jc-meta-row{display:flex;align-items:center;gap:5px;}
-.jc-meta-row svg{width:11px;height:11px;flex-shrink:0;}
-.jc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border);}
-.jstatus{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding:2px 7px;border-radius:4px;}
+.jc-meta-row svg{width:12px;height:12px;flex-shrink:0;opacity:0.6;}
+.jc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:1px solid var(--border);}
+.jstatus{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:3px 8px;border-radius:var(--radius-xs);}
 .js-waiting{background:var(--amber-dim);color:var(--amber);}
 .js-scheduled{background:var(--blue-dim);color:var(--blue);}
 .js-active{background:var(--green-dim);color:var(--green);}
-.js-complete{background:var(--border);color:var(--muted2);}
-.jc-daterange{font-size:11px;color:var(--muted);}
-.list-empty{text-align:center;padding:48px 20px;color:var(--muted);}
-.list-empty svg{opacity:0.2;margin-bottom:10px;}
-.list-empty p{font-size:13px;font-weight:500;}
-.list-empty small{font-size:12px;display:block;margin-top:4px;}
-
-/* ── Detail panel (right) ── */
+.js-complete{background:rgba(0,0,0,0.06);color:var(--muted2);}
+.jc-daterange{font-size:12px;color:var(--muted);font-weight:500;}
+.list-empty{text-align:center;padding:56px 20px;color:var(--muted);}
+.list-empty svg{opacity:0.15;margin-bottom:12px;}
+.list-empty p{font-size:14px;font-weight:700;color:var(--dark);}
+.list-empty small{font-size:13px;display:block;margin-top:5px;font-weight:500;}
 .detail-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--page-bg);}
-.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);gap:12px;}
-.detail-empty svg{opacity:0.2;}
-.detail-empty p{font-size:14px;font-weight:500;}
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);gap:14px;}
+.detail-empty svg{opacity:0.15;}
+.detail-empty p{font-size:15px;font-weight:700;color:var(--dark);}
 .detail-content{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .detail-content.visible{display:flex;}
-
-/* ── Job detail header ── */
-.detail-head{background:var(--card);border-bottom:1px solid var(--border2);padding:16px 22px;flex-shrink:0;}
-.dh-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
-.dh-bar{width:4px;min-height:44px;border-radius:2px;flex-shrink:0;align-self:stretch;}
+.detail-head{background:var(--card);border-bottom:1px solid var(--border2);padding:18px 24px;flex-shrink:0;box-shadow:var(--shadow-sm);}
+.dh-row{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.dh-bar{width:4px;min-height:48px;border-radius:3px;flex-shrink:0;align-self:stretch;}
 .dh-info{flex:1;min-width:0;}
-.dh-name{font-size:18px;font-weight:700;margin-bottom:2px;}
-.dh-sub{font-size:13px;color:var(--muted);margin-bottom:8px;}
-.dh-chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
-.dh-chip{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted2);}
-.dh-chip svg{width:12px;height:12px;color:var(--muted);}
-.dh-actions{display:flex;gap:8px;flex-wrap:wrap;}
-
-/* ── Days scroll ── */
-.days-scroll{flex:1;overflow-y:auto;padding:18px 22px 40px;}
+.dh-name{font-size:20px;font-weight:800;margin-bottom:3px;letter-spacing:-0.03em;color:var(--dark);}
+.dh-sub{font-size:13px;color:var(--muted);margin-bottom:10px;font-weight:500;}
+.dh-chips{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.dh-chip{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--muted2);font-weight:600;}
+.dh-chip svg{width:13px;height:13px;color:var(--muted);}
+.dh-actions{display:flex;gap:9px;flex-wrap:wrap;}
+.days-scroll{flex:1;overflow-y:auto;padding:20px 24px 40px;}
 .days-scroll::-webkit-scrollbar{width:4px;}.days-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.week-group{margin-bottom:20px;}
-.week-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;padding:0 2px;}
-
-/* ── No dates placeholder ── */
-.no-dates{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:14px;color:var(--muted);padding:40px;text-align:center;}
-.no-dates svg{opacity:0.2;}
-.no-dates p{font-size:14px;font-weight:500;}
-.no-dates small{font-size:13px;line-height:1.6;max-width:280px;}
-
-/* ── Day row ── */
-.day-row{background:var(--card);border:1px solid var(--border2);border-radius:10px;margin-bottom:6px;overflow:hidden;transition:box-shadow 0.12s;}
-.day-row.is-work{border-color:rgba(232,90,36,0.3);}
+.week-group{margin-bottom:22px;}
+.week-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;padding:0 2px;}
+.no-dates{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;color:var(--muted);padding:40px;text-align:center;}
+.no-dates svg{opacity:0.15;}
+.no-dates p{font-size:16px;font-weight:800;color:var(--dark);}
+.no-dates small{font-size:14px;line-height:1.6;max-width:300px;font-weight:500;}
+.day-row{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;transition:box-shadow 0.15s;box-shadow:var(--shadow-sm);}
+.day-row.is-work{border-color:rgba(232,90,36,0.35);box-shadow:0 2px 8px rgba(232,90,36,0.08);}
 .day-row.is-today .dr-num{color:var(--orange);}
 .dr-top{display:flex;align-items:stretch;cursor:pointer;user-select:none;}
-.dr-date{width:58px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-right:1px solid var(--border2);}
-.dr-dayname{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
-.dr-num{font-size:20px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;}
-.dr-mid{flex:1;padding:10px 13px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px;}
-.dr-toggle-row{display:flex;align-items:center;gap:8px;}
-.dr-summary{font-size:13px;font-weight:600;}
-.dr-summary-empty{font-size:12px;color:var(--muted);font-style:italic;}
-.dr-note-preview{font-size:11px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
-.dr-avatars{display:flex;align-items:center;padding:0 8px 0 4px;flex-shrink:0;}
-.dr-avatar{width:26px;height:26px;border-radius:50%;border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;margin-left:-6px;}
+.dr-date{width:64px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 6px;border-right:1px solid var(--border2);background:var(--card2);}
+.dr-dayname{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+.dr-num{font-size:22px;font-weight:800;font-family:'DM Mono',monospace;line-height:1;letter-spacing:-0.02em;}
+.dr-mid{flex:1;padding:12px 14px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px;}
+.dr-toggle-row{display:flex;align-items:center;gap:9px;}
+.dr-summary{font-size:14px;font-weight:700;color:var(--dark);letter-spacing:-0.01em;}
+.dr-summary-empty{font-size:13px;color:var(--muted);font-style:italic;font-weight:500;}
+.dr-note-preview{font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px;font-weight:500;}
+.dr-avatars{display:flex;align-items:center;padding:0 10px 0 4px;flex-shrink:0;}
+.dr-avatar{width:28px;height:28px;border-radius:50%;border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;margin-left:-7px;}
 .dr-avatar:first-child{margin-left:0;}
-.dr-chevron{color:var(--muted);transition:transform 0.2s;display:flex;align-items:center;padding-right:10px;}
+.dr-chevron{color:var(--muted);transition:transform 0.2s;display:flex;align-items:center;padding-right:12px;}
 .dr-chevron.open{transform:rotate(180deg);}
-
-/* ── Toggle switch ── */
-.tog{position:relative;width:36px;height:20px;flex-shrink:0;}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
-.tog-sl{position:absolute;inset:0;background:var(--border2);border-radius:10px;cursor:pointer;transition:background 0.15s;}
-.tog-sl::before{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.tog-sl{position:absolute;inset:0;background:var(--border2);border-radius:11px;cursor:pointer;transition:background 0.15s;}
+.tog-sl::before{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.15s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
 .tog input:checked+.tog-sl{background:var(--orange);}
 .tog input:checked+.tog-sl::before{transform:translateX(16px);}
-
-/* ── Expand body ── */
 .dr-expand{display:none;border-top:1px solid var(--border);background:var(--card2);}
 .dr-expand.open{display:block;}
-.dr-expand-inner{padding:14px 16px;}
-.exp-section{margin-bottom:16px;}
+.dr-expand-inner{padding:16px 18px;}
+.exp-section{margin-bottom:18px;}
 .exp-section:last-child{margin-bottom:0;}
-.exp-title{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
-
-/* ── People picker ── */
-.people-grid{display:flex;flex-direction:column;gap:5px;}
-.pr{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--card);border:1px solid var(--border2);cursor:pointer;transition:all 0.1s;}
-.pr:hover{border-color:var(--border2);box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.exp-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
+.people-grid{display:flex;flex-direction:column;gap:6px;}
+.pr{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--card);border:1.5px solid var(--border2);cursor:pointer;transition:all 0.12s;box-shadow:var(--shadow-sm);}
+.pr:hover{box-shadow:var(--shadow-md);border-color:rgba(0,0,0,0.14);}
 .pr.on{border-color:var(--orange);background:var(--orange-dim);}
-.pr-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;}
-.pr-name{flex:1;font-size:13px;font-weight:500;}
-.pr-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);background:var(--card);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.12s;}
+.pr-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;}
+.pr-name{flex:1;font-size:14px;font-weight:600;}
+.pr-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);background:var(--card);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.12s;}
 .pr.on .pr-check{background:var(--orange);border-color:var(--orange);}
-.no-employees{font-size:13px;color:var(--muted);padding:8px 0;font-style:italic;}
-
-/* ── Note area ── */
-.note-ta{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:60px;line-height:1.5;background:var(--card);}
-.note-ta:focus{outline:none;border-color:var(--orange);}
-.note-foot{display:flex;justify-content:flex-end;gap:6px;margin-top:6px;}
-
-/* ── Modal ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.no-employees{font-size:14px;color:var(--muted);padding:10px 0;font-style:italic;font-weight:500;}
+.note-ta{width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;resize:vertical;min-height:64px;line-height:1.5;background:var(--card);color:var(--text);font-weight:500;}
+.note-ta:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.note-foot{display:flex;justify-content:flex-end;gap:7px;margin-top:8px;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
 .modal-bg.open{display:flex;}
-.modal{background:var(--card);border-radius:14px;width:100%;max-width:440px;display:flex;flex-direction:column;}
-.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-radius:14px 14px 0 0;}
-.modal-title{font-size:16px;font-weight:600;}
-.modal-x{width:30px;height:30px;border-radius:50%;background:var(--card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);}
-.modal-body{padding:20px;}
-.modal-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.modal{background:var(--card);border-radius:var(--radius);width:100%;max-width:460px;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-radius:var(--radius) var(--radius) 0 0;}
+.modal-title{font-size:18px;font-weight:800;letter-spacing:-0.02em;}
+.modal-x{width:32px;height:32px;border-radius:50%;background:var(--page-bg);border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);transition:all 0.14s;}
+.modal-x:hover{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.modal-body{padding:22px;}
+.modal-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:9px;}
 .modal-foot .btn{flex:1;justify-content:center;}
-.form-group{margin-bottom:14px;}
-.form-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px;display:block;}
-.form-input{width:100%;padding:9px 11px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--text);}
-.form-input:focus{outline:none;border-color:var(--orange);}
+.form-group{margin-bottom:15px;}
+.form-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;display:block;}
+.form-input{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);font-weight:500;transition:border-color 0.15s,box-shadow 0.15s;}
+.form-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
 .form-input.err{border-color:var(--red);}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.form-hint{font-size:11px;color:var(--muted);margin-top:5px;}
-
-/* ── Mobile detail slide ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.form-hint{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500;}
 .mobile-detail{display:none;position:fixed;inset:0;z-index:250;background:var(--page-bg);overflow-y:auto;transform:translateX(100%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);}
 .mobile-detail.open{transform:translateX(0);}
-.mob-topbar{padding:13px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--orange);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;}
-
-/* ── Toast / spinner ── */
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.error{background:var(--red);}
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Skeleton ── */
-.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--border) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* ── Bottom nav ── */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.bnav-inner{display:flex;justify-content:space-around;padding:6px 0 4px;}
-.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;}
-.bnav-item.active{color:var(--orange);}
-.bnav-item svg{width:22px;height:22px;}
-.bnav-item span{font-size:10px;font-weight:500;}
-
+.mob-topbar{padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:var(--shadow-sm);}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--orange);cursor:pointer;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;}
 @media(max-width:768px){
-  .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
   .job-list{width:100%;border-right:none;}.detail-panel{display:none;}.mobile-detail{display:block;}
-  .list-inner{padding:12px 12px 100px;}
-  .modal-bg{align-items:flex-end;padding:0;}.modal{border-radius:16px 16px 0 0;}
+  .list-inner{padding:14px 14px 100px;}
+  .modal-bg{align-items:flex-end;padding:0;}.modal{border-radius:20px 20px 0 0;max-height:92vh;}
   .form-row{grid-template-columns:1fr;gap:0;}
-  .days-scroll{padding:12px 14px 100px;}.detail-head{padding:14px 16px;}
+  .days-scroll{padding:14px 16px 100px;}.detail-head{padding:14px 18px;}
+  .search-bar{padding:10px 14px;}
 }
-@media(min-width:769px){.topbar{padding:15px 24px;}.topbar-title{font-size:17px;}}
 </style>
 </head>
 <body>
@@ -256,38 +445,32 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   <div class="logo"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <a class="nav-item" href="drc-dashboard.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
-    <a class="nav-item" href="drc-pipeline.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
+    <a class="nav-item" href="drc-pipeline.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline <span class="nav-badge" id="sidebarBadge">0</span></a>
     <a class="nav-item active" href="drc-schedule.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
     <a class="nav-item" href="customer-admin.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
     <div class="nav-section" style="margin-top:6px;">Operations</div>
     <a class="nav-item" href="drc-team.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
     <a class="nav-item" href="drc-oncall.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
-    <a class="nav-item" href="drc-invoice.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>Invoices</a>
-    <a class="nav-item" href="#"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Recurring</a>
-    <a class="nav-item" href="drc-reports.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
   </nav>
   <div class="sidebar-footer"><div class="user-chip"><div class="user-avatar">DR</div><div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div></div></div>
 </aside>
 
+<!-- Mobile overlay + drawer -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
   <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <a class="nav-item" href="drc-dashboard.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
     <a class="nav-item" href="drc-pipeline.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
     <a class="nav-item active" href="drc-schedule.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Schedule</a>
     <a class="nav-item" href="customer-admin.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Customers</a>
     <div class="nav-section" style="margin-top:6px;">Operations</div>
     <a class="nav-item" href="drc-team.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>Team</a>
     <a class="nav-item" href="drc-oncall.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>On-Call</a>
-    <a class="nav-item" href="drc-reports.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Reports</a>
   </nav>
 </div>
 
-<!-- Main -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
@@ -311,19 +494,16 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   </div>
 
   <div class="content-area">
-    <!-- Left: job list -->
     <div class="job-list">
       <div class="list-inner" id="listInner">
-        <div class="skeleton" style="height:110px;border-radius:10px;"></div>
-        <div class="skeleton" style="height:110px;border-radius:10px;"></div>
-        <div class="skeleton" style="height:110px;border-radius:10px;"></div>
+        <div class="skeleton" style="height:115px;border-radius:12px;"></div>
+        <div class="skeleton" style="height:115px;border-radius:12px;"></div>
+        <div class="skeleton" style="height:115px;border-radius:12px;"></div>
       </div>
     </div>
-
-    <!-- Right: job detail -->
     <div class="detail-panel">
       <div class="detail-empty" id="detailEmpty">
-        <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg width="56" height="56" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <p>Select a job to manage its schedule</p>
       </div>
       <div class="detail-content" id="detailContent"></div>
@@ -331,7 +511,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   </div>
 </div>
 
-<!-- Mobile detail slide -->
 <div class="mobile-detail" id="mobileDetail">
   <div class="mob-topbar">
     <button class="back-btn" onclick="closeMobileDetail()">
@@ -342,7 +521,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
   <div id="mobileDetailContent"></div>
 </div>
 
-<!-- Date range modal -->
 <div class="modal-bg" id="dateModal">
   <div class="modal">
     <div class="modal-head">
@@ -350,7 +528,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
       <button class="modal-x" onclick="closeDateModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--muted2);margin-bottom:16px;line-height:1.6;">Set the overall date range for this job. Then toggle which individual days are actual work days and assign people to each one.</p>
+      <p style="font-size:14px;color:var(--muted2);margin-bottom:16px;line-height:1.6;font-weight:500;">Set the overall date range for this job. Then toggle which days are work days and assign people to each one.</p>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Start date *</label><input class="form-input" id="mStart" type="date"></div>
         <div class="form-group"><label class="form-label">End date *</label><input class="form-input" id="mEnd" type="date"></div>
@@ -366,12 +544,11 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'D
 
 <div class="toast" id="toast"></div>
 
-<!-- Bottom nav -->
 <nav class="bottom-nav">
   <div class="bnav-inner">
-    <div class="bnav-item" onclick="location.href='drc-dashboard.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></div>
     <div class="bnav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
-    <div class="bnav-item" onclick="location.href='drc-pipeline.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
+    <div class="bnav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg><span>Pipeline</span></div>
+    <div class="bnav-item" onclick="location.href='customer-admin.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Customers</span></div>
     <div class="bnav-item" onclick="location.href='drc-team.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>Team</span></div>
     <div class="bnav-item" onclick="location.href='drc-oncall.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span>On-Call</span></div>
   </div>
@@ -385,17 +562,17 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── State ─────────────────────────────────────────────────
-let jobs        = [];  // closed-won jobs with customer data
-let employees   = [];  // all active employees (with team field)
-let crews       = [];  // active teams
-let schedMap    = {};  // { [jobId]: { start_date, end_date, work_days: { [dateKey]: { is_workday, assigned: uuid[], note } } } }
+let jobs        = [];
+let employees   = [];
+let crews       = [];
+let schedMap    = {};
 let selJobId    = null;
-let openDays    = new Set();   // which day rows are expanded
+let openDays    = new Set();
 let dateModalJobId = null;
 
 const TODAY = new Date();
-const AVATAR_COLORS = ['#2D7DD2','#1A9E65','#C87E18','#D64040','#7B52D4','#E85A24'];
-const TYPE_COLORS   = {water_damage:'#2D7DD2',fire_restoration:'#D64040',mold_remediation:'#1A9E65',inspection:'#7B52D4',other:'#888480'};
+const AVATAR_COLORS = ['#2563EB','#16A066','#C07010','#D63B3B','#6D40D4','#E85A24'];
+const TYPE_COLORS   = {water_damage:'#2563EB',fire_restoration:'#D63B3B',mold_remediation:'#16A066',inspection:'#6D40D4',other:'#8B95A5'};
 const TYPE_LABELS   = {water_damage:'Water',fire_restoration:'Fire',mold_remediation:'Mold',inspection:'Inspection',other:'Other'};
 const TYPE_SHORT    = {water_damage:'water',fire_restoration:'fire',mold_remediation:'mold',inspection:'insp',other:'other'};
 const DAY_NAMES     = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -423,26 +600,19 @@ function setBtn(id, loading, label){
 // ── Init ──────────────────────────────────────────────────
 async function init(){
   const [jr, er, tr, sr] = await Promise.all([
-    // Jobs: only closed-won, join customer name + address
     db.from('jobs')
       .select('id,title,job_type,status,estimated_value,customers(first_name,last_name,company_name,address_line1,address_city)')
       .eq('is_active', true)
       .eq('status', 'won')
       .order('created_at', {ascending: false}),
-
-    // All active employees for assignment picker
     db.from('employees')
       .select('id,first_name,last_name,role,team')
       .eq('is_active', true)
       .order('first_name'),
-
-    // Active crews for quick-assign
     db.from('teams')
       .select('id,name,color')
       .eq('is_active', true)
       .order('sort_order').order('name'),
-
-    // All schedule rows for won jobs
     db.from('job_schedule')
       .select('job_id,date_key,start_date,end_date,is_workday,assigned_employee_ids,note')
   ]);
@@ -450,31 +620,20 @@ async function init(){
   if(jr.error){
     showToast('Error loading jobs: ' + jr.error.message, true);
     document.getElementById('listInner').innerHTML =
-      '<div style="padding:30px;text-align:center;color:var(--muted);font-size:13px;">Could not load jobs. Check your connection.</div>';
+      '<div style="padding:30px;text-align:center;color:var(--muted);font-size:14px;font-weight:500;">Could not load jobs. Check your connection.</div>';
     return;
   }
-  if(er.error){
-    showToast('Error loading employees: ' + er.error.message, true);
-    return;
-  }
+  if(er.error){ showToast('Error loading employees: ' + er.error.message, true); return; }
 
   jobs      = jr.data || [];
   employees = er.data || [];
   crews     = tr.data || [];
 
-  // Build schedMap from job_schedule rows
-  // The __meta__ row carries start_date / end_date for the job range
-  // All other rows are individual calendar days
   schedMap = {};
   (sr.data || []).forEach(r => {
-    if(!schedMap[r.job_id]){
-      schedMap[r.job_id] = { start_date: null, end_date: null, work_days: {} };
-    }
-    // Every row carries start_date/end_date — keep the latest non-null
+    if(!schedMap[r.job_id]) schedMap[r.job_id] = { start_date: null, end_date: null, work_days: {} };
     if(r.start_date) schedMap[r.job_id].start_date = r.start_date;
     if(r.end_date)   schedMap[r.job_id].end_date   = r.end_date;
-
-    // Only real day rows (not the __meta__ sentinel) get a work_days entry
     if(r.date_key && r.date_key !== '__meta__'){
       schedMap[r.job_id].work_days[r.date_key] = {
         is_workday: r.is_workday === true,
@@ -508,8 +667,8 @@ function schedStatus(jobId){
 
 // ── Job list render ───────────────────────────────────────
 function renderJobList(){
-  const q   = (document.getElementById('searchInput').value || '').toLowerCase();
-  const sf  = document.getElementById('statusFilter').value;
+  const q  = (document.getElementById('searchInput').value || '').toLowerCase();
+  const sf = document.getElementById('statusFilter').value;
 
   const filtered = jobs.filter(j => {
     const c = j.customers || {};
@@ -523,7 +682,7 @@ function renderJobList(){
   if(!filtered.length){
     document.getElementById('listInner').innerHTML = `
       <div class="list-empty">
-        <svg width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg width="44" height="44" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <p>${q||sf ? 'No jobs match your filters.' : 'No closed-won jobs yet.'}</p>
         <small>Jobs appear here once marked "Won" in the pipeline.</small>
       </div>`;
@@ -547,44 +706,44 @@ function jobCardHtml(j){
   const sclass  = {waiting:'js-waiting',scheduled:'js-scheduled',active:'js-active',complete:'js-complete'};
 
   return `<div class="jcard jt-${ts}${selJobId===j.id?' selected':''}" onclick="selectJob('${j.id}')">
-    <div class="jc-top">
-      <div class="jc-name">${j.title||cname}</div>
-      <span class="jtype jtype-${ts}">${TYPE_LABELS[tk]||'Other'}</span>
-    </div>
-    <div class="jc-val">${j.estimated_value ? '$'+Number(j.estimated_value).toLocaleString() : '—'}</div>
-    <div class="jc-meta">
-      <div class="jc-meta-row">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        ${cname}
+    <div class="jcard-bar"></div>
+    <div class="jcard-body">
+      <div class="jc-top">
+        <div class="jc-name">${j.title||cname}</div>
+        <span class="jtype jtype-${ts}">${TYPE_LABELS[tk]||'Other'}</span>
       </div>
-      ${addr ? `<div class="jc-meta-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${addr}</div>` : ''}
-    </div>
-    <div class="jc-foot">
-      <span class="jstatus ${sclass[st]}">${slabels[st]}</span>
-      <span class="jc-daterange">${s?.start_date ? `${fmtShort(s.start_date)}–${fmtShort(s.end_date)} · ${wdc} day${wdc!==1?'s':''}` : 'No dates set'}</span>
+      <div class="jc-val">${j.estimated_value ? '$'+Number(j.estimated_value).toLocaleString() : '—'}</div>
+      <div class="jc-meta">
+        <div class="jc-meta-row">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          ${cname}
+        </div>
+        ${addr ? `<div class="jc-meta-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${addr}</div>` : ''}
+      </div>
+      <div class="jc-foot">
+        <span class="jstatus ${sclass[st]}">${slabels[st]}</span>
+        <span class="jc-daterange">${s?.start_date ? `${fmtShort(s.start_date)}–${fmtShort(s.end_date)} · ${wdc} day${wdc!==1?'s':''}` : 'No dates set'}</span>
+      </div>
     </div>
   </div>`;
 }
 
 // ── Select job ────────────────────────────────────────────
 function selectJob(id){
-  selJobId  = id;
-  openDays  = new Set();
+  selJobId = id;
+  openDays = new Set();
   renderJobList();
-
   const j = jobs.find(x => x.id === id);
   if(!j) return;
-
   if(window.innerWidth <= 768){
     document.getElementById('mobileDetailContent').innerHTML = buildDetailHTML(j);
     document.getElementById('mobileDetail').classList.add('open');
     document.body.style.overflow = 'hidden';
   } else {
-    const empty   = document.getElementById('detailEmpty');
+    document.getElementById('detailEmpty').style.display = 'none';
     const content = document.getElementById('detailContent');
-    empty.style.display   = 'none';
     content.classList.add('visible');
-    content.innerHTML     = buildDetailHTML(j);
+    content.innerHTML = buildDetailHTML(j);
   }
 }
 
@@ -600,11 +759,8 @@ function refreshDetail(){
   const j = jobs.find(x => x.id === selJobId);
   if(!j) return;
   const html = buildDetailHTML(j);
-  if(window.innerWidth <= 768){
-    document.getElementById('mobileDetailContent').innerHTML = html;
-  } else {
-    document.getElementById('detailContent').innerHTML = html;
-  }
+  if(window.innerWidth <= 768) document.getElementById('mobileDetailContent').innerHTML = html;
+  else document.getElementById('detailContent').innerHTML = html;
 }
 
 // ── Build detail HTML ─────────────────────────────────────
@@ -612,7 +768,7 @@ function buildDetailHTML(j){
   const c     = j.customers || {};
   const cname = c.company_name || [c.first_name,c.last_name].filter(Boolean).join(' ') || 'Unknown';
   const addr  = [c.address_line1, c.address_city].filter(Boolean).join(', ');
-  const col   = TYPE_COLORS[j.job_type||'other'] || '#888480';
+  const col   = TYPE_COLORS[j.job_type||'other'] || '#8B95A5';
   const s     = schedMap[j.id];
   const wdc   = Object.values(s?.work_days||{}).filter(d=>d.is_workday).length;
 
@@ -638,13 +794,12 @@ function buildDetailHTML(j){
       </div>
     </div>`;
 
-  // No dates yet
   if(!s?.start_date){
     return head + `
       <div class="no-dates">
-        <svg width="52" height="52" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <svg width="56" height="56" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <p>No dates set yet</p>
-        <small>Click "Set dates" to define the date range, then toggle which days are actual work days and assign people to each one.</small>
+        <small>Click "Set dates" to define the date range, then toggle which days are work days and assign people to each one.</small>
         <button class="btn btn-primary" onclick="openDateModal('${j.id}')">Set job dates</button>
       </div>`;
   }
@@ -657,48 +812,34 @@ function buildDaysList(jobId, s){
   const start = fromKey(s.start_date);
   const end   = fromKey(s.end_date);
   const days  = [];
-
-  for(let d = new Date(start); d <= end; d.setDate(d.getDate()+1)){
+  for(let d = new Date(start); d <= end; d.setDate(d.getDate()+1))
     days.push({ key: fmtKey(d), date: new Date(d), dow: d.getDay() });
-  }
 
   if(!days.length) return '<div style="padding:30px;text-align:center;color:var(--muted);">No days in range.</div>';
 
-  // Group by week (Mon-Sun blocks)
   const weeks = {};
   days.forEach(day => {
-    const dt  = new Date(day.date);
+    const dt = new Date(day.date);
     const mon = new Date(dt);
     mon.setDate(dt.getDate() - ((dt.getDay()+6) % 7));
     const wk = fmtKey(mon);
-    if(!weeks[wk]){
-      weeks[wk] = {
-        label: mon.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' week',
-        days:  []
-      };
-    }
+    if(!weeks[wk]) weeks[wk] = { label: mon.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' week', days: [] };
     weeks[wk].days.push(day);
   });
 
   return Object.entries(weeks).map(([,{label,days:wd}]) =>
-    `<div class="week-group">
-       <div class="week-label">${label}</div>
-       ${wd.map(day => dayRowHtml(jobId, day, s)).join('')}
-     </div>`
+    `<div class="week-group"><div class="week-label">${label}</div>${wd.map(day => dayRowHtml(jobId, day, s)).join('')}</div>`
   ).join('');
 }
 
 function dayRowHtml(jobId, day, s){
-  const dd     = s.work_days?.[day.key] || { is_workday:false, assigned:[], note:null };
-  const isWork = dd.is_workday === true;
+  const dd       = s.work_days?.[day.key] || { is_workday:false, assigned:[], note:null };
+  const isWork   = dd.is_workday === true;
   const assigned = Array.isArray(dd.assigned) ? dd.assigned : [];
-  const isOpen = openDays.has(day.key);
-  const isToday= day.key === todayKey();
+  const isOpen   = openDays.has(day.key);
+  const isToday  = day.key === todayKey();
 
-  // Resolve employee objects for assigned IDs
-  const assignedEmps = assigned
-    .map(id => employees.find(e => e.id === id))
-    .filter(Boolean);
+  const assignedEmps = assigned.map(id => employees.find(e => e.id === id)).filter(Boolean);
 
   let rowClass = 'day-row';
   if(isWork)  rowClass += ' is-work';
@@ -706,29 +847,24 @@ function dayRowHtml(jobId, day, s){
 
   const avatarsHtml = isWork && assignedEmps.length
     ? `<div class="dr-avatars">
-        ${assignedEmps.slice(0,3).map(e =>
-          `<div class="dr-avatar" style="background:${aColor(e.id)}">${getInits(e)}</div>`
-        ).join('')}
+        ${assignedEmps.slice(0,3).map(e => `<div class="dr-avatar" style="background:${aColor(e.id)}">${getInits(e)}</div>`).join('')}
         ${assignedEmps.length > 3 ? `<div class="dr-avatar" style="background:var(--muted)">+${assignedEmps.length-3}</div>` : ''}
        </div>`
     : '';
 
-  // Build crew quick-assign buttons
   const crewBtns = crews.length
-    ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-        ${crews.map(crew=>{
-          const crewMembers = employees.filter(e=>e.team===crew.name);
-          const allOn = crewMembers.length && crewMembers.every(e=>assigned.includes(e.id));
-          return `<button
-            onclick="assignCrew('${jobId}','${day.key}','${crew.name}')"
-            style="padding:5px 11px;border-radius:6px;border:2px solid ${allOn?crew.color:'var(--border2)'};background:${allOn?crew.color+'22':'var(--card)'};color:${allOn?crew.color:'var(--muted2)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all 0.12s;">
-            <span style="width:7px;height:7px;border-radius:50%;background:${crew.color};flex-shrink:0;display:inline-block;"></span>
+    ? `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;">
+        ${crews.map(crew => {
+          const members = employees.filter(e => e.team === crew.name);
+          const allOn   = members.length && members.every(e => assigned.includes(e.id));
+          return `<button onclick="assignCrew('${jobId}','${day.key}','${crew.name}')"
+            style="padding:6px 13px;border-radius:8px;border:2px solid ${allOn?crew.color:'var(--border2)'};background:${allOn?crew.color+'18':'var(--card)'};color:${allOn?crew.color:'var(--muted2)'};font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:all 0.14s;box-shadow:var(--shadow-sm);">
+            <span style="width:8px;height:8px;border-radius:50%;background:${crew.color};flex-shrink:0;display:inline-block;"></span>
             ${crew.name}
           </button>`;
         }).join('')}
-        <button
-          onclick="clearAllPeople('${jobId}','${day.key}')"
-          style="padding:5px 11px;border-radius:6px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;">
+        <button onclick="clearAllPeople('${jobId}','${day.key}')"
+          style="padding:6px 13px;border-radius:8px;border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:var(--shadow-sm);">
           Clear all
         </button>
       </div>`
@@ -742,21 +878,18 @@ function dayRowHtml(jobId, day, s){
           ${crewBtns}
           <div class="people-grid">
             ${employees.length ? employees.map(e => {
-              const on = assigned.includes(e.id);
-              const crewColor = crews.find(c=>c.name===e.team)?.color || null;
+              const on        = assigned.includes(e.id);
+              const crewColor = crews.find(c => c.name === e.team)?.color || null;
               return `<div class="pr${on?' on':''}" onclick="togglePerson('${jobId}','${day.key}','${e.id}')">
                 <div class="pr-av" style="background:${crewColor||aColor(e.id)}">${getInits(e)}</div>
-                <div class="pr-name">
-                  ${getName(e)}
-                  <span style="font-size:11px;color:var(--muted);font-weight:400;margin-left:6px;">${e.team||e.role||''}</span>
-                </div>
+                <div class="pr-name">${getName(e)}<span style="font-size:12px;color:var(--muted);font-weight:500;margin-left:7px;">${e.team||e.role||''}</span></div>
                 <div class="pr-check">${on?`<svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`:''}</div>
               </div>`;
-            }).join('') : '<div class="no-employees">No employees found — add some in the Team page.</div>'}
+            }).join('') : '<div class="no-employees">No employees found — add some in Team.</div>'}
           </div>
         </div>
         <div class="exp-section">
-          <div class="exp-title">Day note <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;">(crew will see this)</span></div>
+          <div class="exp-title">Day note <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0;font-size:11px;">(crew will see this)</span></div>
           <textarea class="note-ta" id="nt-${jobId}-${day.key}" placeholder="e.g. Start at 7am · Access code #4412 · Bring dehumidifiers...">${dd.note||''}</textarea>
           <div class="note-foot">
             <button class="btn btn-ghost btn-sm" onclick="document.getElementById('nt-${jobId}-${day.key}').value=''">Clear</button>
@@ -778,15 +911,12 @@ function dayRowHtml(jobId, day, s){
             <input type="checkbox" ${isWork?'checked':''} onchange="toggleWorkday('${jobId}','${day.key}',this.checked)">
             <div class="tog-sl"></div>
           </label>
-          <span style="font-size:13px;font-weight:500;color:${isWork?'var(--text)':'var(--muted)'};">
-            ${isWork ? 'Work day' : 'Off'}
-          </span>
+          <span style="font-size:14px;font-weight:600;color:${isWork?'var(--text)':'var(--muted)'};">${isWork ? 'Work day' : 'Off'}</span>
         </div>
         ${isWork ? `
           ${assignedEmps.length
             ? `<div class="dr-summary">${assignedEmps.map(e=>e.first_name).join(', ')}</div>`
-            : `<div class="dr-summary-empty">No one assigned — tap to assign</div>`
-          }
+            : `<div class="dr-summary-empty">No one assigned — tap to assign</div>`}
           ${dd.note ? `<div class="dr-note-preview">📝 ${dd.note}</div>` : ''}
         ` : ''}
       </div>
@@ -799,154 +929,88 @@ function dayRowHtml(jobId, day, s){
 
 // ── Toggle workday ────────────────────────────────────────
 async function toggleWorkday(jobId, dateKey, isWork){
-  if(!schedMap[jobId])
-    schedMap[jobId] = { start_date: null, end_date: null, work_days: {} };
-  if(!schedMap[jobId].work_days[dateKey])
-    schedMap[jobId].work_days[dateKey] = { is_workday: false, assigned: [], note: null };
-
+  if(!schedMap[jobId]) schedMap[jobId] = { start_date: null, end_date: null, work_days: {} };
+  if(!schedMap[jobId].work_days[dateKey]) schedMap[jobId].work_days[dateKey] = { is_workday: false, assigned: [], note: null };
   schedMap[jobId].work_days[dateKey].is_workday = isWork;
   if(!isWork) openDays.delete(dateKey);
-
   const s  = schedMap[jobId];
   const dd = s.work_days[dateKey];
-
   const { error } = await db.from('job_schedule').upsert([{
-    job_id:                jobId,
-    date_key:              dateKey,
-    start_date:            s.start_date,
-    end_date:              s.end_date,
-    is_workday:            isWork,
-    assigned_employee_ids: dd.assigned || [],
-    note:                  dd.note     || null
+    job_id: jobId, date_key: dateKey, start_date: s.start_date, end_date: s.end_date,
+    is_workday: isWork, assigned_employee_ids: dd.assigned || [], note: dd.note || null
   }], { onConflict: 'job_id,date_key' });
-
   if(error) showToast('Error saving: ' + error.message, true);
-
-  renderJobList();
-  refreshDetail();
-  updateMeta();
+  renderJobList(); refreshDetail(); updateMeta();
 }
 
 // ── Toggle expand ─────────────────────────────────────────
 function toggleExpand(jobId, dateKey){
   const dd = schedMap[jobId]?.work_days?.[dateKey];
-  if(!dd?.is_workday) return;   // can't expand off days
-  if(openDays.has(dateKey)) openDays.delete(dateKey);
-  else openDays.add(dateKey);
+  if(!dd?.is_workday) return;
+  if(openDays.has(dateKey)) openDays.delete(dateKey); else openDays.add(dateKey);
   refreshDetail();
 }
 
 // ── Toggle person ─────────────────────────────────────────
 async function togglePerson(jobId, dateKey, empId){
-  const dayData = schedMap[jobId]?.work_days?.[dateKey];
-  if(!dayData) return;
-
+  const dayData = schedMap[jobId]?.work_days?.[dateKey]; if(!dayData) return;
   const assigned = Array.isArray(dayData.assigned) ? dayData.assigned : [];
   const idx = assigned.indexOf(empId);
-  if(idx === -1) assigned.push(empId);
-  else assigned.splice(idx, 1);
+  if(idx === -1) assigned.push(empId); else assigned.splice(idx, 1);
   dayData.assigned = assigned;
-
   const s = schedMap[jobId];
   const { error } = await db.from('job_schedule').upsert([{
-    job_id:                jobId,
-    date_key:              dateKey,
-    start_date:            s.start_date,
-    end_date:              s.end_date,
-    is_workday:            true,
-    assigned_employee_ids: assigned,
-    note:                  dayData.note || null
+    job_id: jobId, date_key: dateKey, start_date: s.start_date, end_date: s.end_date,
+    is_workday: true, assigned_employee_ids: assigned, note: dayData.note || null
   }], { onConflict: 'job_id,date_key' });
-
   if(error){ showToast('Error saving: ' + error.message, true); return; }
   showToast(idx === -1 ? 'Person added' : 'Person removed');
-  renderJobList();
-  refreshDetail();
+  renderJobList(); refreshDetail();
 }
 
 // ── Assign whole crew ─────────────────────────────────────
 async function assignCrew(jobId, dateKey, crewName){
-  const dayData = schedMap[jobId]?.work_days?.[dateKey];
-  if(!dayData) return;
-
-  const crewMembers = employees.filter(e => e.team === crewName).map(e => e.id);
-  // If all crew members already assigned, toggle them all off
-  const allOn = crewMembers.every(id => dayData.assigned.includes(id));
-
-  if(allOn){
-    // Remove all crew members
-    dayData.assigned = dayData.assigned.filter(id => !crewMembers.includes(id));
-  } else {
-    // Add all crew members not already assigned
-    crewMembers.forEach(id => {
-      if(!dayData.assigned.includes(id)) dayData.assigned.push(id);
-    });
-  }
-
+  const dayData = schedMap[jobId]?.work_days?.[dateKey]; if(!dayData) return;
+  const members = employees.filter(e => e.team === crewName).map(e => e.id);
+  const allOn   = members.every(id => dayData.assigned.includes(id));
+  if(allOn) dayData.assigned = dayData.assigned.filter(id => !members.includes(id));
+  else members.forEach(id => { if(!dayData.assigned.includes(id)) dayData.assigned.push(id); });
   const s = schedMap[jobId];
   const { error } = await db.from('job_schedule').upsert([{
-    job_id:                jobId,
-    date_key:              dateKey,
-    start_date:            s.start_date,
-    end_date:              s.end_date,
-    is_workday:            true,
-    assigned_employee_ids: dayData.assigned,
-    note:                  dayData.note || null
+    job_id: jobId, date_key: dateKey, start_date: s.start_date, end_date: s.end_date,
+    is_workday: true, assigned_employee_ids: dayData.assigned, note: dayData.note || null
   }], { onConflict: 'job_id,date_key' });
-
   if(error){ showToast('Error saving: ' + error.message, true); return; }
   showToast(allOn ? crewName + ' removed' : crewName + ' assigned');
-  renderJobList();
-  refreshDetail();
+  renderJobList(); refreshDetail();
 }
 
-// ── Clear all people from a day ───────────────────────────
+// ── Clear all people ──────────────────────────────────────
 async function clearAllPeople(jobId, dateKey){
-  const dayData = schedMap[jobId]?.work_days?.[dateKey];
-  if(!dayData) return;
+  const dayData = schedMap[jobId]?.work_days?.[dateKey]; if(!dayData) return;
   dayData.assigned = [];
-
   const s = schedMap[jobId];
   const { error } = await db.from('job_schedule').upsert([{
-    job_id:                jobId,
-    date_key:              dateKey,
-    start_date:            s.start_date,
-    end_date:              s.end_date,
-    is_workday:            true,
-    assigned_employee_ids: [],
-    note:                  dayData.note || null
+    job_id: jobId, date_key: dateKey, start_date: s.start_date, end_date: s.end_date,
+    is_workday: true, assigned_employee_ids: [], note: dayData.note || null
   }], { onConflict: 'job_id,date_key' });
-
   if(error){ showToast('Error saving: ' + error.message, true); return; }
-  showToast('Day cleared');
-  renderJobList();
-  refreshDetail();
+  showToast('Day cleared'); renderJobList(); refreshDetail();
 }
 
-
+// ── Save note ─────────────────────────────────────────────
 async function saveNote(jobId, dateKey){
-  const ta = document.getElementById(`nt-${jobId}-${dateKey}`);
-  if(!ta) return;
+  const ta = document.getElementById(`nt-${jobId}-${dateKey}`); if(!ta) return;
   const note = ta.value.trim() || null;
-
-  const dayData = schedMap[jobId]?.work_days?.[dateKey];
-  if(!dayData) return;
+  const dayData = schedMap[jobId]?.work_days?.[dateKey]; if(!dayData) return;
   dayData.note = note;
-
   const s = schedMap[jobId];
   const { error } = await db.from('job_schedule').upsert([{
-    job_id:                jobId,
-    date_key:              dateKey,
-    start_date:            s.start_date,
-    end_date:              s.end_date,
-    is_workday:            dayData.is_workday,
-    assigned_employee_ids: dayData.assigned || [],
-    note
+    job_id: jobId, date_key: dateKey, start_date: s.start_date, end_date: s.end_date,
+    is_workday: dayData.is_workday, assigned_employee_ids: dayData.assigned || [], note
   }], { onConflict: 'job_id,date_key' });
-
   if(error){ showToast('Error saving note: ' + error.message, true); return; }
-  showToast('Note saved');
-  refreshDetail();
+  showToast('Note saved'); refreshDetail();
 }
 
 // ── Date modal ────────────────────────────────────────────
@@ -962,17 +1026,14 @@ function openDateModal(jobId){
   document.getElementById('dateModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closeDateModal(){
   document.getElementById('dateModal').classList.remove('open');
   document.body.style.overflow = '';
   dateModalJobId = null;
 }
-
 async function saveDates(){
   const start = document.getElementById('mStart').value;
   const end   = document.getElementById('mEnd').value;
-
   let valid = true;
   if(!start){ document.getElementById('mStart').classList.add('err'); valid=false; }
   else document.getElementById('mStart').classList.remove('err');
@@ -980,54 +1041,24 @@ async function saveDates(){
   else document.getElementById('mEnd').classList.remove('err');
   if(!valid){ showToast('Both dates are required', true); return; }
   if(end < start){ showToast('End date must be after start date', true); return; }
-
   setBtn('saveDateBtn', true, 'Saving...');
   const jobId = dateModalJobId;
-
-  if(!schedMap[jobId])
-    schedMap[jobId] = { start_date: null, end_date: null, work_days: {} };
-
+  if(!schedMap[jobId]) schedMap[jobId] = { start_date: null, end_date: null, work_days: {} };
   schedMap[jobId].start_date = start;
   schedMap[jobId].end_date   = end;
-
-  // 1. Upsert the __meta__ sentinel row to store the date range
-  const metaResult = await db.from('job_schedule').upsert([{
-    job_id:                jobId,
-    date_key:              '__meta__',
-    start_date:            start,
-    end_date:              end,
-    is_workday:            null,
-    assigned_employee_ids: [],
-    note:                  null
+  const metaRes = await db.from('job_schedule').upsert([{
+    job_id: jobId, date_key: '__meta__', start_date: start, end_date: end,
+    is_workday: null, assigned_employee_ids: [], note: null
   }], { onConflict: 'job_id,date_key' });
-
-  if(metaResult.error){
-    showToast('Error saving dates: ' + metaResult.error.message, true);
-    setBtn('saveDateBtn', false, 'Save dates');
-    return;
-  }
-
-  // 2. Update start/end on all existing day rows for this job
+  if(metaRes.error){ showToast('Error saving dates: ' + metaRes.error.message, true); setBtn('saveDateBtn', false, 'Save dates'); return; }
   const dayRows = Object.entries(schedMap[jobId].work_days).map(([dk, dd]) => ({
-    job_id:                jobId,
-    date_key:              dk,
-    start_date:            start,
-    end_date:              end,
-    is_workday:            dd.is_workday,
-    assigned_employee_ids: dd.assigned || [],
-    note:                  dd.note     || null
+    job_id: jobId, date_key: dk, start_date: start, end_date: end,
+    is_workday: dd.is_workday, assigned_employee_ids: dd.assigned || [], note: dd.note || null
   }));
-  if(dayRows.length){
-    await db.from('job_schedule').upsert(dayRows, { onConflict: 'job_id,date_key' });
-  }
-
+  if(dayRows.length) await db.from('job_schedule').upsert(dayRows, { onConflict: 'job_id,date_key' });
   setBtn('saveDateBtn', false, 'Save dates');
   showToast('Dates saved');
-  closeDateModal();
-  openDays = new Set();
-  renderJobList();
-  refreshDetail();
-  updateMeta();
+  closeDateModal(); openDays = new Set(); renderJobList(); refreshDetail(); updateMeta();
 }
 
 // ── Drawer ────────────────────────────────────────────────
