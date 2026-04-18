@@ -77,6 +77,8 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .btn-danger:hover{background:#bf3030;}
 .btn-sm{padding:8px 14px;font-size:13px;}
 .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
+.icon-btn{width:40px;height:40px;padding:0;border-radius:var(--radius-sm);background:var(--card);color:var(--text2);border:1.5px solid var(--border2);box-shadow:var(--shadow-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.icon-btn:hover{background:var(--card2);border-color:rgba(0,0,0,0.14);}
 
 /* Summary strip */
 .summary-strip{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border2);flex-shrink:0;overflow-x:auto;box-shadow:var(--shadow-sm);}
@@ -106,7 +108,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .col-cards::-webkit-scrollbar{width:3px;}
 .col-cards::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:2px;}
 .col-empty{padding:28px 14px;text-align:center;font-size:13px;font-weight:600;color:var(--muted);border:2px dashed var(--border2);border-radius:var(--radius);}
-.tint-prospect,.tint-qualified,.tint-proposal,.tint-negot,.tint-won,.tint-lost{}
 
 /* Job cards */
 .job-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:0;cursor:pointer;transition:box-shadow 0.18s,transform 0.18s,border-color 0.18s;display:flex;overflow:hidden;box-shadow:var(--shadow-sm);}
@@ -114,12 +115,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .job-card:active{transform:translateY(0);box-shadow:var(--shadow-sm);}
 .job-card-bar{width:4px;flex-shrink:0;}
 .job-card-body{flex:1;padding:14px 15px 12px;min-width:0;}
-.card-prospect .job-card-bar{background:var(--c-prospect);}
-.card-qualified .job-card-bar{background:var(--c-qualified);}
-.card-proposal .job-card-bar{background:var(--c-proposal);}
-.card-negotiation .job-card-bar{background:var(--c-negot);}
-.card-won .job-card-bar{background:var(--c-won);}
-.card-lost .job-card-bar{background:var(--c-lost);}
 .jc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px;}
 .jc-customer{font-size:15px;font-weight:800;line-height:1.3;letter-spacing:-0.02em;color:var(--dark);}
 .jc-type{padding:3px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;margin-top:2px;}
@@ -205,11 +200,18 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .cust-option:hover,.cust-option.hl{background:var(--orange-dim);}
 .cust-option-name{font-weight:700;}
 .cust-option-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;}
+.cust-option-new{color:var(--orange);font-weight:700;display:flex;align-items:center;gap:8px;border-top:1.5px solid var(--border2);}
+.cust-option-new svg{width:15px;height:15px;}
 .cust-no-results{padding:16px;font-size:14px;color:var(--muted);text-align:center;font-weight:500;}
 .cust-chip{display:flex;align-items:center;gap:10px;background:var(--orange-dim);border:1.5px solid var(--orange-mid);border-radius:var(--radius-sm);padding:10px 14px;margin-top:8px;}
 .cust-chip-name{font-size:14px;font-weight:700;color:var(--orange);flex:1;}
 .cust-chip-clear{background:none;border:none;cursor:pointer;color:var(--orange);padding:0;display:flex;align-items:center;opacity:0.7;}
 .cust-chip-clear:hover{opacity:1;}
+
+/* New customer inline form */
+.new-cust-form{background:var(--card2);border:1.5px solid var(--orange-mid);border-radius:var(--radius);padding:14px;margin-top:8px;}
+.new-cust-title{font-size:13px;font-weight:800;color:var(--orange);margin-bottom:12px;display:flex;align-items:center;gap:7px;letter-spacing:-0.01em;}
+.new-cust-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
 
 /* Contact block */
 .contact-block{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-sm);}
@@ -259,6 +261,23 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .date-preset.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);font-weight:700;}
 .date-custom{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
+/* Stages drawer */
+.stages-drawer{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--card);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
+.stages-drawer.open{transform:translateX(0);}
+.stages-list{display:flex;flex-direction:column;gap:10px;}
+.stage-edit-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--radius);transition:border-color 0.14s;}
+.stage-edit-row:focus-within{border-color:var(--orange);background:var(--card);}
+.stage-color-swatch{width:32px;height:32px;border-radius:var(--radius-xs);flex-shrink:0;cursor:pointer;border:1.5px solid rgba(0,0,0,0.08);padding:0;position:relative;overflow:hidden;}
+.stage-color-input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.stage-label-input{flex:1;min-width:0;padding:8px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;background:var(--card);color:var(--text);}
+.stage-label-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 2px var(--orange-dim);}
+.stage-count-pill{font-size:11px;font-weight:700;color:var(--muted);padding:3px 8px;background:rgba(0,0,0,0.05);border-radius:20px;flex-shrink:0;}
+.stage-del-btn{width:32px;height:32px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.14s;}
+.stage-del-btn:hover:not(:disabled){background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.stage-del-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.add-stage-row{display:flex;align-items:center;gap:8px;padding:14px;border:2px dashed var(--border2);border-radius:var(--radius);color:var(--muted2);cursor:pointer;font-size:14px;font-weight:700;justify-content:center;transition:all 0.14s;margin-top:6px;font-family:'Plus Jakarta Sans',sans-serif;background:none;width:100%;}
+.add-stage-row:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-dim);}
+
 /* Skeleton */
 .skeleton{background:linear-gradient(90deg,var(--card2) 25%,rgba(0,0,0,0.05) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-sm);}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
@@ -269,6 +288,14 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .toast.error{background:var(--red);}
 .spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Confirm dialog */
+.confirm-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.45);z-index:600;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
+.confirm-bg.open{display:flex;}
+.confirm-box{background:var(--card);border-radius:var(--radius);width:100%;max-width:380px;padding:30px 26px;text-align:center;box-shadow:var(--shadow-lg);}
+.confirm-title{font-size:18px;font-weight:800;margin-bottom:9px;letter-spacing:-0.02em;}
+.confirm-msg{font-size:14px;color:var(--muted2);margin-bottom:24px;line-height:1.6;font-weight:500;}
+.confirm-foot{display:flex;gap:9px;}.confirm-foot .btn{flex:1;justify-content:center;}
 
 /* Bottom nav */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.07);}
@@ -283,12 +310,14 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
   .board-wrap{display:none;}.list-wrap{display:block;}
   .detail-panel{width:100%;border-left:none;top:auto;height:93vh;border-radius:20px 20px 0 0;transform:translateY(100%);box-shadow:0 -8px 40px rgba(0,0,0,0.15);}
   .detail-panel.open{transform:translateY(0);}
-  .filter-drawer{width:100%;border-left:none;top:auto;height:86vh;border-radius:20px 20px 0 0;transform:translateY(100%);}
-  .filter-drawer.open{transform:translateY(0);}
+  .filter-drawer,.stages-drawer{width:100%;border-left:none;top:auto;height:86vh;border-radius:20px 20px 0 0;transform:translateY(100%);}
+  .filter-drawer.open,.stages-drawer.open{transform:translateY(0);}
   .field-row{grid-template-columns:1fr;gap:0;}
   .btn-ghost-hide{display:none;}
   .sum-cell{padding:13px 16px;min-width:130px;}
   .sum-value{font-size:19px;}
+  .confirm-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
+  .confirm-box{border-radius:20px 20px 0 0;width:100%;max-width:100%;padding:28px 22px 36px;}
 }
 @media(min-width:769px){
   .topbar{padding:18px 28px;}.topbar-title{font-size:22px;}
@@ -336,6 +365,9 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
       <div><div class="topbar-title">Pipeline</div><div class="topbar-meta" id="topbarMeta">Loading...</div></div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn btn-ghost-hide" onclick="openStages()" title="Manage stages">
+        <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
       <button class="btn btn-ghost btn-ghost-hide" onclick="openFilter()">
         <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
         Filter <span class="filter-dot" id="filterDot"></span>
@@ -348,18 +380,11 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
   </div>
 
   <!-- Summary strip -->
-  <div class="summary-strip">
-    <div class="sum-cell"><div class="sum-label">Total pipeline</div><div class="sum-value" id="sumTotal">—</div><div class="sum-count" id="sumTotalCount">—</div></div>
-    <div class="sum-cell"><div class="sum-label">Prospect</div><div class="sum-value" id="sumProspect">—</div><div class="sum-count" id="sumProspectCount">—</div></div>
-    <div class="sum-cell"><div class="sum-label">Proposal</div><div class="sum-value" id="sumProposal">—</div><div class="sum-count" id="sumProposalCount">—</div></div>
-    <div class="sum-cell"><div class="sum-label">Negotiation</div><div class="sum-value" id="sumNegot">—</div><div class="sum-count" id="sumNegotCount">—</div></div>
-    <div class="sum-cell featured"><div class="sum-label">Won (MTD)</div><div class="sum-value" id="sumWon">—</div><div class="sum-count" id="sumWonCount">—</div></div>
-  </div>
+  <div class="summary-strip" id="summaryStrip"></div>
 
   <!-- Desktop kanban -->
   <div class="board-wrap" id="boardWrap">
-    <!-- Skeleton loading -->
-    <div class="col tint-prospect" style="opacity:0.5;">
+    <div class="col" style="opacity:0.5;">
       <div class="col-head"><div class="col-title-wrap"><div class="skeleton" style="width:80px;height:14px;"></div></div></div>
       <div class="col-cards"><div class="skeleton" style="height:100px;border-radius:10px;"></div><div class="skeleton" style="height:80px;border-radius:10px;margin-top:8px;"></div></div>
     </div>
@@ -367,15 +392,17 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 
   <!-- Mobile list -->
   <div class="list-wrap" id="listWrap">
-    <div class="stage-pills">
-      <div class="stage-pill active" onclick="filterStage('all',this)">All</div>
-      <div class="stage-pill" onclick="filterStage('prospect',this)">Prospect</div>
-      <div class="stage-pill" onclick="filterStage('qualified',this)">Qualified</div>
-      <div class="stage-pill" onclick="filterStage('proposal',this)">Proposal</div>
-      <div class="stage-pill" onclick="filterStage('negotiation',this)">Negotiation</div>
-      <div class="stage-pill" onclick="filterStage('won',this)">Won</div>
-      <div class="stage-pill" onclick="filterStage('lost',this)">Lost</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;" onclick="openStages()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Stages
+      </button>
+      <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;" onclick="openFilter()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+        Filter
+      </button>
     </div>
+    <div class="stage-pills" id="stagePills"></div>
     <div id="mobileList"><div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;">Loading...</div></div>
   </div>
 </div>
@@ -398,15 +425,8 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <!-- Details tab -->
     <div class="tab-pane active" id="tab-details">
       <div class="field-group">
-        <label class="field-label">Status</label>
-        <select class="field-select" id="pStatus">
-          <option value="prospect">Prospect</option>
-          <option value="qualified">Qualified</option>
-          <option value="proposal">Proposal</option>
-          <option value="negotiation">Negotiation</option>
-          <option value="won">Won</option>
-          <option value="lost">Lost</option>
-        </select>
+        <label class="field-label">Stage</label>
+        <select class="field-select" id="pStatus"></select>
       </div>
       <span class="field-divider">Job details</span>
       <div class="field-group"><label class="field-label">Title *</label><input class="field-input" id="pTitle" placeholder="Water damage — 847 Maple Ave"></div>
@@ -440,6 +460,27 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
         <div id="custChip" class="cust-chip" style="display:none;">
           <span class="cust-chip-name" id="custChipName"></span>
           <button class="cust-chip-clear" onclick="clearCustomer()"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+
+        <!-- Inline new customer form -->
+        <div id="newCustForm" class="new-cust-form" style="display:none;">
+          <div class="new-cust-title">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            New customer
+          </div>
+          <div class="field-row">
+            <div class="field-group" style="margin-bottom:10px;"><label class="field-label">First name *</label><input class="field-input" id="ncFirst" placeholder="David"></div>
+            <div class="field-group" style="margin-bottom:10px;"><label class="field-label">Last name</label><input class="field-input" id="ncLast" placeholder="Henderson"></div>
+          </div>
+          <div class="field-group" style="margin-bottom:10px;"><label class="field-label">Company</label><input class="field-input" id="ncCompany" placeholder="Henderson Property Mgmt"></div>
+          <div class="field-row">
+            <div class="field-group" style="margin-bottom:10px;"><label class="field-label">Phone</label><input class="field-input" id="ncPhone" placeholder="" type="tel"></div>
+            <div class="field-group" style="margin-bottom:10px;"><label class="field-label">Email</label><input class="field-input" id="ncEmail" placeholder="" type="email"></div>
+          </div>
+          <div class="new-cust-foot">
+            <button class="btn btn-ghost btn-sm" onclick="cancelNewCust()">Cancel</button>
+            <button class="btn btn-primary btn-sm" id="createCustBtn" onclick="createNewCustomer()">Create customer</button>
+          </div>
         </div>
       </div>
       <input type="hidden" id="pCustomerId">
@@ -508,6 +549,41 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
   </div>
 </div>
 
+<!-- Stages manager drawer -->
+<div class="filter-overlay" id="stagesOverlay" onclick="closeStages()"></div>
+<div class="stages-drawer" id="stagesDrawer">
+  <div class="filter-head">
+    <div>
+      <span class="filter-title">Manage stages</span>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;font-weight:500;">Edit, add, or remove pipeline stages</div>
+    </div>
+    <button class="panel-x" onclick="closeStages()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+  </div>
+  <div class="filter-body">
+    <div class="stages-list" id="stagesList"></div>
+    <button class="add-stage-row" onclick="addStageRow()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Add stage
+    </button>
+  </div>
+  <div class="filter-foot">
+    <button class="btn btn-ghost" onclick="closeStages()">Cancel</button>
+    <button class="btn btn-primary" id="saveStagesBtn" onclick="saveStages()">Save changes</button>
+  </div>
+</div>
+
+<!-- Confirm dialog -->
+<div class="confirm-bg" id="confirmBg">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-foot">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmYesBtn">Yes</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Bottom nav -->
@@ -529,25 +605,19 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── State ─────────────────────────────────────────────────
-let allJobs      = [];
-let allCustomers = [];
-let currentJobId = null;
-let custHighlight= -1;
+let allJobs         = [];
+let allCustomers    = [];
+let stages          = [];    // loaded from job_stages table
+let currentJobId    = null;
+let custHighlight   = -1;
 let mobileStageFilter = 'all';
-
-// ── Config ────────────────────────────────────────────────
-// Schema status values: prospect | qualified | proposal | negotiation | won | lost
-const STAGES = [
-  {key:'prospect',    label:'Prospect',    color:'var(--c-prospect)',  tint:'tint-prospect',  countBg:'rgba(107,114,128,0.12)', countColor:'var(--c-prospect)'},
-  {key:'qualified',   label:'Qualified',   color:'var(--c-qualified)', tint:'tint-qualified', countBg:'var(--blue-dim)',         countColor:'var(--blue)'},
-  {key:'proposal',    label:'Proposal',    color:'var(--c-proposal)',  tint:'tint-proposal',  countBg:'var(--amber-dim)',        countColor:'var(--amber)'},
-  {key:'negotiation', label:'Negotiation', color:'var(--c-negot)',     tint:'tint-negot',     countBg:'var(--orange-dim)',       countColor:'var(--orange)'},
-  {key:'won',         label:'Won',         color:'var(--c-won)',       tint:'tint-won',       countBg:'var(--green-dim)',        countColor:'var(--green)'},
-  {key:'lost',        label:'Lost',        color:'var(--c-lost)',      tint:'tint-lost',      countBg:'var(--red-dim)',          countColor:'var(--red)'},
-];
+let editableStages  = [];    // working copy for stage editor
+let confirmCallback = null;
 
 const TYPE_LABEL = {water_damage:'Water',fire_restoration:'Fire',mold_remediation:'Mold',inspection:'Insp',other:'Other'};
 const TYPE_CLASS = {water_damage:'type-water',fire_restoration:'type-fire',mold_remediation:'type-mold',inspection:'type-insp',other:'type-other'};
+
+const DEFAULT_NEW_STAGE_COLOR = '#8B95A5';
 
 // ── Helpers ───────────────────────────────────────────────
 function fmt(val){ return val ? '$'+Number(val).toLocaleString() : '—'; }
@@ -555,6 +625,13 @@ function daysAgo(ts){ return Math.floor((Date.now()-new Date(ts))/86400000); }
 function fmtDate(d){ if(!d) return '—'; return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
 function custName(c){ if(!c) return '—'; return [c.first_name,c.last_name].filter(Boolean).join(' '); }
 function custLabel(c){ return custName(c)+(c.company_name?' · '+c.company_name:''); }
+function slugify(s){ return (s||'').toLowerCase().trim().replace(/[^a-z0-9_]+/g,'_').replace(/^_+|_+$/g,''); }
+function hexToTint(hex,alpha){
+  const h=hex.replace('#','');
+  const r=parseInt(h.substring(0,2),16), g=parseInt(h.substring(2,4),16), b=parseInt(h.substring(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function stageByKey(key){ return stages.find(s=>s.key===key); }
 
 function showToast(msg, isErr){
   const t=document.getElementById('toast');
@@ -566,9 +643,27 @@ function setBtn(id, loading, label){
   b.disabled=loading; b.innerHTML=loading?'<span class="spinner"></span>':label;
 }
 
+// ── Confirm ───────────────────────────────────────────────
+function openConfirm(title, msg, onYes){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent   = msg;
+  confirmCallback = onYes;
+  document.getElementById('confirmBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeConfirm(){
+  document.getElementById('confirmBg').classList.remove('open');
+  document.body.style.overflow = '';
+  confirmCallback = null;
+}
+document.getElementById('confirmYesBtn').addEventListener('click',()=>{
+  const cb = confirmCallback; closeConfirm(); if(cb) cb();
+});
+
 // ── Load ──────────────────────────────────────────────────
 async function loadAll(){
-  const [jr, cr] = await Promise.all([
+  const [sr, jr, cr] = await Promise.all([
+    db.from('job_stages').select('*').eq('is_active',true).order('sort_order'),
     db.from('jobs')
       .select('*, customers(id,first_name,last_name,company_name,phone,email)')
       .eq('is_active', true)
@@ -579,52 +674,95 @@ async function loadAll(){
       .order('first_name')
   ]);
 
+  if(sr.error){
+    showToast('Error loading stages: '+sr.error.message, true);
+    return;
+  }
   if(jr.error){
     showToast('Error loading jobs: '+jr.error.message, true);
     document.getElementById('boardWrap').innerHTML =
-      '<div style="padding:40px;color:var(--muted);font-size:13px;">Could not load pipeline. Check your connection.</div>';
+      '<div style="padding:40px;color:var(--muted);font-size:13px;">Could not load pipeline.</div>';
     return;
   }
 
+  stages       = sr.data || [];
   allJobs      = jr.data || [];
   allCustomers = cr.data || [];
 
+  populateStatusDropdown();
+  renderMobileStagePills();
+  renderSummaryStrip();
   updateSummary();
   renderBoard();
   renderMobileList();
 }
 
-// ── Summary strip ─────────────────────────────────────────
+function populateStatusDropdown(){
+  const sel = document.getElementById('pStatus');
+  const currentVal = sel.value;
+  sel.innerHTML = stages.map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
+  if(currentVal && stages.find(s=>s.key===currentVal)) sel.value = currentVal;
+}
+
+function renderMobileStagePills(){
+  const wrap = document.getElementById('stagePills');
+  const pills = [
+    `<div class="stage-pill ${mobileStageFilter==='all'?'active':''}" onclick="filterStage('all',this)">All</div>`,
+    ...stages.map(s=>`<div class="stage-pill ${mobileStageFilter===s.key?'active':''}" onclick="filterStage('${s.key}',this)">${s.label}</div>`)
+  ].join('');
+  wrap.innerHTML = pills;
+}
+
+function renderSummaryStrip(){
+  // Keep summary strip stable — show Total, first few stages, and featured "Won MTD" if a "won" stage exists
+  const wonStage = stages.find(s=>s.key==='won') || stages[stages.length-1];
+  const topStages = stages.filter(s=>s.key!==wonStage?.key).slice(0,3);
+  const cells = [
+    `<div class="sum-cell"><div class="sum-label">Total pipeline</div><div class="sum-value" id="sumTotal">—</div><div class="sum-count" id="sumTotalCount">—</div></div>`,
+    ...topStages.map(s=>`<div class="sum-cell"><div class="sum-label">${s.label}</div><div class="sum-value" id="sumStage_${s.key}">—</div><div class="sum-count" id="sumStage_${s.key}_count">—</div></div>`),
+    wonStage ? `<div class="sum-cell featured"><div class="sum-label">${wonStage.label} (MTD)</div><div class="sum-value" id="sumWon">—</div><div class="sum-count" id="sumWonCount">—</div></div>` : ''
+  ].join('');
+  document.getElementById('summaryStrip').innerHTML = cells;
+}
+
+// ── Summary strip values ──────────────────────────────────
 function updateSummary(){
-  const active  = allJobs.filter(j=>!['won','lost'].includes(j.status));
+  const closedKeys = ['won','lost']; // considered closed if they exist by these keys
+  const active  = allJobs.filter(j=>!closedKeys.includes(j.status));
   const total   = active.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0);
-  const prospect= allJobs.filter(j=>j.status==='prospect');
-  const proposal= allJobs.filter(j=>j.status==='proposal');
-  const negot   = allJobs.filter(j=>j.status==='negotiation');
-  const now     = new Date();
-  const won     = allJobs.filter(j=>{
-    if(j.status!=='won') return false;
-    const d=new Date(j.updated_at);
-    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+
+  document.getElementById('sumTotal').textContent      = fmt(total);
+  document.getElementById('sumTotalCount').textContent = active.length+' active';
+
+  const wonStage = stages.find(s=>s.key==='won') || stages[stages.length-1];
+  const topStages = stages.filter(s=>s.key!==wonStage?.key).slice(0,3);
+
+  topStages.forEach(s=>{
+    const jobs = allJobs.filter(j=>j.status===s.key);
+    const v = jobs.reduce((sum,j)=>sum+(parseFloat(j.estimated_value)||0),0);
+    const valEl = document.getElementById('sumStage_'+s.key);
+    const cntEl = document.getElementById('sumStage_'+s.key+'_count');
+    if(valEl) valEl.textContent = fmt(v);
+    if(cntEl) cntEl.textContent = jobs.length+' job'+(jobs.length!==1?'s':'');
   });
 
-  document.getElementById('sumTotal').textContent       = fmt(total);
-  document.getElementById('sumTotalCount').textContent  = active.length+' active';
-  document.getElementById('sumProspect').textContent    = fmt(prospect.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0));
-  document.getElementById('sumProspectCount').textContent= prospect.length+' lead'+(prospect.length!==1?'s':'');
-  document.getElementById('sumProposal').textContent    = fmt(proposal.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0));
-  document.getElementById('sumProposalCount').textContent= proposal.length+' out';
-  document.getElementById('sumNegot').textContent       = fmt(negot.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0));
-  document.getElementById('sumNegotCount').textContent  = negot.length+' deal'+(negot.length!==1?'s':'');
-  document.getElementById('sumWon').textContent         = fmt(won.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0));
-  document.getElementById('sumWonCount').textContent    = won.length+' closed MTD';
-  document.getElementById('topbarMeta').textContent     = allJobs.length+' jobs · '+fmt(total)+' in play';
-  document.getElementById('sidebarBadge').textContent   = active.length;
+  if(wonStage){
+    const now = new Date();
+    const won = allJobs.filter(j=>{
+      if(j.status!==wonStage.key) return false;
+      const d = new Date(j.updated_at);
+      return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+    });
+    document.getElementById('sumWon').textContent      = fmt(won.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0));
+    document.getElementById('sumWonCount').textContent = won.length+' closed MTD';
+  }
+
+  document.getElementById('topbarMeta').textContent = allJobs.length+' jobs · '+fmt(total)+' in play';
+  document.getElementById('sidebarBadge').textContent = active.length;
 }
 
 // ── Board render ──────────────────────────────────────────
 function renderBoard(){
-  // Apply filters
   const activeTypes = [...document.querySelectorAll('.filter-chip.on')].map(c=>c.dataset.val);
   const dateFrom    = document.getElementById('dateFrom').value;
   const dateTo      = document.getElementById('dateTo').value;
@@ -636,23 +774,40 @@ function renderBoard(){
     return true;
   });
 
-  document.getElementById('boardWrap').innerHTML = STAGES.map(s=>{
+  document.getElementById('boardWrap').innerHTML = stages.map(s=>{
     const jobs = filtered.filter(j=>j.status===s.key);
     const cards = jobs.length
       ? jobs.map(j=>jobCardHtml(j,s)).join('')
       : `<div class="col-empty">No ${s.label.toLowerCase()} jobs</div>`;
-    return `<div class="col ${s.tint}">
+    return `<div class="col">
       <div class="col-head">
         <div class="col-title-wrap">
           <div class="col-dot" style="background:${s.color}"></div>
           <span class="col-title">${s.label}</span>
-          <span class="col-count" style="background:${s.countBg};color:${s.countColor}">${jobs.length}</span>
+          <span class="col-count" style="background:${hexToTint(s.color,0.12)};color:${s.color}">${jobs.length}</span>
         </div>
         <button class="col-add" onclick="openPanel(null,'${s.key}')">+</button>
       </div>
       <div class="col-cards">${cards}</div>
     </div>`;
   }).join('');
+
+  // Also render any "orphan" jobs whose stage no longer exists
+  const orphans = filtered.filter(j=>!stages.find(s=>s.key===j.status));
+  if(orphans.length){
+    const cards = orphans.map(j=>jobCardHtml(j,{color:'#999',label:'Unknown'})).join('');
+    const html = `<div class="col">
+      <div class="col-head">
+        <div class="col-title-wrap">
+          <div class="col-dot" style="background:#999"></div>
+          <span class="col-title" style="color:var(--muted)">Unassigned</span>
+          <span class="col-count" style="background:rgba(0,0,0,0.06);color:var(--muted2)">${orphans.length}</span>
+        </div>
+      </div>
+      <div class="col-cards">${cards}</div>
+    </div>`;
+    document.getElementById('boardWrap').insertAdjacentHTML('beforeend', html);
+  }
 }
 
 function jobCardHtml(j, s){
@@ -662,8 +817,8 @@ function jobCardHtml(j, s){
   const tl   = TYPE_LABEL[j.job_type]||'Other';
   const age  = daysAgo(j.created_at);
   const loc  = [j.job_city, j.job_state].filter(Boolean).join(', ');
-  return `<div class="job-card card-${j.status}" onclick="openPanel('${j.id}')">
-    <div class="job-card-bar"></div>
+  return `<div class="job-card" onclick="openPanel('${j.id}')" style="border-left:0;">
+    <div class="job-card-bar" style="background:${s.color||'#999'}"></div>
     <div class="job-card-body">
       <div class="jc-top">
         <div class="jc-customer">${name}</div>
@@ -685,7 +840,7 @@ function jobCardHtml(j, s){
 
 // ── Mobile list render ────────────────────────────────────
 function renderMobileList(){
-  const stagesToShow = mobileStageFilter==='all' ? STAGES : STAGES.filter(s=>s.key===mobileStageFilter);
+  const stagesToShow = mobileStageFilter==='all' ? stages : stages.filter(s=>s.key===mobileStageFilter);
   document.getElementById('mobileList').innerHTML = stagesToShow.map(s=>{
     const jobs = allJobs.filter(j=>j.status===s.key);
     const cards = jobs.length
@@ -709,7 +864,7 @@ function renderMobileList(){
       <div class="stage-group-head">
         <div class="stage-group-dot" style="background:${s.color}"></div>
         <span class="stage-group-title">${s.label}</span>
-        <span class="stage-group-count" style="background:${s.countBg};color:${s.countColor}">${jobs.length}</span>
+        <span class="stage-group-count" style="background:${hexToTint(s.color,0.12)};color:${s.color}">${jobs.length}</span>
         <button class="stage-group-add" onclick="openPanel(null,'${s.key}')">+ Add</button>
       </div>
       ${cards}
@@ -739,15 +894,22 @@ function renderCustDropdown(q){
   const dd      = document.getElementById('custDropdown');
   const results = filteredCustomers(q);
   custHighlight = -1;
-  if(!results.length){
-    dd.innerHTML = '<div class="cust-no-results">No customers found</div>';
-  } else {
-    dd.innerHTML = results.map((c,i)=>`
+  let html = '';
+  if(results.length){
+    html = results.map((c,i)=>`
       <div class="cust-option" data-id="${c.id}" data-idx="${i}" onmousedown="selectCustomer('${c.id}')">
         <div class="cust-option-name">${custName(c)}</div>
         ${c.company_name||c.phone?`<div class="cust-option-sub">${[c.company_name,c.phone].filter(Boolean).join(' · ')}</div>`:''}
       </div>`).join('');
+  } else {
+    html = '<div class="cust-no-results">No matching customers</div>';
   }
+  // Always append "create new customer" option
+  html += `<div class="cust-option cust-option-new" onmousedown="showNewCustForm('${(q||'').replace(/'/g,"\\'")}')">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+    + Create new customer${q?` "${q}"`:''}
+  </div>`;
+  dd.innerHTML = html;
   dd.classList.add('open');
 }
 
@@ -756,7 +918,7 @@ function onCustFocus(){ renderCustDropdown(document.getElementById('custSearchIn
 
 function onCustKeydown(e){
   const dd    = document.getElementById('custDropdown');
-  const items = dd.querySelectorAll('.cust-option');
+  const items = dd.querySelectorAll('.cust-option:not(.cust-option-new)');
   if(e.key==='ArrowDown'){ e.preventDefault(); custHighlight=Math.min(custHighlight+1,items.length-1); items.forEach((el,i)=>el.classList.toggle('hl',i===custHighlight)); }
   else if(e.key==='ArrowUp'){ e.preventDefault(); custHighlight=Math.max(custHighlight-1,0); items.forEach((el,i)=>el.classList.toggle('hl',i===custHighlight)); }
   else if(e.key==='Enter'&&custHighlight>=0){ e.preventDefault(); selectCustomer(items[custHighlight].dataset.id); }
@@ -782,6 +944,7 @@ function clearCustomer(){
   document.getElementById('custSearchWrap').style.display = '';
   document.getElementById('custChip').style.display = 'none';
   document.getElementById('customerCard').style.display = 'none';
+  document.getElementById('newCustForm').style.display = 'none';
 }
 
 function showCustomerCard(c){
@@ -795,6 +958,69 @@ function showCustomerCard(c){
   else em.style.display='none';
 }
 
+// ── New customer inline form ──────────────────────────────
+function showNewCustForm(prefill){
+  document.getElementById('custDropdown').classList.remove('open');
+  document.getElementById('custSearchWrap').style.display = 'none';
+  document.getElementById('newCustForm').style.display = 'block';
+
+  // Try to parse "First Last" if there's a space
+  const q = (prefill||'').trim();
+  let first = q, last = '';
+  if(q.includes(' ')){
+    const parts = q.split(/\s+/);
+    first = parts[0];
+    last  = parts.slice(1).join(' ');
+  }
+  document.getElementById('ncFirst').value   = first;
+  document.getElementById('ncLast').value    = last;
+  document.getElementById('ncCompany').value = '';
+  document.getElementById('ncPhone').value   = '';
+  document.getElementById('ncEmail').value   = '';
+  setTimeout(()=>document.getElementById('ncFirst').focus(),80);
+}
+
+function cancelNewCust(){
+  document.getElementById('newCustForm').style.display = 'none';
+  document.getElementById('custSearchWrap').style.display = '';
+  document.getElementById('custSearchInput').focus();
+}
+
+async function createNewCustomer(){
+  const first = document.getElementById('ncFirst').value.trim();
+  if(!first){
+    document.getElementById('ncFirst').classList.add('err');
+    document.getElementById('ncFirst').focus();
+    return;
+  }
+  document.getElementById('ncFirst').classList.remove('err');
+  setBtn('createCustBtn', true, 'Create customer');
+
+  const payload = {
+    first_name:   first,
+    last_name:    document.getElementById('ncLast').value.trim()||null,
+    company_name: document.getElementById('ncCompany').value.trim()||null,
+    phone:        document.getElementById('ncPhone').value.trim()||null,
+    email:        document.getElementById('ncEmail').value.trim()||null,
+    customer_type:'homeowner',
+    status:       'prospect',
+    lead_source:  'other',
+    is_active:    true
+  };
+
+  const {data, error} = await db.from('customers').insert([payload]).select().single();
+  setBtn('createCustBtn', false, 'Create customer');
+
+  if(error){ showToast('Error: '+error.message, true); return; }
+
+  // Add to local list, hide the form, select the new customer
+  allCustomers.push(data);
+  allCustomers.sort((a,b)=>(a.first_name||'').localeCompare(b.first_name||''));
+  document.getElementById('newCustForm').style.display = 'none';
+  selectCustomer(data.id);
+  showToast('Customer created');
+}
+
 document.addEventListener('click', e=>{
   if(!document.getElementById('custSearchWrap').contains(e.target))
     document.getElementById('custDropdown').classList.remove('open');
@@ -806,7 +1032,9 @@ async function openPanel(jobId, defaultStatus){
   const j = jobId ? allJobs.find(l=>l.id===jobId)||null : null;
 
   // Reset form
-  document.getElementById('pStatus').value  = j ? j.status : (defaultStatus||'prospect');
+  populateStatusDropdown();
+  const desiredStatus = j ? j.status : (defaultStatus || stages[0]?.key || '');
+  document.getElementById('pStatus').value  = desiredStatus;
   document.getElementById('pTitle').value   = j ? (j.title||'') : '';
   document.getElementById('pJobType').value = j ? (j.job_type||'water_damage') : 'water_damage';
   document.getElementById('pValue').value   = j ? (j.estimated_value||'') : '';
@@ -826,8 +1054,9 @@ async function openPanel(jobId, defaultStatus){
 
   // Panel header
   const c = j?.customers;
+  const stageLabel = stageByKey(j?.status)?.label || '';
   document.getElementById('panelTitle').textContent    = j ? (custName(c)||j.title||'Job') : 'New Job';
-  document.getElementById('panelSubtitle').textContent = j ? (STAGES.find(s=>s.key===j.status)?.label||'') + (j.job_type?' · '+TYPE_LABEL[j.job_type]:'') : '';
+  document.getElementById('panelSubtitle').textContent = j ? stageLabel + (j.job_type?' · '+TYPE_LABEL[j.job_type]:'') : '';
   document.getElementById('savePanelBtn').textContent  = j ? 'Save changes' : 'Save job';
 
   // Notes
@@ -960,9 +1189,150 @@ function setDatePreset(preset,el){
 function clearFilters(){ document.querySelectorAll('.filter-chip,.date-preset').forEach(c=>c.classList.remove('on')); document.getElementById('dateFrom').value=''; document.getElementById('dateTo').value=''; updateFilterDot(); }
 function updateFilterDot(){ const any=document.querySelectorAll('.filter-chip.on,.date-preset.on').length>0||document.getElementById('dateFrom').value||document.getElementById('dateTo').value; document.getElementById('filterDot').classList.toggle('show',!!any); }
 
-// ── Drawer ────────────────────────────────────────────────
+// ── Stages manager ────────────────────────────────────────
+function openStages(){
+  // Deep copy current stages as editable
+  editableStages = stages.map(s=>({
+    id: s.id, key: s.key, label: s.label, color: s.color,
+    sort_order: s.sort_order, is_active: true,
+    _original: true
+  }));
+  renderStagesEditor();
+  document.getElementById('stagesDrawer').classList.add('open');
+  document.getElementById('stagesOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStages(){
+  document.getElementById('stagesDrawer').classList.remove('open');
+  document.getElementById('stagesOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderStagesEditor(){
+  const wrap = document.getElementById('stagesList');
+  wrap.innerHTML = editableStages.map((s,idx)=>{
+    const jobsUsing = allJobs.filter(j=>j.status===s.key).length;
+    const canDelete = jobsUsing===0;
+    const delTitle = canDelete ? 'Delete stage' : `Can't delete: ${jobsUsing} job${jobsUsing!==1?'s':''} in this stage`;
+    return `<div class="stage-edit-row" data-idx="${idx}">
+      <label class="stage-color-swatch" style="background:${s.color}">
+        <input class="stage-color-input" type="color" value="${s.color}" oninput="updateStageField(${idx},'color',this.value);this.parentElement.style.background=this.value">
+      </label>
+      <input class="stage-label-input" value="${(s.label||'').replace(/"/g,'&quot;')}" oninput="updateStageField(${idx},'label',this.value)" placeholder="Stage name">
+      <span class="stage-count-pill">${jobsUsing} job${jobsUsing!==1?'s':''}</span>
+      <button class="stage-del-btn" onclick="deleteStageRow(${idx})" ${canDelete?'':'disabled'} title="${delTitle}">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function updateStageField(idx, field, value){
+  if(!editableStages[idx]) return;
+  editableStages[idx][field] = value;
+}
+
+function addStageRow(){
+  editableStages.push({
+    id: null, key: null, label: 'New stage',
+    color: DEFAULT_NEW_STAGE_COLOR,
+    sort_order: editableStages.length+1,
+    is_active: true,
+    _original: false
+  });
+  renderStagesEditor();
+  // Focus the new label input
+  setTimeout(()=>{
+    const inputs = document.querySelectorAll('.stage-label-input');
+    const last = inputs[inputs.length-1];
+    if(last){ last.focus(); last.select(); }
+  },30);
+}
+
+function deleteStageRow(idx){
+  const s = editableStages[idx];
+  if(!s) return;
+  const jobsUsing = allJobs.filter(j=>j.status===s.key).length;
+  if(jobsUsing>0){
+    showToast(`Can't delete — ${jobsUsing} job${jobsUsing!==1?'s':''} still use this stage`, true);
+    return;
+  }
+  editableStages.splice(idx,1);
+  renderStagesEditor();
+}
+
+async function saveStages(){
+  // Validate: every stage needs a label
+  for(let i=0;i<editableStages.length;i++){
+    if(!(editableStages[i].label||'').trim()){
+      showToast('Every stage needs a name', true);
+      return;
+    }
+  }
+  if(editableStages.length===0){
+    showToast('You need at least one stage', true);
+    return;
+  }
+
+  setBtn('saveStagesBtn', true, 'Save changes');
+
+  // Build set of ids we're keeping
+  const keptIds = editableStages.filter(s=>s.id).map(s=>s.id);
+
+  // Soft-delete stages that existed originally but were removed
+  const toRemove = stages.filter(s=>!keptIds.includes(s.id));
+  for(const s of toRemove){
+    const {error} = await db.from('job_stages').update({is_active:false}).eq('id',s.id);
+    if(error){ showToast('Error deleting stage: '+error.message,true); setBtn('saveStagesBtn',false,'Save changes'); return; }
+  }
+
+  // Upsert each stage
+  for(let i=0;i<editableStages.length;i++){
+    const s = editableStages[i];
+    const label = s.label.trim();
+    const payload = {
+      label,
+      color: s.color||DEFAULT_NEW_STAGE_COLOR,
+      sort_order: i+1,
+      is_active: true
+    };
+    if(s.id){
+      const {error} = await db.from('job_stages').update(payload).eq('id',s.id);
+      if(error){ showToast('Error saving "'+label+'": '+error.message,true); setBtn('saveStagesBtn',false,'Save changes'); return; }
+    } else {
+      // Generate a unique key from the label
+      let baseKey = slugify(label) || 'stage';
+      let key = baseKey;
+      let suffix = 2;
+      const existingKeys = new Set([
+        ...stages.map(x=>x.key),
+        ...editableStages.filter((_,j)=>j!==i && _.key).map(x=>x.key)
+      ]);
+      while(existingKeys.has(key)){ key = baseKey+'_'+suffix; suffix++; }
+      const {error} = await db.from('job_stages').insert([{...payload, key}]);
+      if(error){ showToast('Error adding "'+label+'": '+error.message,true); setBtn('saveStagesBtn',false,'Save changes'); return; }
+    }
+  }
+
+  setBtn('saveStagesBtn',false,'Save changes');
+  showToast('Stages saved');
+  closeStages();
+  await loadAll();
+}
+
+// ── Drawer (mobile sidebar) ───────────────────────────────
 function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+// ── Escape key ────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if(document.getElementById('confirmBg').classList.contains('open')){ closeConfirm(); return; }
+  if(document.getElementById('stagesDrawer').classList.contains('open')){ closeStages(); return; }
+  if(document.getElementById('filterDrawer').classList.contains('open')){ closeFilter(); return; }
+  if(document.getElementById('detailPanel').classList.contains('open')){ closePanel(); return; }
+});
 
 // ── Boot ──────────────────────────────────────────────────
 loadAll().then(()=>{
@@ -973,7 +1343,7 @@ loadAll().then(()=>{
     const url = new URL(window.location);
     url.searchParams.delete('newjob');
     window.history.replaceState({},'',url);
-    openPanel(null,'prospect').then(()=>{
+    openPanel(null, stages[0]?.key).then(()=>{
       const c = allCustomers.find(x=>x.id===newJobCust);
       if(c) selectCustomer(c.id);
     });
