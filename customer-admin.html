@@ -85,45 +85,73 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .fpill.active{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 10px rgba(232,90,36,0.28);}
 
 /* Content area */
-.content-area{flex:1;display:flex;overflow:hidden;}
-.contact-list{width:380px;flex-shrink:0;border-right:1px solid var(--border2);overflow-y:auto;background:var(--page-bg);-webkit-overflow-scrolling:touch;}
-.contact-list::-webkit-scrollbar{width:4px;}.contact-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.list-inner{padding:14px;display:flex;flex-direction:column;gap:9px;}
-.contact-count{font-size:12px;color:var(--muted);padding:2px 4px 6px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;}
+.content-area{flex:1;overflow-y:auto;background:var(--page-bg);-webkit-overflow-scrolling:touch;}
+.content-area::-webkit-scrollbar{width:6px;}.content-area::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.list-wrap{max-width:1200px;margin:0 auto;padding:20px 24px 40px;}
+.list-count{font-size:12px;color:var(--muted);padding:0 4px 10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;}
 
-/* Contact card */
-.contact-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:15px 17px;cursor:pointer;transition:box-shadow 0.15s,border-color 0.15s,transform 0.15s;box-shadow:var(--shadow-sm);}
-.contact-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:rgba(0,0,0,0.14);}
-.contact-card:active{transform:translateY(0);}
-.contact-card.selected{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
-.cc-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:11px;}
-.cc-avatar{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
-.cc-info{flex:1;min-width:0;}
-.cc-name{font-size:15px;font-weight:800;margin-bottom:2px;letter-spacing:-0.02em;color:var(--dark);}
-.cc-type{font-size:12px;color:var(--muted);font-weight:500;}
-.cc-meta{display:flex;flex-direction:column;gap:4px;padding-top:11px;border-top:1px solid var(--border);}
-.cc-row{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted2);font-weight:500;}
-.cc-row svg{width:13px;height:13px;flex-shrink:0;color:var(--muted);}
-.cc-tags{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
-.cc-tag{padding:3px 9px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
-.tag-insurance{background:var(--blue-dim);color:var(--blue);}
-.tag-repeat{background:var(--green-dim);color:var(--green);}
-.tag-google{background:var(--amber-dim);color:var(--amber);}
-.tag-wom{background:var(--orange-dim);color:var(--orange);}
-.tag-other{background:rgba(0,0,0,0.06);color:var(--muted2);}
+/* Desktop table */
+.list-table{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);}
+.lt-head{display:grid;grid-template-columns:2.2fr 1.8fr 1fr 1.1fr 80px;gap:16px;padding:14px 20px;border-bottom:1.5px solid var(--border2);background:var(--card2);}
+.lt-head-cell{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.lt-row{display:grid;grid-template-columns:2.2fr 1.8fr 1fr 1.1fr 80px;gap:16px;padding:14px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;align-items:center;}
+.lt-row:last-child{border-bottom:none;}
+.lt-row:hover{background:var(--card2);}
+.lt-name-cell{display:flex;align-items:center;gap:12px;min-width:0;}
+.lt-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;}
+.lt-name-wrap{min-width:0;flex:1;}
+.lt-name{font-size:14px;font-weight:700;letter-spacing:-0.01em;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lt-sub{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lt-contact{font-size:13px;color:var(--text2);font-weight:500;min-width:0;}
+.lt-contact-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lt-contact-line.sub{color:var(--muted);font-size:12px;}
+.lt-chevron{color:var(--muted);display:flex;justify-content:flex-end;}
+
+/* Mobile contact cards */
+.mobile-cards{display:none;flex-direction:column;gap:10px;}
+.mc-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:14px 16px;cursor:pointer;transition:border-color 0.12s,box-shadow 0.12s;box-shadow:var(--shadow-sm);}
+.mc-card:active{background:var(--card2);}
+.mc-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.mc-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;}
+.mc-title{flex:1;min-width:0;}
+.mc-name{font-size:15px;font-weight:800;letter-spacing:-0.02em;color:var(--dark);}
+.mc-sub{font-size:12px;color:var(--muted);font-weight:500;margin-top:1px;}
+.mc-meta{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid var(--border);}
+.mc-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted2);font-weight:500;}
+
+/* Empty state */
+.empty-state{text-align:center;padding:80px 20px;color:var(--muted);}
+.empty-state svg{opacity:0.2;margin-bottom:14px;}
+.empty-state p{font-size:15px;font-weight:600;color:var(--text2);}
+.empty-state .sub{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500;}
 
 /* Skeleton */
 .skeleton{background:linear-gradient(90deg,var(--card2) 25%,rgba(0,0,0,0.05) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-sm);height:14px;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.skel-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:15px 17px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);}
+.skel-row{display:grid;grid-template-columns:2.2fr 1.8fr 1fr 1.1fr 80px;gap:16px;padding:14px 20px;border-bottom:1px solid var(--border);}
 
-/* Profile panel */
-.profile-panel{flex:1;overflow-y:auto;background:var(--page-bg);-webkit-overflow-scrolling:touch;}
-.profile-panel::-webkit-scrollbar{width:4px;}.profile-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.profile-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);gap:14px;}
-.profile-empty svg{opacity:0.15;}
-.profile-empty p{font-size:15px;font-weight:700;color:var(--dark);}
-.profile-inner{padding:24px;max-width:700px;}
+/* Tags */
+.tag{padding:3px 9px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;display:inline-block;}
+.tag-insurance{background:var(--blue-dim);color:var(--blue);}
+.tag-repeat{background:var(--green-dim);color:var(--green);}
+.tag-google{background:var(--amber-dim);color:var(--amber);}
+.tag-wom{background:var(--orange-dim);color:var(--orange);}
+.tag-social{background:var(--purple-dim);color:var(--purple);}
+.tag-other{background:rgba(0,0,0,0.06);color:var(--muted2);}
+.tag-prospect{background:var(--amber-dim);color:var(--amber);}
+.tag-active{background:var(--green-dim);color:var(--green);}
+.tag-archived{background:rgba(0,0,0,0.06);color:var(--muted2);}
+
+/* Profile modal */
+.profile-modal-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.55);z-index:400;align-items:center;justify-content:center;padding:40px 20px;backdrop-filter:blur(4px);animation:fadeIn 0.18s ease-out;}
+.profile-modal-bg.open{display:flex;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.profile-modal{background:var(--page-bg);border-radius:var(--radius);width:100%;max-width:780px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);position:relative;-webkit-overflow-scrolling:touch;animation:slideUp 0.22s cubic-bezier(0.4,0,0.2,1);}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.profile-modal::-webkit-scrollbar{width:6px;}.profile-modal::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.profile-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:var(--card);border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted2);z-index:2;box-shadow:var(--shadow-sm);transition:all 0.14s;}
+.profile-close:hover{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.profile-inner{padding:24px 28px 28px;}
 
 /* Profile head */
 .profile-head{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow-sm);}
@@ -135,6 +163,8 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .pc-row svg{width:14px;height:14px;color:var(--muted);flex-shrink:0;}
 .pc-row a{color:var(--blue);text-decoration:none;font-weight:600;}.pc-row a:hover{text-decoration:underline;}
 .ph-actions{display:flex;gap:9px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.status-quick-select{padding:4px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-xs);font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card2);color:var(--text);cursor:pointer;}
+.status-quick-select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 2px var(--orange-dim);}
 
 /* Stats */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:16px;}
@@ -167,6 +197,8 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .ins-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
 .ins-value{font-size:14px;font-weight:600;color:var(--text);}
 .ins-mono{font-family:'DM Mono',monospace;font-size:13px;font-weight:400;}
+.ins-source-badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:var(--blue-dim);color:var(--blue);vertical-align:middle;}
+.ins-source-badge.ins-source-job{background:var(--amber-dim);color:var(--amber);}
 
 /* Notes */
 .add-note-box{background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px;}
@@ -208,7 +240,9 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .form-input:focus,.form-select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
 .form-input.err{border-color:var(--red);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.form-row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:13px;}
 .form-divider{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin:20px 0 14px;padding-top:16px;border-top:1px solid var(--border);display:block;}
+.form-hint{font-size:11px;color:var(--muted);font-weight:500;margin-left:6px;text-transform:none;letter-spacing:0;}
 
 /* Confirm */
 .confirm-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:600;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
@@ -223,12 +257,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Mobile profile slide */
-.mobile-profile{display:none;position:fixed;inset:0;z-index:250;background:var(--page-bg);overflow-y:auto;transform:translateX(100%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);-webkit-overflow-scrolling:touch;}
-.mobile-profile.open{transform:translateX(0);}
-.mob-topbar{padding:13px 16px;background:var(--card);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:var(--shadow-sm);}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--orange);cursor:pointer;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;}
-
 /* Bottom nav */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.07);}
 .bnav-inner{display:flex;justify-content:space-around;padding:8px 0 5px;}
@@ -240,28 +268,34 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 /* Touch & mobile */
 input,select,textarea{font-size:16px !important;}
 @media(min-width:769px){input,select,textarea{font-size:14px !important;}}
-.contact-card{min-height:56px;}
 
 @media(max-width:768px){
   .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
-  .contact-list{width:100%;border-right:none;}.profile-panel{display:none;}.mobile-profile{display:block;}
-  .list-inner{padding:12px 12px 100px;}
+  .list-wrap{padding:14px 12px 100px;}
+  .list-table{display:none;}
+  .mobile-cards{display:flex;}
   .topbar{padding:12px 14px;}
   .topbar-title{font-size:17px;}
   .search-bar{padding:10px 12px;}
 
-  /* Profile in mobile slide */
+  /* Profile modal on mobile — fill the screen */
+  .profile-modal-bg{padding:0;backdrop-filter:none;align-items:stretch;}
+  .profile-modal{border-radius:0;max-width:100%;max-height:100vh;height:100vh;}
+  .profile-close{top:12px;right:12px;}
+  .profile-inner{padding:18px 16px 40px;}
+
+  /* Profile in mobile modal */
   .stats-row{grid-template-columns:1fr 1fr;}
   .stats-row .stat-card:last-child{grid-column:span 2;}
   .ins-grid{grid-template-columns:1fr;}
   .ph-actions .btn{flex:1;justify-content:center;}
-  .profile-inner{padding:14px 14px 100px;}
   .stat-value{font-size:19px;}
 
   /* Modals */
   .modal-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
   .modal{border-radius:20px 20px 0 0;max-height:93vh;}
   .form-row{grid-template-columns:1fr;gap:0;}
+  .form-row-3{grid-template-columns:1fr;gap:0;}
 
   /* Confirm */
   .confirm-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
@@ -322,39 +356,32 @@ input,select,textarea{font-size:16px !important;}
     </div>
     <div class="filter-pills">
       <div class="fpill active" onclick="setFilter('all',this)">All</div>
-      <div class="fpill" onclick="setFilter('insurance_referral',this)">Insurance referral</div>
-      <div class="fpill" onclick="setFilter('google',this)">Google</div>
-      <div class="fpill" onclick="setFilter('word_of_mouth',this)">Word of mouth</div>
-      <div class="fpill" onclick="setFilter('repeat_customer',this)">Repeat</div>
+      <div class="fpill" onclick="setFilter('prospect',this)">Prospects</div>
+      <div class="fpill" onclick="setFilter('active',this)">Active</div>
+      <div class="fpill" onclick="setFilter('archived',this)">Archived</div>
+      <div class="fpill" onclick="setFilter('unset',this)">No status</div>
     </div>
   </div>
   <div class="content-area">
-    <div class="contact-list">
-      <div class="list-inner" id="listInner">
-        <div class="contact-count">Loading...</div>
-        <div class="skel-card"><div class="skeleton" style="width:40%;height:16px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:55%"></div></div>
-        <div class="skel-card"><div class="skeleton" style="width:40%;height:16px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:55%"></div></div>
-        <div class="skel-card"><div class="skeleton" style="width:40%;height:16px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:55%"></div></div>
+    <div class="list-wrap" id="listWrap">
+      <div class="list-count">Loading...</div>
+      <div class="list-table">
+        <div class="skel-row"><div class="skeleton" style="width:60%"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:50%"></div><div class="skeleton" style="width:70%"></div><div></div></div>
+        <div class="skel-row"><div class="skeleton" style="width:60%"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:50%"></div><div class="skeleton" style="width:70%"></div><div></div></div>
+        <div class="skel-row"><div class="skeleton" style="width:60%"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:50%"></div><div class="skeleton" style="width:70%"></div><div></div></div>
       </div>
-    </div>
-    <div class="profile-panel">
-      <div class="profile-empty" id="profileEmpty">
-        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        <p>Select a contact to view their profile</p>
-      </div>
-      <div class="profile-inner" id="profileContent" style="display:none;"></div>
     </div>
   </div>
 </div>
 
-<div class="mobile-profile" id="mobileProfile">
-  <div class="mob-topbar">
-    <button class="back-btn" onclick="closeMobileProfile()">
-      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-      Customers
+<!-- Profile modal -->
+<div class="profile-modal-bg" id="profileModal" onclick="handleProfileBgClick(event)">
+  <div class="profile-modal" id="profileModalContent">
+    <button class="profile-close" onclick="closeProfileModal()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
+    <div class="profile-inner" id="profileInner"></div>
   </div>
-  <div class="profile-inner" id="mobileProfileContent"></div>
 </div>
 
 <!-- Add/Edit Modal -->
@@ -377,15 +404,24 @@ input,select,textarea{font-size:16px !important;}
           <option value="property_management">Property Management</option>
         </select>
       </div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-select" id="fStatus">
+          <option value="prospect">Prospect</option>
+          <option value="active">Active</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
       <span class="form-divider">Contact info</span>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="fPhone" placeholder="(801) 555-0198" type="tel"></div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="fEmail" placeholder="name@email.com" type="email"></div>
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="fPhone" placeholder="" type="tel"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="fEmail" placeholder="" type="email"></div>
       </div>
-      <div class="form-group"><label class="form-label">Address</label><input class="form-input" id="fAddr" placeholder="847 Maple Ave"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">City</label><input class="form-input" id="fCity" placeholder="Salt Lake City"></div>
-        <div class="form-group"><label class="form-label">Zip</label><input class="form-input" id="fZip" placeholder="84101"></div>
+      <span class="form-divider">Address <span class="form-hint">(optional)</span></span>
+      <div class="form-group"><label class="form-label">Street address</label><input class="form-input" id="fAddr" placeholder=""></div>
+      <div class="form-row-3">
+        <div class="form-group"><label class="form-label">City</label><input class="form-input" id="fCity" placeholder=""></div>
+        <div class="form-group"><label class="form-label">State</label><input class="form-input" id="fState" placeholder="" maxlength="20"></div>
+        <div class="form-group"><label class="form-label">Zip</label><input class="form-input" id="fZip" placeholder=""></div>
       </div>
       <span class="form-divider">How they found us</span>
       <div class="form-group"><label class="form-label">Lead source</label>
@@ -394,7 +430,7 @@ input,select,textarea{font-size:16px !important;}
           <option value="google">Google</option>
           <option value="word_of_mouth">Word of mouth</option>
           <option value="repeat_customer">Repeat customer</option>
-          <option value="facebook">Facebook</option>
+          <option value="social_media">Social media</option>
           <option value="cold_outreach">Cold outreach</option>
           <option value="other">Other</option>
         </select>
@@ -403,6 +439,32 @@ input,select,textarea{font-size:16px !important;}
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" id="saveBtn" onclick="saveContact()">Save contact</button>
+    </div>
+  </div>
+</div>
+
+<!-- Insurance Edit Modal -->
+<div class="modal-bg" id="insModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">Edit Default Insurance</span>
+      <button class="modal-x" onclick="closeInsModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:13px;color:var(--muted2);margin-bottom:18px;line-height:1.5;font-weight:500;">This is the customer's default insurance. Individual jobs can override this with their own insurance info.</div>
+      <div class="form-group"><label class="form-label">Carrier</label><input class="form-input" id="iCarrier" placeholder=""></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Policy #</label><input class="form-input" id="iPolicy" placeholder=""></div>
+        <div class="form-group"><label class="form-label">Claim #</label><input class="form-input" id="iClaim" placeholder=""></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Adjuster name</label><input class="form-input" id="iAdjName" placeholder=""></div>
+        <div class="form-group"><label class="form-label">Adjuster phone</label><input class="form-input" id="iAdjPhone" placeholder="" type="tel"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeInsModal()">Cancel</button>
+      <button class="btn btn-primary" id="insSaveBtn" onclick="saveInsurance()">Save insurance</button>
     </div>
   </div>
 </div>
@@ -441,20 +503,27 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let allCustomers = [];
 let currentId    = null;
 let editingId    = null;
+let insEditingId = null;
 let pendingDelete= null;
 let searchQ      = '';
-let sourceFilter = 'all';
+let statusFilter = 'all';
 
-const sourceLabels = {insurance_referral:'Insurance referral',google:'Google',word_of_mouth:'Word of mouth',repeat_customer:'Repeat customer',facebook:'Facebook',cold_outreach:'Cold outreach',other:'Other'};
+const sourceLabels = {insurance_referral:'Insurance referral',google:'Google',word_of_mouth:'Word of mouth',repeat_customer:'Repeat customer',social_media:'Social media',cold_outreach:'Cold outreach',other:'Other'};
 const typeLabels   = {homeowner:'Homeowner',commercial:'Commercial',property_management:'Property Management'};
-const sourceTagClass = {insurance_referral:'tag-insurance',google:'tag-google',word_of_mouth:'tag-wom',repeat_customer:'tag-repeat',facebook:'tag-other',cold_outreach:'tag-other',other:'tag-other'};
+const sourceTagClass = {insurance_referral:'tag-insurance',google:'tag-google',word_of_mouth:'tag-wom',repeat_customer:'tag-repeat',social_media:'tag-social',cold_outreach:'tag-other',other:'tag-other'};
+const statusLabels = {prospect:'Prospect',active:'Active',archived:'Archived'};
+const statusTagClass = {prospect:'tag-prospect',active:'tag-active',archived:'tag-archived'};
 const avatarColors = ['#2D7DD2','#1A9E65','#C87E18','#D64040','#7B52D4','#E85A24'];
 const typeColor    = {water_damage:'#2D7DD2',fire_restoration:'#D64040',mold_remediation:'#1A9E65',inspection:'#7B52D4',other:'#888480'};
 const jobStatusLabel = {scheduled:'Scheduled',in_progress:'In Progress',completed:'Completed',cancelled:'Cancelled'};
 const jobStatusClass = {scheduled:'s-scheduled',in_progress:'s-progress',completed:'s-complete',cancelled:'s-progress'};
 
 function getName(c){ return [c.first_name,c.last_name].filter(Boolean).join(' '); }
-function getInitials(c){ return ((c.first_name||'')[0]+(c.last_name||c.first_name||'')[1]||'').toUpperCase(); }
+function getInitials(c){
+  const f=(c.first_name||'').trim()[0]||'';
+  const l=(c.last_name||'').trim()[0]||'';
+  return (f+l).toUpperCase()||'?';
+}
 function getColor(id){ let s=0; for(let ch of(id||''))s+=ch.charCodeAt(0); return avatarColors[s%avatarColors.length]; }
 function getAddr(c){ return [c.address_line1,c.address_city,c.address_state,c.address_zip].filter(Boolean).join(', '); }
 
@@ -481,59 +550,113 @@ function renderList(){
     const addr=getAddr(c).toLowerCase();
     const name=getName(c).toLowerCase();
     const ms=!searchQ||name.includes(searchQ)||(c.company_name||'').toLowerCase().includes(searchQ)||(c.phone||'').toLowerCase().includes(searchQ)||(c.email||'').toLowerCase().includes(searchQ)||addr.includes(searchQ);
-    const mf=sourceFilter==='all'||c.lead_source===sourceFilter;
+    let mf=true;
+    if(statusFilter==='unset') mf=!c.status;
+    else if(statusFilter!=='all') mf=c.status===statusFilter;
     return ms&&mf;
   });
   document.getElementById('topbarMeta').textContent=allCustomers.length+' contact'+(allCustomers.length!==1?'s':'');
+  const listWrap=document.getElementById('listWrap');
   if(!filtered.length){
-    document.getElementById('listInner').innerHTML=
-      '<div class="contact-count">0 contacts</div>'+
-      '<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;">'+(allCustomers.length===0?'No contacts yet — add your first one above.':'No contacts match your search.')+'</div>';
+    listWrap.innerHTML=
+      '<div class="list-count">0 contacts</div>'+
+      '<div class="empty-state">'+
+        '<svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>'+
+        '<p>'+(allCustomers.length===0?'No contacts yet':'No contacts match your search')+'</p>'+
+        '<div class="sub">'+(allCustomers.length===0?'Tap "Add Contact" above to create your first one':'Try a different search or filter')+'</div>'+
+      '</div>';
     return;
   }
-  const cards=filtered.map(c=>{
+
+  // Build table rows (desktop)
+  const rows=filtered.map(c=>{
     const initials=getInitials(c);
     const color=getColor(c.id);
     const addr=getAddr(c);
-    const tagClass=sourceTagClass[c.lead_source]||'tag-other';
-    const tagLabel=sourceLabels[c.lead_source]||c.lead_source||'—';
-    return `<div class="contact-card${currentId===c.id?' selected':''}" onclick="selectContact('${c.id}')">
-      <div class="cc-top">
-        <div class="cc-avatar" style="background:${color}">${initials}</div>
-        <div class="cc-info"><div class="cc-name">${getName(c)}</div><div class="cc-type">${c.company_name||typeLabels[c.customer_type]||''}</div></div>
+    const srcClass=sourceTagClass[c.lead_source]||'tag-other';
+    const srcLabel=sourceLabels[c.lead_source]||'—';
+    const statusTag=c.status
+      ?`<span class="tag ${statusTagClass[c.status]||'tag-other'}">${statusLabels[c.status]}</span>`
+      :`<span class="tag tag-other">No status</span>`;
+    const primary=c.phone||c.email||'';
+    const secondary=c.phone&&c.email?c.email:(addr||'');
+    return `<div class="lt-row" onclick="selectContact('${c.id}')">
+      <div class="lt-name-cell">
+        <div class="lt-avatar" style="background:${color}">${initials}</div>
+        <div class="lt-name-wrap">
+          <div class="lt-name">${getName(c)||'—'}</div>
+          <div class="lt-sub">${c.company_name||typeLabels[c.customer_type]||''}</div>
+        </div>
       </div>
-      <div class="cc-meta">
-        ${c.phone?`<div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>${c.phone}</div>`:''}
-        ${c.email?`<div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>${c.email}</div>`:''}
-        ${addr?`<div class="cc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${addr}</div>`:''}
+      <div class="lt-contact">
+        <div class="lt-contact-line">${primary||'<span style="color:var(--muted)">—</span>'}</div>
+        ${secondary?`<div class="lt-contact-line sub">${secondary}</div>`:''}
       </div>
-      <div class="cc-tags"><span class="cc-tag ${tagClass}">${tagLabel}</span></div>
+      <div>${statusTag}</div>
+      <div><span class="tag ${srcClass}">${srcLabel}</span></div>
+      <div class="lt-chevron"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
     </div>`;
   }).join('');
-  document.getElementById('listInner').innerHTML=`<div class="contact-count">${filtered.length} contact${filtered.length!==1?'s':''}</div>`+cards;
+
+  // Build mobile cards
+  const cards=filtered.map(c=>{
+    const initials=getInitials(c);
+    const color=getColor(c.id);
+    const srcClass=sourceTagClass[c.lead_source]||'tag-other';
+    const srcLabel=sourceLabels[c.lead_source]||'—';
+    const statusTag=c.status
+      ?`<span class="tag ${statusTagClass[c.status]||'tag-other'}">${statusLabels[c.status]}</span>`
+      :`<span class="tag tag-other">No status</span>`;
+    return `<div class="mc-card" onclick="selectContact('${c.id}')">
+      <div class="mc-top">
+        <div class="mc-avatar" style="background:${color}">${initials}</div>
+        <div class="mc-title">
+          <div class="mc-name">${getName(c)||'—'}</div>
+          <div class="mc-sub">${c.company_name||typeLabels[c.customer_type]||''}</div>
+        </div>
+      </div>
+      <div class="mc-meta">
+        ${statusTag}
+        <span class="tag ${srcClass}">${srcLabel}</span>
+        ${c.phone?`<span class="mc-row" style="margin-left:auto;">${c.phone}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  listWrap.innerHTML=
+    `<div class="list-count">${filtered.length} contact${filtered.length!==1?'s':''}</div>`+
+    `<div class="list-table">
+      <div class="lt-head">
+        <div class="lt-head-cell">Name</div>
+        <div class="lt-head-cell">Contact</div>
+        <div class="lt-head-cell">Status</div>
+        <div class="lt-head-cell">Source</div>
+        <div></div>
+      </div>
+      ${rows}
+    </div>`+
+    `<div class="mobile-cards">${cards}</div>`;
 }
 
 async function selectContact(id){
   currentId=id;
-  renderList();
   const c=allCustomers.find(x=>x.id===id);
   if(!c)return;
   const html=await buildProfile(c);
-  if(window.innerWidth<=768){
-    document.getElementById('mobileProfileContent').innerHTML=html;
-    document.getElementById('mobileProfile').classList.add('open');
-    document.body.style.overflow='hidden';
-  } else {
-    document.getElementById('profileEmpty').style.display='none';
-    const pc=document.getElementById('profileContent');
-    pc.style.display='block'; pc.innerHTML=html;
-  }
+  document.getElementById('profileInner').innerHTML=html;
+  document.getElementById('profileModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('profileModalContent').scrollTop=0;
 }
 
-function closeMobileProfile(){
-  document.getElementById('mobileProfile').classList.remove('open');
+function closeProfileModal(){
+  document.getElementById('profileModal').classList.remove('open');
   document.body.style.overflow='';
-  currentId=null; renderList();
+  currentId=null;
+}
+
+function handleProfileBgClick(e){
+  if(e.target.id==='profileModal') closeProfileModal();
 }
 
 async function refreshProfile(){
@@ -541,8 +664,7 @@ async function refreshProfile(){
   const c=allCustomers.find(x=>x.id===currentId);
   if(!c)return;
   const html=await buildProfile(c);
-  if(window.innerWidth<=768) document.getElementById('mobileProfileContent').innerHTML=html;
-  else document.getElementById('profileContent').innerHTML=html;
+  document.getElementById('profileInner').innerHTML=html;
 }
 
 async function buildProfile(c){
@@ -557,12 +679,30 @@ async function buildProfile(c){
     db.from('customer_notes').select('*').eq('customer_id',id).order('created_at',{ascending:false})
   ]);
 
+  // Insurance: prefer per-job override if any job has one, otherwise use customer-level default
   const jobIds=(jobs||[]).map(j=>j.id);
   let ins={};
+  let insSource='default'; // 'default' = from customer, 'job' = from a specific job
+  let insJobTitle='';
   if(jobIds.length){
     const {data:insRows}=await db.from('job_insurance').select('*').in('job_id',jobIds).limit(1);
-    if(insRows&&insRows[0]) ins=insRows[0];
+    if(insRows&&insRows[0]){
+      ins=insRows[0];
+      insSource='job';
+      const linkedJob=(jobs||[]).find(j=>j.id===ins.job_id);
+      insJobTitle=linkedJob?linkedJob.title||'a job':'a job';
+    }
   }
+  if(insSource==='default'){
+    ins={
+      carrier:c.insurance_carrier,
+      policy_number:c.insurance_policy_number,
+      claim_number:c.insurance_claim_number,
+      adjuster_name:c.insurance_adjuster_name,
+      adjuster_phone:c.insurance_adjuster_phone
+    };
+  }
+  const hasInsData=ins.carrier||ins.policy_number||ins.claim_number||ins.adjuster_name||ins.adjuster_phone;
 
   const totalValue=(jobs||[]).reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0);
   const completed=(jobs||[]).filter(j=>j.status==='completed').length;
@@ -607,6 +747,15 @@ async function buildProfile(c){
         <div style="flex:1;min-width:0;">
           <div class="profile-name">${name}</div>
           <div class="profile-subtype">${c.company_name?c.company_name+' · ':''}${typeLabels[c.customer_type]||''}</div>
+          <div class="pc-row" style="margin-top:8px;">
+            <span style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-right:6px;">Status:</span>
+            <select class="status-quick-select" onchange="quickChangeStatus('${id}',this.value)">
+              <option value="">No status</option>
+              <option value="prospect" ${c.status==='prospect'?'selected':''}>Prospect</option>
+              <option value="active" ${c.status==='active'?'selected':''}>Active</option>
+              <option value="archived" ${c.status==='archived'?'selected':''}>Archived</option>
+            </select>
+          </div>
           ${c.phone?`<div class="pc-row">${SVG_PHONE}<a href="tel:${c.phone}">${c.phone}</a></div>`:''}
           ${c.email?`<div class="pc-row">${SVG_MAIL}<a href="mailto:${c.email}">${c.email}</a></div>`:''}
           ${addr?`<div class="pc-row">${SVG_PIN}${addr}</div>`:''}
@@ -628,8 +777,11 @@ async function buildProfile(c){
       <div class="sec-body" style="padding-top:0;padding-bottom:0;">${jobsHtml}</div>
     </div>
     <div class="sec-card">
-      <div class="sec-head"><div class="sec-title">Insurance info</div></div>
-      <div class="sec-body">${insHtml}</div>
+      <div class="sec-head">
+        <div class="sec-title">Insurance info ${insSource==='default'?'<span class="ins-source-badge">Customer default</span>':'<span class="ins-source-badge ins-source-job">From: '+insJobTitle+'</span>'}</div>
+        <button class="btn btn-ghost btn-sm" onclick="openInsModal('${id}')">${SVG_EDIT} Edit default</button>
+      </div>
+      <div class="sec-body">${hasInsData?insHtml:'<div style="padding:4px 0;font-size:13px;color:var(--muted);">No insurance info yet. Click <b>Edit default</b> to add it.</div>'}</div>
     </div>
     <div class="sec-card">
       <div class="sec-head"><div class="sec-title">Notes</div></div>
@@ -688,16 +840,19 @@ function openModal(id){
       document.getElementById('fLast').value=c.last_name||'';
       document.getElementById('fCompany').value=c.company_name||'';
       document.getElementById('fType').value=c.customer_type||'homeowner';
+      document.getElementById('fStatus').value=c.status||'prospect';
       document.getElementById('fPhone').value=c.phone||'';
       document.getElementById('fEmail').value=c.email||'';
       document.getElementById('fAddr').value=c.address_line1||'';
       document.getElementById('fCity').value=c.address_city||'';
+      document.getElementById('fState').value=c.address_state||'';
       document.getElementById('fZip').value=c.address_zip||'';
       document.getElementById('fSource').value=c.lead_source||'insurance_referral';
     }
   } else {
-    ['fFirst','fLast','fCompany','fPhone','fEmail','fAddr','fCity','fZip'].forEach(i=>document.getElementById(i).value='');
+    ['fFirst','fLast','fCompany','fPhone','fEmail','fAddr','fCity','fState','fZip'].forEach(i=>document.getElementById(i).value='');
     document.getElementById('fType').value='homeowner';
+    document.getElementById('fStatus').value='prospect';
     document.getElementById('fSource').value='insurance_referral';
   }
   document.getElementById('contactModal').classList.add('open');
@@ -715,11 +870,12 @@ async function saveContact(){
     last_name:document.getElementById('fLast').value.trim()||null,
     company_name:document.getElementById('fCompany').value.trim()||null,
     customer_type:document.getElementById('fType').value,
+    status:document.getElementById('fStatus').value,
     phone:document.getElementById('fPhone').value.trim()||null,
     email:document.getElementById('fEmail').value.trim()||null,
     address_line1:document.getElementById('fAddr').value.trim()||null,
     address_city:document.getElementById('fCity').value.trim()||null,
-    address_state:'UT',
+    address_state:document.getElementById('fState').value.trim().toUpperCase()||null,
     address_zip:document.getElementById('fZip').value.trim()||null,
     lead_source:document.getElementById('fSource').value,
     is_active:true
@@ -733,6 +889,53 @@ async function saveContact(){
   closeModal();
   await loadCustomers();
   if(editingId&&currentId===editingId) await refreshProfile();
+}
+
+async function quickChangeStatus(customerId,newStatus){
+  const {error}=await db.from('customers').update({status:newStatus||null}).eq('id',customerId);
+  if(error){showToast('Error: '+error.message,true);return;}
+  const idx=allCustomers.findIndex(x=>x.id===customerId);
+  if(idx>=0) allCustomers[idx].status=newStatus||null;
+  showToast('Status updated');
+  renderList();
+}
+
+function openInsModal(customerId){
+  insEditingId=customerId;
+  const c=allCustomers.find(x=>x.id===customerId);
+  if(c){
+    document.getElementById('iCarrier').value=c.insurance_carrier||'';
+    document.getElementById('iPolicy').value=c.insurance_policy_number||'';
+    document.getElementById('iClaim').value=c.insurance_claim_number||'';
+    document.getElementById('iAdjName').value=c.insurance_adjuster_name||'';
+    document.getElementById('iAdjPhone').value=c.insurance_adjuster_phone||'';
+  }
+  document.getElementById('insModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('iCarrier').focus(),120);
+}
+function closeInsModal(){
+  document.getElementById('insModal').classList.remove('open');
+  document.body.style.overflow='';
+  insEditingId=null;
+}
+async function saveInsurance(){
+  if(!insEditingId)return;
+  setBtn('insSaveBtn',true,'Save insurance');
+  const payload={
+    insurance_carrier:document.getElementById('iCarrier').value.trim()||null,
+    insurance_policy_number:document.getElementById('iPolicy').value.trim()||null,
+    insurance_claim_number:document.getElementById('iClaim').value.trim()||null,
+    insurance_adjuster_name:document.getElementById('iAdjName').value.trim()||null,
+    insurance_adjuster_phone:document.getElementById('iAdjPhone').value.trim()||null
+  };
+  const {error}=await db.from('customers').update(payload).eq('id',insEditingId);
+  setBtn('insSaveBtn',false,'Save insurance');
+  if(error){showToast('Error: '+error.message,true);return;}
+  showToast('Insurance updated');
+  closeInsModal();
+  await loadCustomers();
+  if(currentId) await refreshProfile();
 }
 
 function openDeleteConfirm(id){
@@ -749,16 +952,24 @@ async function executeDelete(){
   const {error}=await db.from('customers').update({is_active:false}).eq('id',pendingDelete);
   setBtn('deleteBtn',false,'Yes, delete');
   if(error){showToast('Error: '+error.message,true);return;}
-  if(currentId===pendingDelete){currentId=null;document.getElementById('profileEmpty').style.display='';document.getElementById('profileContent').style.display='none';closeMobileProfile();}
+  if(currentId===pendingDelete){closeProfileModal();}
   showToast('Contact deleted');
   closeDeleteConfirm();
   await loadCustomers();
 }
 
 function doSearch(q){searchQ=q.toLowerCase();renderList();}
-function setFilter(src,el){document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');sourceFilter=src;renderList();}
+function setFilter(src,el){document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');statusFilter=src;renderList();}
 function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+
+document.addEventListener('keydown',(e)=>{
+  if(e.key!=='Escape')return;
+  if(document.getElementById('deleteConfirm').classList.contains('open')){closeDeleteConfirm();return;}
+  if(document.getElementById('insModal').classList.contains('open')){closeInsModal();return;}
+  if(document.getElementById('contactModal').classList.contains('open')){closeModal();return;}
+  if(document.getElementById('profileModal').classList.contains('open')){closeProfileModal();return;}
+});
 
 loadCustomers();
 </script>
