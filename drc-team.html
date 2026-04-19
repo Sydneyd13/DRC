@@ -437,7 +437,14 @@ input,select,textarea{font-size:16px !important;}
         <div class="form-group"><label class="form-label">Start date</label><input class="form-input" id="eStartDate" type="date"></div>
       </div>
       <div class="form-group" style="margin-top:4px;">
-        <label class="form-check"><input type="checkbox" id="eOncall"> On-call eligible</label>
+        <label class="form-check"><input type="checkbox" id="eOncall" onchange="toggleOncallStartDate()"> On-call eligible</label>
+      </div>
+      <div class="form-group" id="eOncallStartWrap" style="display:none;">
+        <label class="form-label">On-call rotation start date</label>
+        <input class="form-input" id="eOncallStart" type="date">
+        <div style="font-size:12px;color:var(--muted);margin-top:6px;font-weight:500;line-height:1.5;">
+          Leave blank to start rotating immediately. Set a future date to add them to the rotation starting then — existing schedule stays untouched.
+        </div>
       </div>
       <span class="form-divider">Emergency contact</span>
       <div class="form-row">
@@ -668,7 +675,14 @@ function empRowHtml(e){
       <div class="emp-name">${getName(e)}</div>
       <div class="emp-sub">${e.role || ''}${e.role && e.team ? ' · ' : ''}${crewLabel}</div>
       <div class="emp-badges">
-        ${e.oncall_eligible ? '<span class="badge badge-oncall">On-Call</span>' : ''}
+        ${e.oncall_eligible ? (() => {
+          const today = new Date().toISOString().split('T')[0];
+          if(e.oncall_start_date && e.oncall_start_date > today){
+            const startShort = new Date(e.oncall_start_date + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'});
+            return `<span class="badge" style="background:rgba(37,99,235,0.1);color:var(--blue);">Starts ${startShort}</span>`;
+          }
+          return '<span class="badge badge-oncall">On-Call</span>';
+        })() : ''}
       </div>
     </div>
     <div class="emp-pin-chip">${e.pin_code || '—'}</div>
@@ -759,6 +773,13 @@ function buildDetail(e){
         <div class="info-value" style="color:${e.oncall_eligible ? 'var(--orange)' : 'var(--muted)'};">
           ${e.oncall_eligible ? 'Eligible' : 'Not eligible'}
         </div>
+        ${e.oncall_eligible && e.oncall_start_date ? (() => {
+          const today = new Date().toISOString().split('T')[0];
+          const startFmt = new Date(e.oncall_start_date + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+          return e.oncall_start_date > today
+            ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:600;">Starts ${startFmt}</div>`
+            : `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-weight:500;">Since ${startFmt}</div>`;
+        })() : ''}
       </div>
       <div class="info-card">
         <div class="info-label">Start Date</div>
@@ -878,11 +899,12 @@ function openEmpModal(id){
       document.getElementById('ePin').value       = e.pin_code || '';
       document.getElementById('eStartDate').value = e.start_date || '';
       document.getElementById('eOncall').checked  = !!e.oncall_eligible;
+      document.getElementById('eOncallStart').value = e.oncall_start_date || '';
       document.getElementById('eEmergName').value = e.emergency_contact_name || '';
       document.getElementById('eEmergPhone').value= e.emergency_contact_phone || '';
     }
   } else {
-    ['eFirst','eLast','ePhone','eEmail','ePin','eStartDate','eEmergName','eEmergPhone']
+    ['eFirst','eLast','ePhone','eEmail','ePin','eStartDate','eOncallStart','eEmergName','eEmergPhone']
       .forEach(i => document.getElementById(i).value = '');
     document.getElementById('eRole').value = 'Technician';
     // Default to currently-filtered crew if user is filtered to a specific one
@@ -890,6 +912,7 @@ function openEmpModal(id){
     document.getElementById('eOncall').checked = false;
     document.getElementById('ePin').value = String(Math.floor(100 + Math.random() * 900));
   }
+  toggleOncallStartDate();
   document.getElementById('empModal').classList.add('open');
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('eFirst').focus(), 120);
@@ -900,6 +923,13 @@ function closeEmpModal(){
   document.body.style.overflow = '';
   ['eFirst','eLast','ePin'].forEach(i => document.getElementById(i).classList.remove('err'));
   editingEmpId = null;
+}
+
+// Show/hide the on-call start date field based on the eligible checkbox
+function toggleOncallStartDate(){
+  const checked = document.getElementById('eOncall').checked;
+  document.getElementById('eOncallStartWrap').style.display = checked ? '' : 'none';
+  if(!checked) document.getElementById('eOncallStart').value = '';
 }
 
 async function saveEmployee(){
@@ -918,6 +948,7 @@ async function saveEmployee(){
 
   setBtn('saveEmpBtn', true, 'Save employee');
 
+  const isOncallEligible = document.getElementById('eOncall').checked;
   const payload = {
     first_name:              fn,
     last_name:               ln,
@@ -927,7 +958,8 @@ async function saveEmployee(){
     team:                    document.getElementById('eTeam').value              || null,
     pin_code:                pin,
     start_date:              document.getElementById('eStartDate').value         || null,
-    oncall_eligible:         document.getElementById('eOncall').checked,
+    oncall_eligible:         isOncallEligible,
+    oncall_start_date:       isOncallEligible ? (document.getElementById('eOncallStart').value || null) : null,
     emergency_contact_name:  document.getElementById('eEmergName').value.trim() || null,
     emergency_contact_phone: document.getElementById('eEmergPhone').value.trim()|| null,
     is_active:               true
@@ -1011,13 +1043,56 @@ async function saveCrew(){
 }
 
 // ── Delete confirms ───────────────────────────────────────
-function confirmDeleteEmp(id, name){
+async function confirmDeleteEmp(id, name){
+  // Check for future on-call days (from today onward)
+  // so we can warn the admin before they confirm.
+  const todayKey = new Date().toISOString().split('T')[0];
+  const { data: futureDays, error: checkErr } = await db
+    .from('oncall_schedule')
+    .select('date_key')
+    .eq('employee_id', id)
+    .gte('date_key', todayKey);
+
+  if(checkErr){
+    showToast('Error checking on-call schedule: ' + checkErr.message, true);
+    return;
+  }
+
+  const futureCount = (futureDays || []).length;
+
+  // Escape name for HTML (since we're using innerHTML for bold formatting)
+  const nameEsc = String(name).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
   document.getElementById('confirmTitle').textContent = 'Delete employee?';
-  document.getElementById('confirmMsg').textContent   = `This will permanently remove ${name} from the team.`;
+  document.getElementById('confirmMsg').innerHTML = futureCount > 0
+    ? `This will permanently remove <strong>${nameEsc}</strong> from the team.<br><br>
+       They have <strong>${futureCount} future on-call day${futureCount !== 1 ? 's' : ''}</strong> — those days will be flagged as "Needs coverage" for you to reassign.`
+    : `This will permanently remove <strong>${nameEsc}</strong> from the team.`;
+
   document.getElementById('confirmBtn').onclick = async () => {
+    // 1. Soft-delete the employee
     const { error } = await db.from('employees').update({ is_active: false }).eq('id', id);
     if(error){ showToast('Error: ' + error.message, true); return; }
-    showToast('Employee removed');
+
+    // 2. Flag their future locked days as needs_coverage
+    //    (past days are left untouched as historical record)
+    if(futureCount > 0){
+      const { error: flagErr } = await db
+        .from('oncall_schedule')
+        .update({ needs_coverage: true })
+        .eq('employee_id', id)
+        .gte('date_key', todayKey);
+      if(flagErr){
+        // Employee is already deactivated — warn but don't roll back.
+        showToast('Employee removed, but flagging on-call days failed: ' + flagErr.message, true);
+      }
+    }
+
+    showToast(
+      futureCount > 0
+        ? `Employee removed · ${futureCount} on-call day${futureCount !== 1 ? 's' : ''} flagged`
+        : 'Employee removed'
+    );
     if(currentEmpId === id) currentEmpId = null;
     closeConfirm();
     await loadAll();
