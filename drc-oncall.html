@@ -151,6 +151,22 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .needs-banner{background:var(--amber-dim);border:1.5px solid rgba(192,112,16,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
 .needs-banner-text{font-size:13px;font-weight:700;color:var(--amber);}
 .needs-banner-btn{padding:7px 13px;border-radius:var(--radius-sm);border:none;background:var(--amber);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.swap-banner{background:var(--green-dim);border:1.5px solid rgba(22,160,102,0.3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.swap-banner-text{font-size:13px;font-weight:700;color:var(--green);}
+.swap-banner-btn{padding:7px 13px;border-radius:var(--radius-sm);border:none;background:var(--green);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.dtag-swap{background:var(--green-dim);color:var(--green);}
+.dtag-swap-pending{background:rgba(0,0,0,0.06);color:var(--muted2);}
+.dtag-swap-claimed{background:var(--amber-dim);color:var(--amber);}
+.day-card.has-swap-claimed{border-color:rgba(192,112,16,0.4);}
+.day-card.is-swapped{border-color:rgba(22,160,102,0.35);}
+.swap-review-item{background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+.swap-review-date{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.swap-review-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+.swap-review-person{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;}
+.swap-review-arrow{color:var(--muted);flex-shrink:0;}
+.swap-review-mini{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.swap-review-note{font-size:12px;color:var(--muted2);font-style:italic;margin-bottom:10px;padding-left:2px;}
+.swap-review-actions{display:flex;gap:8px;}
 .form-group{margin-bottom:14px;}
 .form-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;display:block;}
 .form-input,.form-select,.form-textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.15s,box-shadow 0.15s;font-weight:500;}
@@ -159,6 +175,12 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .form-check{display:flex;align-items:center;gap:9px;font-size:14px;cursor:pointer;padding:6px 0;font-weight:500;}
 .form-check input{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;}
 .manual-note{font-size:12px;color:var(--amber);padding:9px 12px;background:var(--amber-dim);border-radius:var(--radius-xs);margin-top:6px;font-weight:600;display:none;}
+.panel-notices{display:flex;flex-direction:column;gap:7px;margin-top:8px;}
+.pnotice{font-size:12px;padding:9px 12px;border-radius:var(--radius-xs);font-weight:600;line-height:1.5;display:flex;gap:8px;align-items:flex-start;}
+.pnotice-amber{color:var(--amber);background:var(--amber-dim);}
+.pnotice-blue{color:var(--blue);background:var(--blue-dim);}
+.pnotice-purple{color:var(--purple);background:var(--purple-dim);}
+.pnotice-ico{flex-shrink:0;font-size:13px;line-height:1.4;}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
 .modal-bg.open{display:flex;}
 .modal{background:var(--card);border-radius:var(--radius);width:100%;max-width:460px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);}
@@ -195,49 +217,28 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 input,select,textarea{font-size:16px !important;}
 @media(min-width:769px){input,select,textarea{font-size:14px !important;}}
 @media(max-width:768px){
-  /* Layout */
   .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}.overlay{display:block;}
-
-  /* Topbar — icon-only Holidays button */
   .topbar{padding:12px 14px;gap:8px;}
   .topbar-title{font-size:17px;}
   .btn-label-hide{display:none;}
-
-  /* Control bar — pills wrap to second row */
   .control-bar{gap:7px;padding:10px 12px;flex-wrap:wrap;}
   .search-wrap{min-width:0;flex:1;}
   .filter-select{flex-shrink:0;}
   .filter-pills{width:100%;order:3;overflow-x:auto;padding-bottom:2px;}
-
-  /* Schedule */
   .schedule-scroll{padding:14px 12px 100px;}
-
-  /* Month header */
   .month-title{font-size:16px;}
   .month-save-btn{font-size:11px;padding:6px 11px;}
-
-  /* Day card — tighter on small screens */
   .day-left{width:52px;}
   .day-num{font-size:20px;}
   .day-mid{padding:10px 12px;}
   .day-person{font-size:13px;}
-
-  /* Side panel — bottom sheet */
   .side-panel{width:100%;border-left:none;top:auto;height:93vh;border-radius:20px 20px 0 0;transform:translateY(100%);box-shadow:0 -8px 40px rgba(0,0,0,0.15);}
   .side-panel.open{transform:translateY(0);}
-
-  /* Stats chips scroll */
   .stats-inner{-webkit-overflow-scrolling:touch;padding:12px 12px;}
   .stat-chip{min-width:170px;}
-
-  /* Legend wrap tighter */
   .legend-bar{padding:8px 12px;gap:8px;}
-
-  /* Modals — bottom sheet */
   .modal-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
   .modal{border-radius:20px 20px 0 0;max-height:93vh;}
-
-  /* Holiday modal form */
   .modal-body > div[style*="display:flex"]{flex-wrap:wrap;}
 }
 @media(min-width:769px){
@@ -354,13 +355,17 @@ input,select,textarea{font-size:16px !important;}
       <div class="panel-section-title">Holiday</div>
       <div id="panelHolName" style="font-size:15px;font-weight:700;color:var(--purple);"></div>
     </div>
+    <div class="panel-section" id="panelSwapSection" style="display:none;">
+      <div class="panel-section-title">Swap Request</div>
+      <div id="panelSwapBody"></div>
+    </div>
     <div class="panel-section">
       <div class="panel-section-title">On-Call Assignment</div>
       <div class="form-group" style="margin-bottom:8px;">
         <label class="form-label">Assigned person</label>
         <select class="form-select" id="panelPerson" onchange="onPersonChange()"><option value="">— Unassigned —</option></select>
       </div>
-      <div class="manual-note" id="panelManualNote">⚠ Not in rotation — will be marked as manual fill-in.</div>
+      <div class="panel-notices" id="panelNotices"></div>
     </div>
     <div class="panel-section">
       <div class="panel-section-title">Day Settings</div>
@@ -370,7 +375,6 @@ input,select,textarea{font-size:16px !important;}
       <div class="panel-section-title">Note</div>
       <textarea class="form-textarea" id="panelNote" placeholder="Add a note..."></textarea>
     </div>
-    <div id="panelStatusNote" style="font-size:12px;color:var(--muted);font-weight:500;text-align:center;padding:4px 0 8px;"></div>
   </div>
   <div class="panel-foot">
     <button class="btn btn-ghost btn-sm" id="panelUnlockBtn" onclick="unlockDay()" style="display:none;">Unlock</button>
@@ -421,6 +425,18 @@ input,select,textarea{font-size:16px !important;}
   </div>
 </div>
 
+<!-- Swaps review modal -->
+<div class="modal-bg" id="swapsModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-head">
+      <span class="modal-title">Swap Requests</span>
+      <button class="modal-x" onclick="closeSwapsModal()"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body" id="swapsModalBody"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeSwapsModal()">Done</button></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <nav class="bottom-nav">
@@ -446,6 +462,7 @@ let lockedDays    = {};  // DB rows — locked/committed
 let draftDays     = {};  // computed round-robin previews — NOT saved
 let customHols    = {};
 let allOnCallDays = [];
+let swapsByDate   = {};  // { 'YYYY-MM-DD': [swap_request_rows...] } — all non-cancelled swaps indexed by day
 let activePill    = 'all';
 let statsOpen     = false;
 let panelDateKey  = null;
@@ -479,26 +496,44 @@ function getFedHols(year){
 function getAllHols(year){ return {...getFedHols(year),...Object.fromEntries(Object.entries(customHols).filter(([k])=>k.startsWith(year+'-')))}; }
 
 async function init(){
-  const [poolRes,allRes,schedRes,holRes] = await Promise.all([
+  const [poolRes,allRes,schedRes,holRes,swapRes] = await Promise.all([
     db.from('employees').select('id,first_name,last_name,role,oncall_start_date').eq('is_active',true).eq('oncall_eligible',true).order('first_name'),
     db.from('employees').select('id,first_name,last_name,role,oncall_start_date').eq('is_active',true).order('first_name'),
     db.from('oncall_schedule').select('*'),
-    db.from('oncall_custom_holidays').select('date_key,name')
+    db.from('oncall_custom_holidays').select('date_key,name'),
+    db.from('shift_swap_requests').select('*').neq('status','cancelled').order('swap_date')
   ]);
   if(poolRes.error){ showToast('Error: '+poolRes.error.message,true); return; }
   allEmployees = allRes.data||[];
-  // Only include employees whose rotation start date has arrived (or is null)
-  rotationPool = (poolRes.data||[]).filter(e=>!e.oncall_start_date||e.oncall_start_date<=TODAYKEY);
+  // Include all on-call eligible employees — start date is checked per-day in buildDraftDays
+  rotationPool = poolRes.data||[];
   lockedDays={};
   (schedRes.data||[]).forEach(r=>{ lockedDays[r.date_key]=r; });
   customHols={};
   (holRes.data||[]).forEach(r=>{ customHols[r.date_key]=r.name; });
+  // Index swap requests by date for fast lookup (many-to-one is possible if history accumulates)
+  swapsByDate={};
+  (swapRes.data||[]).forEach(r=>{
+    if(!swapsByDate[r.swap_date]) swapsByDate[r.swap_date]=[];
+    swapsByDate[r.swap_date].push(r);
+  });
   buildOnCallDays();
   buildDraftDays();
   populatePersonFilter();
   renderStats();
   renderSchedule();
   updateMeta();
+}
+
+// Returns the most relevant active swap for a date (or null).
+// Priority: claimed (awaiting admin) > approved > pending.
+function getActiveSwap(dateKey){
+  const list = swapsByDate[dateKey];
+  if(!list || !list.length) return null;
+  return list.find(s => s.status === 'claimed')
+      || list.find(s => s.status === 'approved')
+      || list.find(s => s.status === 'pending')
+      || null;
 }
 
 function buildOnCallDays(){
@@ -531,19 +566,30 @@ function buildDraftDays(){
       return;
     }
     // Only show drafts for future/today unassigned days
-    if(day.dateKey>=TODAYKEY){
-      const emp=rotationPool[idx%rotationPool.length];
-      draftDays[day.dateKey]={employee_id:emp.id,employee_name:getName(emp)};
-      idx++;
-    }
+    if(day.dateKey<TODAYKEY) return;
+
+    // Build the subset of the rotation that's eligible FOR THIS DAY
+    // (i.e. their start date has arrived by this date, or is null)
+    const eligibleForDay = rotationPool.filter(e =>
+      !e.oncall_start_date || e.oncall_start_date <= day.dateKey
+    );
+    if(!eligibleForDay.length) return; // nobody eligible yet for this date
+
+    // Round-robin within the day-eligible subset, but preserve the global idx
+    // so adding a new future-dated person doesn't reshuffle everyone's upcoming days
+    const emp = eligibleForDay[idx % eligibleForDay.length];
+    draftDays[day.dateKey] = { employee_id: emp.id, employee_name: getName(emp) };
+    idx++;
   });
 }
 
 function updateMeta(){
   const lockedCount=Object.values(lockedDays).filter(d=>!d.is_skipped&&d.employee_id).length;
   const needsCount=Object.values(lockedDays).filter(d=>d.needs_coverage).length;
+  const claimedCount=Object.values(swapsByDate).flat().filter(s=>s.status==='claimed').length;
   let meta=`${rotationPool.length} in rotation · ${lockedCount} locked`;
   if(needsCount) meta+=` · ⚠ ${needsCount} need coverage`;
+  if(claimedCount) meta+=` · 🔄 ${claimedCount} swap${claimedCount!==1?'s':''} to approve`;
   document.getElementById('topbarMeta').textContent=meta;
 }
 
@@ -640,6 +686,14 @@ function renderSchedule(){
   if(needsDays.length){
     html+=`<div class="needs-banner" style="margin-bottom:20px;"><div class="needs-banner-text">⚠ ${needsDays.length} future day${needsDays.length!==1?'s':''} need coverage.</div><button class="needs-banner-btn" onclick="openRedistributeModal()">Redistribute all</button></div>`;
   }
+  // Swaps awaiting admin approval — green-tinted banner
+  const claimedSwaps = Object.values(swapsByDate).flat().filter(s => s.status === 'claimed');
+  if(claimedSwaps.length){
+    html+=`<div class="swap-banner" style="margin-bottom:20px;">
+      <div class="swap-banner-text">🔄 ${claimedSwaps.length} swap${claimedSwaps.length!==1?'s':''} awaiting your approval</div>
+      <button class="swap-banner-btn" onclick="openSwapsModal()">Review &amp; approve</button>
+    </div>`;
+  }
   const months={};
   filtered.forEach(day=>{
     const mk=`${day.date.getFullYear()}-${day.date.getMonth()}`;
@@ -670,20 +724,27 @@ function dayCardHtml(day){
   const isSkipped=locked?.is_skipped||false;
   const isManual=locked?.is_manual_fill||false;
   const isOverride=locked?.is_override||false;
+  const isSwapped=locked?.swap_status==='swapped';
+  const swap=getActiveSwap(day.dateKey); // may include pending/claimed/approved
   const empId=locked?.employee_id||draft?.employee_id||null;
   const empName=locked?.employee_name||draft?.employee_name||null;
   const color=empId?avatarColor(empId):'#8B95A5';
   let cls='day-card';
   if(isDraft)cls+=' is-draft'; if(day.holName)cls+=' is-holiday';
-  if(day.isToday)cls+=' is-today'; if(isOverride&&!isDraft)cls+=' is-override';
+  if(day.isToday)cls+=' is-today'; if(isOverride&&!isDraft&&!isSwapped)cls+=' is-override';
   if(needsCov)cls+=' needs-coverage';
+  if(isSwapped)cls+=' is-swapped';
+  if(swap&&swap.status==='claimed')cls+=' has-swap-claimed';
   const tags=[];
   if(day.holName) tags.push(`<span class="dtag dtag-holiday">${day.holName}</span>`);
   if(isDraft)     tags.push('<span class="dtag dtag-draft">Draft</span>');
   if(isManual)    tags.push('<span class="dtag dtag-manual">Fill-in</span>');
-  if(isOverride&&!isDraft&&!isManual) tags.push('<span class="dtag dtag-override">Edited</span>');
+  if(isOverride&&!isDraft&&!isManual&&!isSwapped) tags.push('<span class="dtag dtag-override">Edited</span>');
   if(needsCov)    tags.push('<span class="dtag dtag-needs">Needs coverage</span>');
   if(isSkipped)   tags.push('<span class="dtag dtag-skipped">No coverage</span>');
+  if(isSwapped)   tags.push('<span class="dtag dtag-swap">Swapped</span>');
+  if(swap&&swap.status==='claimed')  tags.push('<span class="dtag dtag-swap-claimed">Swap: approve</span>');
+  if(swap&&swap.status==='pending')  tags.push('<span class="dtag dtag-swap-pending">Up for grabs</span>');
   const avHtml=isDraft
     ?`<div class="day-avatar-draft">${empName?getInitials(empName):'?'}</div>`
     :empId?`<div class="day-avatar" style="background:${color}">${getInitials(empName||'')}</div>`:'';
@@ -740,20 +801,310 @@ function openPanel(dateKey){
     others.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=getName(e);const cur=locked?.employee_id||draft?.employee_id;if(cur===e.id)o.selected=true;og.appendChild(o);});
     sel.appendChild(og);
   }
-  updateManualNote();
+  renderPanelNotices();
+  renderPanelSwap();
   document.getElementById('panelSkipped').checked=locked?.is_skipped||false;
   document.getElementById('panelNote').value=locked?.note||'';
   document.getElementById('panelUnlockBtn').style.display=locked?'':'none';
-  document.getElementById('panelStatusNote').textContent=locked?'🔒 Changes will overwrite the saved assignment.':'✏️ Save & Lock to commit this day to the database.';
   document.getElementById('sidePanel').classList.add('open');
   document.getElementById('panelOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function onPersonChange(){updateManualNote();}
-function updateManualNote(){
-  const empId=document.getElementById('panelPerson').value;
-  document.getElementById('panelManualNote').style.display=empId&&!rotationPool.some(e=>e.id===empId)?'block':'none';
+function onPersonChange(){ renderPanelNotices(); }
+
+// Show stacked contextual warnings based on the current panel state.
+// Each notice is an { level, html } object rendered as a colored pill.
+function renderPanelNotices(){
+  if(!panelDateKey) return;
+  const notices = [];
+  const empId   = document.getElementById('panelPerson').value;
+  const emp     = empId ? allEmployees.find(e => e.id === empId) : null;
+  const locked  = lockedDays[panelDateKey];
+  const [y]     = panelDateKey.split('-').map(Number);
+  const holName = getAllHols(y)[panelDateKey] || null;
+
+  // 1) Picking someone not in the rotation
+  if(empId && !rotationPool.some(r => r.id === empId)){
+    notices.push({
+      level: 'amber',
+      html: '<strong>Not in rotation.</strong> Will be marked as a manual fill-in.'
+    });
+  }
+
+  // 2) Picking someone whose on-call start date is after this day
+  if(emp && emp.oncall_start_date && emp.oncall_start_date > panelDateKey){
+    const startFmt = new Date(emp.oncall_start_date + 'T12:00:00')
+      .toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    notices.push({
+      level: 'amber',
+      html: `<strong>${getName(emp)}</strong> isn&rsquo;t scheduled to start the rotation until ${startFmt}. You can still assign them, but it&rsquo;ll be earlier than planned.`
+    });
+  }
+
+  // 3) Back-to-back coverage — is this person on-call within 3 days on either side?
+  if(empId){
+    const nearby = findNearbyAssignments(empId, panelDateKey, 3);
+    if(nearby.length){
+      const list = nearby.map(d => {
+        const dt = new Date(d + 'T12:00:00');
+        return dt.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+      }).join(', ');
+      notices.push({
+        level: 'blue',
+        html: `Heads up &mdash; also on-call: <strong>${list}</strong>.`
+      });
+    }
+  }
+
+  // 4) Overriding an already-locked day
+  if(locked){
+    notices.push({
+      level: 'blue',
+      html: '<strong>Already locked.</strong> Saving will overwrite the current assignment.'
+    });
+  }
+
+  // 5) Holiday falling on a weekday (just informational context)
+  const dow = new Date(panelDateKey + 'T12:00:00').getDay();
+  if(holName && dow >= 1 && dow <= 4){
+    notices.push({
+      level: 'purple',
+      html: `<strong>${holName}</strong> &mdash; on-call coverage needed because it falls on a weekday.`
+    });
+  }
+
+  const wrap = document.getElementById('panelNotices');
+  wrap.innerHTML = notices.map(n =>
+    `<div class="pnotice pnotice-${n.level}"><span class="pnotice-ico">${
+      n.level === 'purple' ? '🎉' : n.level === 'blue' ? 'ℹ️' : '⚠️'
+    }</span><span>${n.html}</span></div>`
+  ).join('');
 }
+
+// Find dates (within +/- windowDays) where this employee is also on-call.
+// Looks at both locked days and current drafts. Excludes the day being edited.
+function findNearbyAssignments(empId, dateKey, windowDays){
+  const [y,m,d] = dateKey.split('-').map(Number);
+  const target  = new Date(y, m-1, d);
+  const hits    = [];
+
+  // Build a map of every day this person is assigned (locked OR draft)
+  const allAssignments = {};
+  Object.entries(lockedDays).forEach(([k, row]) => {
+    if(row.employee_id === empId && !row.is_skipped) allAssignments[k] = 'locked';
+  });
+  Object.entries(draftDays).forEach(([k, row]) => {
+    if(row.employee_id === empId && !allAssignments[k]) allAssignments[k] = 'draft';
+  });
+
+  Object.keys(allAssignments).forEach(k => {
+    if(k === dateKey) return; // skip the day being edited
+    const [yy,mm,dd] = k.split('-').map(Number);
+    const other = new Date(yy, mm-1, dd);
+    const diffDays = Math.abs((other - target) / (1000*60*60*24));
+    if(diffDays <= windowDays) hits.push(k);
+  });
+
+  return hits.sort();
+}
+
+// Render the swap section in the side panel — shows the swap request, who's
+// covering whom, and an Approve button if the swap is claimed.
+function renderPanelSwap(){
+  const swap = getActiveSwap(panelDateKey);
+  const section = document.getElementById('panelSwapSection');
+  if(!swap){ section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  const requester = allEmployees.find(e => e.id === swap.requester_id);
+  const coverer   = swap.covered_by_id ? allEmployees.find(e => e.id === swap.covered_by_id) : null;
+  const requesterName = requester ? getName(requester) : 'Unknown';
+  const requesterInit = getInitials(requesterName);
+  const requesterColor = avatarColor(swap.requester_id);
+
+  let html = '';
+
+  if(swap.status === 'pending'){
+    // Nobody has claimed it yet
+    html = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div class="swap-review-mini" style="background:${requesterColor}">${requesterInit}</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;">${requesterName}</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:500;">posted this day for coverage</div>
+        </div>
+      </div>
+      ${swap.requester_notes ? `<div class="swap-review-note">"${escapeAttr(swap.requester_notes)}"</div>` : ''}
+      <div style="font-size:12px;color:var(--muted);font-weight:500;padding:4px 0;">No one has volunteered yet — teammates will see this in the employee app.</div>
+    `;
+  } else if(swap.status === 'claimed'){
+    // Waiting on admin approval
+    const covererName  = coverer ? getName(coverer) : 'Unknown';
+    const covererInit  = getInitials(covererName);
+    const covererColor = avatarColor(swap.covered_by_id);
+    html = `
+      <div class="swap-review-flow">
+        <div class="swap-review-person">
+          <div class="swap-review-mini" style="background:${requesterColor}">${requesterInit}</div>
+          <span>${requesterName}</span>
+        </div>
+        <svg class="swap-review-arrow" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        <div class="swap-review-person">
+          <div class="swap-review-mini" style="background:${covererColor}">${covererInit}</div>
+          <span>${covererName}</span>
+        </div>
+      </div>
+      ${swap.requester_notes ? `<div class="swap-review-note">"${escapeAttr(swap.requester_notes)}"</div>` : ''}
+      <div class="swap-review-actions">
+        <button class="btn btn-primary btn-sm" id="panelApproveSwapBtn" onclick="approveSwap('${swap.id}')" style="flex:1;justify-content:center;background:var(--green);box-shadow:0 3px 10px rgba(22,160,102,0.3);">
+          ✓ Approve swap
+        </button>
+      </div>
+    `;
+  } else if(swap.status === 'approved'){
+    // Already approved, show context
+    const covererName = coverer ? getName(coverer) : (swap.covered_by_id ? 'Unknown' : '');
+    const covererInit = getInitials(covererName);
+    const covererColor = avatarColor(swap.covered_by_id);
+    html = `
+      <div class="swap-review-flow">
+        <div class="swap-review-person">
+          <div class="swap-review-mini" style="background:${requesterColor}">${requesterInit}</div>
+          <span>${requesterName}</span>
+        </div>
+        <svg class="swap-review-arrow" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        <div class="swap-review-person">
+          <div class="swap-review-mini" style="background:${covererColor}">${covererInit}</div>
+          <span>${covererName}</span>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--green);font-weight:700;padding:4px 0;">✓ Swap approved ${swap.approved_at ? '· ' + new Date(swap.approved_at).toLocaleDateString() : ''}</div>
+    `;
+  }
+
+  document.getElementById('panelSwapBody').innerHTML = html;
+}
+
+// Approve a claimed swap: update the real schedule + mark the request as approved.
+async function approveSwap(swapId){
+  const swap = Object.values(swapsByDate).flat().find(s => s.id === swapId);
+  if(!swap || swap.status !== 'claimed'){ showToast('Swap not found or not claimable', true); return; }
+
+  setBtn('panelApproveSwapBtn', true, 'Approving...');
+
+  const coverer = allEmployees.find(e => e.id === swap.covered_by_id);
+  const requester = allEmployees.find(e => e.id === swap.requester_id);
+  if(!coverer){ showToast('Could not find covering employee', true); setBtn('panelApproveSwapBtn', false, '✓ Approve swap'); return; }
+
+  const [y] = swap.swap_date.split('-').map(Number);
+  const existing = lockedDays[swap.swap_date];
+
+  // Update oncall_schedule: new person gets the shift; original person is preserved
+  // in swap_original_* columns. swap_status = 'swapped' is the rebalance-protection marker.
+  const payload = {
+    date_key: swap.swap_date,
+    employee_id: coverer.id,
+    employee_name: getName(coverer),
+    is_skipped: false,
+    is_override: !!existing,
+    is_manual_fill: false,
+    needs_coverage: false,
+    holiday_name: getAllHols(y)[swap.swap_date] || null,
+    note: existing?.note || null,
+    swap_status: 'swapped',
+    swap_original_emp_id: swap.requester_id,
+    swap_original_emp_name: requester ? getName(requester) : (existing?.employee_name || null)
+  };
+
+  const { error: schedErr } = await db.from('oncall_schedule').upsert([payload], { onConflict: 'date_key' });
+  if(schedErr){ showToast('Error updating schedule: ' + schedErr.message, true); setBtn('panelApproveSwapBtn', false, '✓ Approve swap'); return; }
+
+  // Mark the swap request as approved
+  const { error: swapErr } = await db
+    .from('shift_swap_requests')
+    .update({ status: 'approved', approved_at: new Date().toISOString() })
+    .eq('id', swapId);
+  if(swapErr){
+    // Schedule got updated but request didn't — warn rather than roll back
+    showToast('Schedule updated, but swap record update failed: ' + swapErr.message, true);
+  }
+
+  setBtn('panelApproveSwapBtn', false, '✓ Approve swap');
+
+  // Update local state
+  lockedDays[swap.swap_date] = payload;
+  swap.status = 'approved';
+  swap.approved_at = new Date().toISOString();
+  delete draftDays[swap.swap_date];
+
+  buildDraftDays();
+  populatePersonFilter();
+  renderStats();
+  renderSchedule();
+  updateMeta();
+
+  showToast(`Swap approved — ${getName(coverer)} now covers ${swap.swap_date}`);
+  closePanel();
+}
+
+// ── Swaps review modal ────────────────────────────────────
+function openSwapsModal(){
+  renderSwapsModalBody();
+  document.getElementById('swapsModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSwapsModal(){
+  document.getElementById('swapsModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function renderSwapsModalBody(){
+  const claimed = Object.values(swapsByDate).flat()
+    .filter(s => s.status === 'claimed')
+    .sort((a,b) => a.swap_date.localeCompare(b.swap_date));
+  const body = document.getElementById('swapsModalBody');
+  if(!claimed.length){
+    body.innerHTML = '<div style="font-size:14px;color:var(--muted);text-align:center;padding:24px;font-weight:500;">No swap requests awaiting approval.</div>';
+    return;
+  }
+  body.innerHTML = claimed.map(swap => {
+    const requester = allEmployees.find(e => e.id === swap.requester_id);
+    const coverer   = allEmployees.find(e => e.id === swap.covered_by_id);
+    const requesterName = requester ? getName(requester) : 'Unknown';
+    const covererName   = coverer ? getName(coverer) : 'Unknown';
+    const dateObj = new Date(swap.swap_date + 'T12:00:00');
+    const dateLabel = dateObj.toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric', year:'numeric'});
+    return `<div class="swap-review-item">
+      <div class="swap-review-date">${dateLabel}</div>
+      <div class="swap-review-flow">
+        <div class="swap-review-person">
+          <div class="swap-review-mini" style="background:${avatarColor(swap.requester_id)}">${getInitials(requesterName)}</div>
+          <span>${requesterName}</span>
+        </div>
+        <svg class="swap-review-arrow" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        <div class="swap-review-person">
+          <div class="swap-review-mini" style="background:${avatarColor(swap.covered_by_id)}">${getInitials(covererName)}</div>
+          <span>${covererName}</span>
+        </div>
+      </div>
+      ${swap.requester_notes ? `<div class="swap-review-note">"${escapeAttr(swap.requester_notes)}"</div>` : ''}
+      <div class="swap-review-actions">
+        <button class="btn btn-ghost btn-sm" onclick="closeSwapsModal();openPanel('${swap.swap_date}')">View day</button>
+        <button class="btn btn-primary btn-sm" onclick="approveSwapFromModal('${swap.id}')" style="background:var(--green);box-shadow:0 3px 10px rgba(22,160,102,0.3);">✓ Approve</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function approveSwapFromModal(swapId){
+  const swap = Object.values(swapsByDate).flat().find(s => s.id === swapId);
+  if(!swap) return;
+  // Reuse the core approve logic by opening the day panel and approving there
+  closeSwapsModal();
+  await approveSwap(swapId);
+}
+
+// Small helper used in swap notes (escape quotes)
+function escapeAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function closePanel(){
   document.getElementById('sidePanel').classList.remove('open');
   document.getElementById('panelOverlay').classList.remove('open');
@@ -801,7 +1152,12 @@ function closeRedistributeModal(){document.getElementById('redistributeModal').c
 async function doRedistribute(){
   if(!rotationPool.length){showToast('No rotation members',true);return;}
   setBtn('redistributeBtn',true,'Reassigning...');
-  const needsDays=allOnCallDays.filter(d=>lockedDays[d.dateKey]?.needs_coverage&&d.dateKey>=TODAYKEY).sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
+  // Skip days that are swap-protected (already swapped or pending admin approval)
+  const needsDays=allOnCallDays.filter(d=>
+    lockedDays[d.dateKey]?.needs_coverage
+    && d.dateKey>=TODAYKEY
+    && lockedDays[d.dateKey]?.swap_status !== 'swapped'
+  ).sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
   if(!needsDays.length){setBtn('redistributeBtn',false,'Reassign all');closeRedistributeModal();return;}
   let idx=0;
   const rows=needsDays.map(day=>{
