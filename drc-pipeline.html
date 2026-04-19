@@ -33,7 +33,8 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 /* SIDEBAR — white with orange pill */
 .sidebar{width:232px;flex-shrink:0;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;}
 .logo{padding:22px 18px 18px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:12px;}
-.logo-mark{width:36px;height:36px;flex-shrink:0;background:var(--orange-grad);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;box-shadow:0 3px 8px rgba(232,90,36,0.35);}
+.logo-mark{width:36px;height:36px;flex-shrink:0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 8px rgba(232,90,36,0.35);padding:3px;}
+.logo-mark img{width:100%;height:100%;object-fit:contain;}
 .logo-text{font-size:16px;font-weight:800;color:var(--dark);letter-spacing:-0.02em;}
 .logo-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:500;}
 .nav{padding:10px 10px;flex:1;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
@@ -108,6 +109,13 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .col-cards::-webkit-scrollbar{width:3px;}
 .col-cards::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:2px;}
 .col-empty{padding:28px 14px;text-align:center;font-size:13px;font-weight:600;color:var(--muted);border:2px dashed var(--border2);border-radius:var(--radius);}
+
+/* Drag & drop */
+.job-card[draggable="true"]{cursor:grab;}
+.job-card[draggable="true"]:active{cursor:grabbing;}
+.job-card.dragging{opacity:0.4;transform:rotate(1.5deg) scale(0.98);transition:none;}
+.col-cards.drop-hover{background:var(--orange-dim);border-radius:var(--radius);outline:2px dashed var(--orange);outline-offset:-4px;}
+.col-cards.drop-hover .col-empty{border-color:var(--orange);color:var(--orange);}
 
 /* Job cards */
 .job-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:0;cursor:pointer;transition:box-shadow 0.18s,transform 0.18s,border-color 0.18s;display:flex;overflow:hidden;box-shadow:var(--shadow-sm);}
@@ -331,7 +339,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 
 <!-- Sidebar -->
 <aside class="sidebar">
-  <div class="logo"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+  <div class="logo"><div class="logo-mark"><img src="https://i.postimg.cc/WzrXfwJ9/DRCLOGO.png" alt="DRC"></div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
     <a class="nav-item active" href="drc-pipeline.html"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline <span class="nav-badge" id="sidebarBadge">0</span></a>
@@ -348,7 +356,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-  <div class="logo" style="padding-right:52px;"><div class="logo-mark">D</div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
+  <div class="logo" style="padding-right:52px;"><div class="logo-mark"><img src="https://i.postimg.cc/WzrXfwJ9/DRCLOGO.png" alt="DRC"></div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
     <div class="nav-section">Main</div>
     <a class="nav-item active" href="drc-pipeline.html" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>Pipeline</a>
@@ -792,7 +800,10 @@ function renderBoard(){
         </div>
         <button class="col-add" onclick="openPanel(null,'${s.key}')">+</button>
       </div>
-      <div class="col-cards">${cards}</div>
+      <div class="col-cards" data-stage="${s.key}"
+           ondragover="onColDragOver(event)"
+           ondragleave="onColDragLeave(event)"
+           ondrop="onColDrop(event,'${s.key}')">${cards}</div>
     </div>`;
   }).join('');
 
@@ -821,7 +832,10 @@ function jobCardHtml(j, s){
   const tl   = TYPE_LABEL[j.job_type]||'Other';
   const age  = daysAgo(j.created_at);
   const loc  = [j.job_city, j.job_state].filter(Boolean).join(', ');
-  return `<div class="job-card" onclick="openPanel('${j.id}')" style="border-left:0;">
+  return `<div class="job-card" data-job-id="${j.id}" draggable="true"
+       ondragstart="onCardDragStart(event,'${j.id}')"
+       ondragend="onCardDragEnd(event)"
+       onclick="onCardClick(event,'${j.id}')" style="border-left:0;">
     <div class="job-card-bar" style="background:${s.color||'#999'}"></div>
     <div class="job-card-body">
       <div class="jc-top">
@@ -840,6 +854,76 @@ function jobCardHtml(j, s){
       </div>
     </div>
   </div>`;
+}
+
+// ── Drag & drop ───────────────────────────────────────────
+let dragState = { jobId: null, dragged: false };
+
+function onCardDragStart(e, jobId){
+  dragState.jobId = jobId;
+  dragState.dragged = true;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', jobId); // required by Firefox
+  e.currentTarget.classList.add('dragging');
+}
+
+function onCardDragEnd(e){
+  e.currentTarget.classList.remove('dragging');
+  // Clear any lingering hover states
+  document.querySelectorAll('.col-cards.drop-hover').forEach(el=>el.classList.remove('drop-hover'));
+  // Reset dragState.dragged on next tick so click handler can see it
+  setTimeout(()=>{ dragState.jobId=null; dragState.dragged=false; }, 0);
+}
+
+function onColDragOver(e){
+  e.preventDefault(); // required to allow drop
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drop-hover');
+}
+
+function onColDragLeave(e){
+  // Only clear if we've actually left this element (not entered a child)
+  if(!e.currentTarget.contains(e.relatedTarget)){
+    e.currentTarget.classList.remove('drop-hover');
+  }
+}
+
+async function onColDrop(e, newStage){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drop-hover');
+  const jobId = dragState.jobId;
+  if(!jobId) return;
+
+  const job = allJobs.find(j=>j.id===jobId);
+  if(!job) return;
+  if(job.status === newStage) return; // dropped back in same column
+
+  const oldStage = job.status;
+
+  // Optimistic update
+  job.status = newStage;
+  renderBoard();
+  renderMobileList();
+  updateSummary();
+
+  const {error} = await db.from('jobs').update({status: newStage}).eq('id', jobId);
+  if(error){
+    // Roll back
+    job.status = oldStage;
+    renderBoard();
+    renderMobileList();
+    updateSummary();
+    showToast('Error moving job: '+error.message, true);
+    return;
+  }
+  const stageLabel = stageByKey(newStage)?.label || newStage;
+  showToast(`Moved to ${stageLabel}`);
+}
+
+function onCardClick(e, jobId){
+  // Don't open panel if this was the end of a drag
+  if(dragState.dragged) return;
+  openPanel(jobId);
 }
 
 // ── Mobile list render ────────────────────────────────────
