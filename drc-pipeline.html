@@ -508,6 +508,9 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
   </div>
   <div class="panel-foot">
     <button class="btn btn-ghost" onclick="closePanel()">Cancel</button>
+    <button class="btn btn-ghost" id="deleteJobBtn" onclick="confirmDeleteJob()" style="display:none;color:var(--red);border-color:rgba(214,64,64,0.25);flex:0 0 auto;padding-left:14px;padding-right:14px;" title="Delete job">
+      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+    </button>
     <button class="btn btn-primary" id="savePanelBtn" onclick="saveJob()">Save job</button>
   </div>
 </div>
@@ -1059,6 +1062,7 @@ async function openPanel(jobId, defaultStatus){
   document.getElementById('panelTitle').textContent    = j ? (custName(c)||j.title||'Job') : 'New Job';
   document.getElementById('panelSubtitle').textContent = j ? stageLabel + (j.job_type?' · '+TYPE_LABEL[j.job_type]:'') : '';
   document.getElementById('savePanelBtn').textContent  = j ? 'Save changes' : 'Save job';
+  document.getElementById('deleteJobBtn').style.display = j ? 'inline-flex' : 'none';
 
   // Notes
   document.getElementById('notesList').innerHTML = '';
@@ -1124,6 +1128,26 @@ async function saveJob(){
 
   if(error){ showToast('Error: '+error.message, true); return; }
   showToast(currentJobId?'Job updated':'Job added');
+  closePanel();
+  await loadAll();
+}
+
+function confirmDeleteJob(){
+  if(!currentJobId) return;
+  const j = allJobs.find(x=>x.id===currentJobId);
+  const name = j ? (custName(j.customers)||j.title||'this job') : 'this job';
+  openConfirm(
+    'Delete job?',
+    `This will permanently remove ${name}. Notes attached to this job will also be deleted. This can't be undone.`,
+    doDeleteJob
+  );
+}
+
+async function doDeleteJob(){
+  if(!currentJobId) return;
+  const {error} = await db.from('jobs').update({is_active:false}).eq('id', currentJobId);
+  if(error){ showToast('Error deleting job: '+error.message, true); return; }
+  showToast('Job deleted');
   closePanel();
   await loadAll();
 }
