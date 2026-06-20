@@ -452,9 +452,10 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
         <div class="field-group"><label class="field-label">Est. value ($)</label><input class="field-input field-mono" id="pValue" placeholder="28000" type="number" min="0"></div>
       </div>
       <div class="field-row">
-        <div class="field-group"><label class="field-label">Job city</label><input class="field-input" id="pCity" placeholder="West Jordan"></div>
-        <div class="field-group"><label class="field-label">Job date</label><input class="field-input" id="pJobDate" type="date"></div>
+        <div class="field-group"><label class="field-label">Start date</label><input class="field-input" id="pJobDate" type="date"></div>
+        <div class="field-group"><label class="field-label">End date</label><input class="field-input" id="pEndDate" type="date"></div>
       </div>
+      <div class="field-group"><label class="field-label">Job city</label><input class="field-input" id="pCity" placeholder="West Jordan"></div>
       <div class="field-group"><label class="field-label">Description</label><input class="field-input" id="pDesc" placeholder="Brief description of scope..."></div>
 
       <span class="field-divider">Customer</span>
@@ -832,6 +833,9 @@ function jobCardHtml(j, s){
   const tl   = TYPE_LABEL[j.job_type]||'Other';
   const age  = daysAgo(j.created_at);
   const loc  = [j.job_city, j.job_state].filter(Boolean).join(', ');
+  const dateLabel = j.job_date
+    ? fmtDate(j.job_date)+((j.job_end_date && j.job_end_date!==j.job_date) ? ' – '+fmtDate(j.job_end_date) : '')
+    : '';
   return `<div class="job-card" data-job-id="${j.id}" draggable="true"
        ondragstart="onCardDragStart(event,'${j.id}')"
        ondragend="onCardDragEnd(event)"
@@ -846,7 +850,7 @@ function jobCardHtml(j, s){
       <div class="jc-meta">
         ${j.title&&c?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>${j.title}</div>`:''}
         ${loc?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${loc}</div>`:''}
-        ${j.job_date?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${fmtDate(j.job_date)}</div>`:''}
+        ${dateLabel?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${dateLabel}</div>`:''}
       </div>
       <div class="jc-footer">
         <span class="jc-link">Open <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
@@ -938,11 +942,12 @@ function renderMobileList(){
           const tc   = TYPE_CLASS[j.job_type]||'type-other';
           const tl   = TYPE_LABEL[j.job_type]||'Other';
           const loc  = [j.job_city, j.job_state].filter(Boolean).join(', ');
+          const dlabel = j.job_date ? fmtDate(j.job_date)+((j.job_end_date&&j.job_end_date!==j.job_date)?' – '+fmtDate(j.job_end_date):'') : '';
           return `<div class="list-card" onclick="openPanel('${j.id}')">
             <div class="list-card-bar" style="background:${s.color}"></div>
             <div class="list-card-body">
               <div class="list-card-top"><div class="list-card-name">${name}</div><div class="list-card-value">${fmt(j.estimated_value)}</div></div>
-              <div class="list-card-sub"><span class="list-card-type ${tc}">${tl}</span><span class="list-card-loc">${loc}${j.job_date?' · '+fmtDate(j.job_date):''}</span></div>
+              <div class="list-card-sub"><span class="list-card-type ${tc}">${tl}</span><span class="list-card-loc">${loc}${dlabel?' · '+dlabel:''}</span></div>
             </div>
             <div class="list-card-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
           </div>`;
@@ -1128,6 +1133,7 @@ async function openPanel(jobId, defaultStatus){
   document.getElementById('pValue').value   = j ? (j.estimated_value||'') : '';
   document.getElementById('pCity').value    = j ? (j.job_city||'') : '';
   document.getElementById('pJobDate').value = j ? (j.job_date||'') : '';
+  document.getElementById('pEndDate').value = j ? (j.job_end_date||'') : '';
   document.getElementById('pDesc').value    = j ? (j.description||'') : '';
   document.getElementById('pTitle').classList.remove('err');
 
@@ -1186,6 +1192,10 @@ async function saveJob(){
   const customerId = document.getElementById('pCustomerId').value||null;
   if(!customerId){ showToast('Please link a customer', true); return; }
 
+  const startD = document.getElementById('pJobDate').value;
+  const endD   = document.getElementById('pEndDate').value;
+  if(startD && endD && endD < startD){ showToast('End date must be on or after the start date', true); return; }
+
   setBtn('savePanelBtn', true, 'Saving...');
 
   const payload = {
@@ -1196,7 +1206,8 @@ async function saveJob(){
     estimated_value: parseFloat(document.getElementById('pValue').value)||null,
     job_city:        document.getElementById('pCity').value.trim()||null,
     job_state:       'UT',
-    job_date:        document.getElementById('pJobDate').value||null,
+    job_date:        startD||null,
+    job_end_date:    endD||null,
     description:     document.getElementById('pDesc').value.trim()||null,
     is_active:       true
   };
