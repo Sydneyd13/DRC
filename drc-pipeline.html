@@ -338,8 +338,66 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 }
 
 /* Per-job scheduling pane */
-.no-dates{display:flex;flex-direction:column;...}
-...                          ← all of the Edit 7 CSS block
+.no-dates{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);padding:40px 24px;text-align:center;}
+.no-dates svg{opacity:0.15;}
+.no-dates p{font-size:16px;font-weight:800;color:var(--dark);}
+.no-dates small{font-size:13px;line-height:1.6;max-width:300px;font-weight:500;}
+.week-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin:14px 0 10px;}
+.week-label:first-child{margin-top:0;}
+.av-stack{display:flex;align-items:center;}
+.av{width:22px;height:22px;border-radius:50%;border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;margin-left:-6px;flex-shrink:0;}
+.av:first-child{margin-left:0;}
+.av.more{background:var(--muted);}
+.day-row{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.day-row.is-work{border-color:rgba(232,90,36,0.35);}
+.dr-top{display:flex;align-items:stretch;cursor:pointer;user-select:none;}
+.dr-date{width:60px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:11px 6px;border-right:1.5px solid var(--border2);background:var(--card2);}
+.dr-dayname{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
+.dr-num{font-family:'DM Mono',monospace;font-size:21px;font-weight:800;line-height:1;}
+.day-row.is-today .dr-num{color:var(--orange);}
+.dr-mid{flex:1;padding:11px 13px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px;}
+.dr-toggle-row{display:flex;align-items:center;gap:9px;}
+.dr-summary{font-size:13px;font-weight:700;color:var(--dark);}
+.dr-summary-empty{font-size:13px;color:var(--muted);font-style:italic;font-weight:500;}
+.dr-meta-preview{font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px;font-weight:500;}
+.dr-avatars{display:flex;align-items:center;padding:0 8px 0 4px;flex-shrink:0;}
+.dr-chevron{color:var(--muted);transition:transform 0.2s;display:flex;align-items:center;padding-right:12px;}
+.dr-chevron.open{transform:rotate(180deg);}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;position:absolute;}
+.tog-sl{position:absolute;inset:0;background:var(--border2);border-radius:11px;cursor:pointer;transition:background 0.15s;}
+.tog-sl::before{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.15s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+.tog input:checked+.tog-sl{background:var(--orange);}
+.tog input:checked+.tog-sl::before{transform:translateX(16px);}
+.dr-expand{display:none;border-top:1px solid var(--border);background:var(--card2);}
+.dr-expand.open{display:block;}
+.dr-expand-inner{padding:16px 16px 18px;}
+.exp-section{margin-bottom:18px;}
+.exp-section:last-child{margin-bottom:0;}
+.exp-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
+.people-grid{display:flex;flex-direction:column;gap:6px;}
+.pr{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--radius-sm);background:var(--card);border:1.5px solid var(--border2);cursor:pointer;transition:all 0.12s;}
+.pr:hover{border-color:rgba(0,0,0,0.14);}
+.pr.on{border-color:var(--orange);background:var(--orange-dim);}
+.pr-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;}
+.pr-name{flex:1;font-size:14px;font-weight:600;}
+.pr-name .role{font-size:12px;color:var(--muted);font-weight:500;margin-left:7px;}
+.pr-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);background:var(--card);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.12s;}
+.pr.on .pr-check{background:var(--orange);border-color:var(--orange);}
+.no-employees{font-size:14px;color:var(--muted);padding:10px 0;font-style:italic;font-weight:500;}
+.crew-btns{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;}
+.crew-btn{padding:6px 13px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:all 0.14s;box-shadow:var(--shadow-sm);background:var(--card);}
+.crew-btn .cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.crew-btn.clear{border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);}
+.df-grid{display:flex;flex-direction:column;gap:12px;}
+.df-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.df-group{display:flex;flex-direction:column;}
+.df-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.df-label svg{width:12px;height:12px;}
+.df-input,.df-ta{width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);font-weight:500;transition:border-color 0.15s,box-shadow 0.15s;}
+.df-ta{resize:vertical;min-height:58px;line-height:1.5;}
+.df-input:focus,.df-ta:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
+.df-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;}
 @media(max-width:768px){.df-row{grid-template-columns:1fr;gap:10px;}}
 </style>
 </head>
@@ -1505,6 +1563,101 @@ loadAll().then(()=>{
     });
   }
 });
+  });
+
+/* ===== Per-job scheduling: dates + workers (mirrors the Schedule page) ===== */
+const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const AVATAR_COLORS=['#2563EB','#16A066','#C07010','#D63B3B','#6D40D4','#E85A24'];
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function getRange(j){const start=(j&&j.job_date)||null;const end=(j&&(j.job_end_date||j.job_date))||null;return{start,end};}
+function fmtKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fromKey(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);}
+function todayKey(){return fmtKey(new Date());}
+function getName(e){return [e.first_name,e.last_name].filter(Boolean).join(' ');}
+function getInits(e){return (((e.first_name||'')[0]||'')+((e.last_name||'')[0]||'')).toUpperCase();}
+function aColor(id){let s=0;for(const c of(id||''))s+=c.charCodeAt(0);return AVATAR_COLORS[s%AVATAR_COLORS.length];}
+function empColor(e){const c=crews.find(x=>x.name===e.team);return c?c.color:aColor(e.id);}
+function dayData(jobId,key){return (schedMap[jobId]&&schedMap[jobId].work_days[key])||null;}
+function ensureDay(jobId,key){if(!schedMap[jobId])schedMap[jobId]={work_days:{}};if(!schedMap[jobId].work_days[key])schedMap[jobId].work_days[key]={is_workday:false,assigned:[],note:null,arrival_time:null,site_address:null,day_instructions:null,equipment:null};return schedMap[jobId].work_days[key];}
+const SVG_CLOCK='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+const SVG_PIN='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>';
+const SVG_LIST='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>';
+const SVG_BOX='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
+const SVG_NOTE='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>';
+const SVG_CREW='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
+function avatarStack(ids){const emps=(ids||[]).map(id=>employees.find(e=>e.id===id)).filter(Boolean);if(!emps.length)return '';return '<div class="av-stack">'+emps.slice(0,4).map(e=>'<span class="av" style="background:'+empColor(e)+'" title="'+esc(getName(e))+'">'+getInits(e)+'</span>').join('')+(emps.length>4?'<span class="av more">+'+(emps.length-4)+'</span>':'')+'</div>';}
+function renderSchedDays(){
+  const host=document.getElementById('schedDays');if(!host)return;
+  if(!currentJobId){host.innerHTML='<div class="no-dates"><svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p>Save the job first</p><small>Once the job exists you can set its dates and schedule crew here.</small><button class="btn btn-primary" onclick="switchTab(\'details\')">Go to Details</button></div>';return;}
+  const j=jobsById[currentJobId];if(!j){host.innerHTML='';return;}
+  const r=getRange(j);
+  if(!r.start){host.innerHTML='<div class="no-dates"><svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p>No dates set yet</p><small>Add a start and end date in the Details tab and save — then mark work days and assign crew here.</small><button class="btn btn-primary" onclick="switchTab(\'details\')">Go to Details</button></div>';return;}
+  const start=fromKey(r.start),end=fromKey(r.end),days=[];
+  for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1))days.push({date:new Date(d),key:fmtKey(d)});
+  const weeks={};
+  days.forEach(day=>{const dt=new Date(day.date);const mon=new Date(dt);mon.setDate(dt.getDate()-((dt.getDay()+6)%7));const wk=fmtKey(mon);if(!weeks[wk])weeks[wk]={label:mon.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' week',days:[]};weeks[wk].days.push(day);});
+  host.innerHTML=Object.values(weeks).map(w=>'<div class="week-label">'+w.label+'</div>'+w.days.map(d=>dayRow(j.id,d)).join('')).join('');
+}
+function dayRow(jobId,day){
+  const dd=dayData(jobId,day.key)||{is_workday:false,assigned:[],note:null,arrival_time:null,site_address:null,day_instructions:null,equipment:null};
+  const isWork=dd.is_workday===true,isOpen=openDays.has(day.key),isToday=day.key===todayKey();
+  const assignedEmps=(dd.assigned||[]).map(id=>employees.find(e=>e.id===id)).filter(Boolean);
+  let summary='';
+  if(isWork){
+    summary=assignedEmps.length?'<div class="dr-summary">'+assignedEmps.map(e=>e.first_name).join(', ')+'</div>':'<div class="dr-summary-empty">No one assigned — tap to assign</div>';
+    const m=[];if(dd.arrival_time)m.push(esc(dd.arrival_time));if(dd.site_address)m.push(esc(dd.site_address));
+    if(m.length)summary+='<div class="dr-meta-preview">'+m.join(' · ')+'</div>';
+  }
+  const avatars=(isWork&&assignedEmps.length)?'<div class="dr-avatars">'+avatarStack(dd.assigned)+'</div>':'';
+  let expand='<div class="dr-expand"></div>';
+  if(isOpen)expand='<div class="dr-expand open"><div class="dr-expand-inner">'+assignSection(jobId,day.key,dd)+detailFieldsSection(jobId,day.key,dd)+'</div></div>';
+  return '<div class="day-row'+(isWork?' is-work':'')+(isToday?' is-today':'')+'">'
+    +'<div class="dr-top" onclick="toggleExpand(\''+jobId+'\',\''+day.key+'\')">'
+    +'<div class="dr-date"><div class="dr-dayname">'+DAY_NAMES[day.date.getDay()]+'</div><div class="dr-num">'+day.date.getDate()+'</div></div>'
+    +'<div class="dr-mid"><div class="dr-toggle-row" onclick="event.stopPropagation()"><label class="tog"><input type="checkbox" '+(isWork?'checked':'')+' onchange="toggleWorkday(\''+jobId+'\',\''+day.key+'\',this.checked)"><div class="tog-sl"></div></label><span style="font-size:14px;font-weight:600;color:'+(isWork?'var(--text)':'var(--muted)')+';">'+(isWork?'Work day':'Off')+'</span></div>'+summary+'</div>'
+    +avatars
+    +(isWork?'<div class="dr-chevron'+(isOpen?' open':'')+'"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div>':'')
+    +'</div>'+expand+'</div>';
+}
+function assignSection(jobId,key,dd){
+  const assigned=dd.assigned||[];
+  let crewBtns='';
+  if(crews.length){
+    crewBtns='<div class="crew-btns">'+crews.map(cr=>{
+      const members=employees.filter(e=>e.team===cr.name);
+      const allOn=members.length&&members.every(e=>assigned.includes(e.id));
+      const style='border:2px solid '+(allOn?cr.color:'var(--border2)')+';background:'+(allOn?cr.color+'18':'var(--card)')+';color:'+(allOn?cr.color:'var(--muted2)')+';';
+      return '<button class="crew-btn" style="'+style+'" onclick="assignCrew(\''+jobId+'\',\''+key+'\',\''+esc(cr.name).replace(/'/g,"\\'")+'\')"><span class="cdot" style="background:'+cr.color+'"></span>'+esc(cr.name)+'</button>';
+    }).join('')+'<button class="crew-btn clear" onclick="clearAllPeople(\''+jobId+'\',\''+key+'\')">Clear all</button></div>';
+  }
+  const grid=employees.length?employees.map(e=>{
+    const on=assigned.includes(e.id);
+    return '<div class="pr'+(on?' on':'')+'" onclick="togglePerson(\''+jobId+'\',\''+key+'\',\''+e.id+'\')"><div class="pr-av" style="background:'+empColor(e)+'">'+getInits(e)+'</div><div class="pr-name">'+esc(getName(e))+'<span class="role">'+esc(e.team||e.role||'')+'</span></div><div class="pr-check">'+(on?'<svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>':'')+'</div></div>';
+  }).join(''):'<div class="no-employees">No employees found — add some in Team.</div>';
+  return '<div class="exp-section"><div class="exp-title">Assign people</div>'+crewBtns+'<div class="people-grid">'+grid+'</div></div>';
+}
+function detailFieldsSection(jobId,key,dd){
+  const p='df_'+jobId+'_'+key;
+  return '<div class="exp-section"><div class="exp-title">Day details</div><div class="df-grid">'
+    +'<div class="df-row"><div class="df-group"><label class="df-label">'+SVG_CLOCK+'Arrival / start time</label><input class="df-input" id="'+p+'_arr" placeholder="7:00 AM" value="'+esc(dd.arrival_time)+'"></div>'
+    +'<div class="df-group"><label class="df-label">'+SVG_PIN+'Site address</label><input class="df-input" id="'+p+'_site" placeholder="Where they\'re going" value="'+esc(dd.site_address)+'"></div></div>'
+    +'<div class="df-group"><label class="df-label">'+SVG_LIST+'Instructions / scope</label><textarea class="df-ta" id="'+p+'_instr" placeholder="What to do today…">'+esc(dd.day_instructions)+'</textarea></div>'
+    +'<div class="df-group"><label class="df-label">'+SVG_BOX+'Equipment / materials</label><textarea class="df-ta" id="'+p+'_equip" placeholder="What to bring…">'+esc(dd.equipment)+'</textarea></div>'
+    +'<div class="df-group"><label class="df-label">'+SVG_NOTE+'Other notes</label><textarea class="df-ta" id="'+p+'_note" placeholder="Anything else…">'+esc(dd.note)+'</textarea></div>'
+    +'</div><div class="df-foot"><button class="btn btn-primary btn-sm" onclick="saveDayDetails(\''+jobId+'\',\''+key+'\')">Save day details</button></div></div>';
+}
+async function upsertDay(jobId,key){
+  const dd=schedMap[jobId].work_days[key];const r=getRange(jobsById[jobId]);
+  const {error}=await db.from('job_schedule').upsert([{job_id:jobId,date_key:key,start_date:r.start,end_date:r.end,is_workday:dd.is_workday,assigned_employee_ids:dd.assigned||[],note:dd.note||null,arrival_time:dd.arrival_time||null,site_address:dd.site_address||null,day_instructions:dd.day_instructions||null,equipment:dd.equipment||null}],{onConflict:'job_id,date_key'});
+  return error;
+}
+async function toggleWorkday(jobId,key,isWork){const dd=ensureDay(jobId,key);dd.is_workday=isWork;if(!isWork)openDays.delete(key);else openDays.add(key);const err=await upsertDay(jobId,key);if(err)showToast('Error saving: '+err.message,true);renderSchedDays();}
+function toggleExpand(jobId,key){const dd=dayData(jobId,key);if(!dd||!dd.is_workday)return;if(openDays.has(key))openDays.delete(key);else openDays.add(key);renderSchedDays();}
+async function togglePerson(jobId,key,empId){const dd=ensureDay(jobId,key);dd.is_workday=true;const a=dd.assigned||[];const i=a.indexOf(empId);if(i===-1)a.push(empId);else a.splice(i,1);dd.assigned=a;const err=await upsertDay(jobId,key);if(err){showToast('Error saving: '+err.message,true);return;}renderSchedDays();}
+async function assignCrew(jobId,key,crewName){const dd=ensureDay(jobId,key);dd.is_workday=true;const members=employees.filter(e=>e.team===crewName).map(e=>e.id);const allOn=members.length&&members.every(id=>dd.assigned.includes(id));if(allOn)dd.assigned=dd.assigned.filter(id=>!members.includes(id));else members.forEach(id=>{if(!dd.assigned.includes(id))dd.assigned.push(id);});const err=await upsertDay(jobId,key);if(err){showToast('Error saving: '+err.message,true);return;}showToast(allOn?crewName+' removed':crewName+' assigned');renderSchedDays();}
+async function clearAllPeople(jobId,key){const dd=ensureDay(jobId,key);dd.assigned=[];const err=await upsertDay(jobId,key);if(err){showToast('Error saving: '+err.message,true);return;}showToast('Crew cleared');renderSchedDays();}
+async function saveDayDetails(jobId,key){const dd=ensureDay(jobId,key);dd.is_workday=true;const p='df_'+jobId+'_'+key;const v=id=>{const el=document.getElementById(id);return el&&el.value.trim()?el.value.trim():null;};dd.arrival_time=v(p+'_arr');dd.site_address=v(p+'_site');dd.day_instructions=v(p+'_instr');dd.equipment=v(p+'_equip');dd.note=v(p+'_note');const err=await upsertDay(jobId,key);if(err){showToast('Error saving details: '+err.message,true);return;}showToast('Day details saved');renderSchedDays();}
+</script>
 </script>
 </body>
 </html>
