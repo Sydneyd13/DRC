@@ -29,8 +29,6 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;line-height:1.5;}
 .app{display:flex;height:100vh;overflow:hidden;}
-
-/* SIDEBAR — white with orange pill */
 .sidebar{width:232px;flex-shrink:0;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;}
 .logo{padding:22px 18px 18px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:12px;}
 .logo-mark{width:36px;height:36px;flex-shrink:0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 8px rgba(232,90,36,0.35);padding:3px;}
@@ -51,23 +49,17 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .user-avatar{width:34px;height:34px;border-radius:50%;background:var(--orange-grad);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;box-shadow:0 2px 6px rgba(232,90,36,0.3);}
 .user-name{font-size:13px;font-weight:700;color:var(--text);}
 .user-role{font-size:11px;color:var(--muted);font-weight:500;}
-
-/* Mobile drawer — same light style */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;opacity:0;transition:opacity 0.2s;}
 .overlay.open{opacity:1;}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--sidebar-bg);z-index:201;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-right:1px solid var(--sidebar-border);box-shadow:4px 0 24px rgba(0,0,0,0.10);}
 .drawer.open{transform:translateX(0);}
 .drawer-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--page-bg);border:none;color:var(--muted2);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-
-/* Main */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--page-bg);}
 .topbar{padding:16px 24px;border-bottom:1px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow-sm);}
 .topbar-left{display:flex;align-items:center;gap:13px;}
 .menu-btn{width:38px;height:38px;flex-shrink:0;background:transparent;border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--muted2);cursor:pointer;display:none;align-items:center;justify-content:center;}
 .topbar-title{font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--dark);}
 .topbar-meta{font-size:13px;color:var(--muted);margin-top:1px;font-weight:500;}
-
-/* Buttons */
 .btn{padding:10px 18px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;letter-spacing:-0.01em;}
 .btn-primary{background:var(--orange-grad);color:#fff;box-shadow:0 3px 10px rgba(232,90,36,0.30);}
 .btn-primary:hover{box-shadow:0 5px 18px rgba(232,90,36,0.40);transform:translateY(-1px);}
@@ -80,8 +72,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;box-shadow:none !important;}
 .icon-btn{width:40px;height:40px;padding:0;border-radius:var(--radius-sm);background:var(--card);color:var(--text2);border:1.5px solid var(--border2);box-shadow:var(--shadow-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;}
 .icon-btn:hover{background:var(--card2);border-color:rgba(0,0,0,0.14);}
-
-/* Summary strip */
 .summary-strip{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border2);flex-shrink:0;overflow-x:auto;box-shadow:var(--shadow-sm);}
 .summary-strip::-webkit-scrollbar{display:none;}
 .sum-cell{padding:16px 24px;border-right:1px solid var(--border2);flex-shrink:0;display:flex;flex-direction:column;gap:3px;min-width:150px;}
@@ -91,8 +81,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .sum-value{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--dark);letter-spacing:-0.03em;line-height:1;}
 .sum-cell.featured .sum-value{color:var(--orange);}
 .sum-count{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
-
-/* Kanban board */
 .board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding:20px 22px;display:flex;gap:14px;}
 .board-wrap::-webkit-scrollbar{height:5px;}
 .board-wrap::-webkit-scrollbar-track{background:transparent;}
@@ -109,15 +97,11 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .col-cards::-webkit-scrollbar{width:3px;}
 .col-cards::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:2px;}
 .col-empty{padding:28px 14px;text-align:center;font-size:13px;font-weight:600;color:var(--muted);border:2px dashed var(--border2);border-radius:var(--radius);}
-
-/* Drag & drop */
 .job-card[draggable="true"]{cursor:grab;}
 .job-card[draggable="true"]:active{cursor:grabbing;}
 .job-card.dragging{opacity:0.4;transform:rotate(1.5deg) scale(0.98);transition:none;}
 .col-cards.drop-hover{background:var(--orange-dim);border-radius:var(--radius);outline:2px dashed var(--orange);outline-offset:-4px;}
 .col-cards.drop-hover .col-empty{border-color:var(--orange);color:var(--orange);}
-
-/* Job cards */
 .job-card{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:0;cursor:pointer;transition:box-shadow 0.18s,transform 0.18s,border-color 0.18s;display:flex;overflow:hidden;box-shadow:var(--shadow-sm);}
 .job-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:rgba(0,0,0,0.14);}
 .job-card:active{transform:translateY(0);box-shadow:var(--shadow-sm);}
@@ -138,8 +122,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .jc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);}
 .jc-link{font-size:12px;font-weight:700;color:var(--orange);display:flex;align-items:center;gap:3px;}
 .jc-age{font-size:12px;color:var(--muted);font-weight:500;}
-
-/* Mobile list */
 .list-wrap{display:none;flex:1;overflow-y:auto;padding:16px 14px 100px;}
 .list-wrap::-webkit-scrollbar{width:4px;}
 .list-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
@@ -164,8 +146,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .list-card-type{padding:3px 8px;border-radius:var(--radius-xs);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
 .list-card-loc{font-size:12px;color:var(--muted2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .list-card-arrow{color:var(--muted);flex-shrink:0;padding:0 14px;display:flex;align-items:center;}
-
-/* Detail panel */
 .panel-overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.35);z-index:300;backdrop-filter:blur(3px);}
 .panel-overlay.open{display:block;}
 .detail-panel{position:fixed;top:0;right:0;bottom:0;width:480px;background:var(--card);z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.26s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
@@ -185,8 +165,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .tab-pane.active{display:block;}
 .panel-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:var(--card);}
 .panel-foot .btn{flex:1;justify-content:center;}
-
-/* Form */
 .field-group{margin-bottom:16px;}
 .field-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;display:block;}
 .field-input,.field-select{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);transition:border-color 0.15s,box-shadow 0.15s;font-weight:500;}
@@ -195,8 +173,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
 .field-mono{font-family:'DM Mono',monospace;}
 .field-divider{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin:20px 0 14px;padding-top:16px;border-top:1px solid var(--border);display:block;}
-
-/* Customer search */
 .cust-search-wrap{position:relative;}
 .cust-search-input{width:100%;padding:11px 13px 11px 38px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--card);color:var(--text);font-weight:500;transition:border-color 0.15s,box-shadow 0.15s;}
 .cust-search-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
@@ -215,21 +191,15 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .cust-chip-name{font-size:14px;font-weight:700;color:var(--orange);flex:1;}
 .cust-chip-clear{background:none;border:none;cursor:pointer;color:var(--orange);padding:0;display:flex;align-items:center;opacity:0.7;}
 .cust-chip-clear:hover{opacity:1;}
-
-/* New customer inline form */
 .new-cust-form{background:var(--card2);border:1.5px solid var(--orange-mid);border-radius:var(--radius);padding:14px;margin-top:8px;}
 .new-cust-title{font-size:13px;font-weight:800;color:var(--orange);margin-bottom:12px;display:flex;align-items:center;gap:7px;letter-spacing:-0.01em;}
 .new-cust-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
-
-/* Contact block */
 .contact-block{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-sm);}
 .contact-block-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;display:block;}
 .contact-name{font-size:16px;font-weight:800;margin-bottom:7px;letter-spacing:-0.02em;color:var(--dark);}
 .contact-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted2);margin-bottom:4px;font-weight:500;}
 .contact-row svg{width:13px;height:13px;color:var(--muted);flex-shrink:0;}
 .contact-row a{color:var(--blue);text-decoration:none;font-weight:600;}
-
-/* Notes */
 .add-note-box{background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);padding:15px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
 .add-note-ta{width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;resize:vertical;min-height:76px;line-height:1.6;background:var(--page-bg);color:var(--text);font-weight:500;}
 .add-note-ta:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
@@ -246,8 +216,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .note-edit-ta{width:100%;padding:10px 12px;border:1.5px solid var(--orange);border-radius:var(--radius-sm);font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;resize:vertical;min-height:64px;line-height:1.6;color:var(--text);font-weight:500;background:var(--card);}
 .note-edit-ta:focus{outline:none;}
 .note-edit-foot{display:flex;gap:8px;margin-top:8px;}
-
-/* Filter drawer */
 .filter-overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.25);z-index:399;backdrop-filter:blur(2px);}
 .filter-overlay.open{display:block;}
 .filter-drawer{position:fixed;top:0;right:0;bottom:0;width:320px;background:var(--card);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
@@ -268,8 +236,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .date-preset{padding:9px 10px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;border:1.5px solid var(--border2);background:var(--card);color:var(--muted2);cursor:pointer;text-align:center;transition:all 0.14s;box-shadow:var(--shadow-sm);}
 .date-preset.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);font-weight:700;}
 .date-custom{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-
-/* Stages drawer */
 .stages-drawer{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--card);z-index:400;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.22s cubic-bezier(0.4,0,0.2,1);border-left:1px solid var(--border2);box-shadow:var(--shadow-lg);}
 .stages-drawer.open{transform:translateX(0);}
 .stages-list{display:flex;flex-direction:column;gap:10px;}
@@ -285,59 +251,25 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .stage-del-btn:disabled{opacity:0.4;cursor:not-allowed;}
 .add-stage-row{display:flex;align-items:center;gap:8px;padding:14px;border:2px dashed var(--border2);border-radius:var(--radius);color:var(--muted2);cursor:pointer;font-size:14px;font-weight:700;justify-content:center;transition:all 0.14s;margin-top:6px;font-family:'Plus Jakarta Sans',sans-serif;background:none;width:100%;}
 .add-stage-row:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-dim);}
-
-/* Skeleton */
 .skeleton{background:linear-gradient(90deg,var(--card2) 25%,rgba(0,0,0,0.05) 50%,var(--card2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-sm);}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* Toast / spinner */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark);color:#fff;padding:12px 22px;border-radius:var(--radius);font-size:14px;font-weight:700;z-index:999;opacity:0;transition:all 0.22s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-lg);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{background:var(--red);}
 .spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Confirm dialog */
 .confirm-bg{display:none;position:fixed;inset:0;background:rgba(15,17,23,0.45);z-index:600;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
 .confirm-bg.open{display:flex;}
 .confirm-box{background:var(--card);border-radius:var(--radius);width:100%;max-width:380px;padding:30px 26px;text-align:center;box-shadow:var(--shadow-lg);}
 .confirm-title{font-size:18px;font-weight:800;margin-bottom:9px;letter-spacing:-0.02em;}
 .confirm-msg{font-size:14px;color:var(--muted2);margin-bottom:24px;line-height:1.6;font-weight:500;}
 .confirm-foot{display:flex;gap:9px;}.confirm-foot .btn{flex:1;justify-content:center;}
-
-/* Bottom nav */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border2);z-index:100;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -4px 20px rgba(0,0,0,0.07);}
 .bnav-inner{display:flex;justify-content:space-around;padding:8px 0 5px;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;color:var(--muted);cursor:pointer;min-width:54px;transition:color 0.14s;}
 .bnav-item.active{color:var(--orange);}
 .bnav-item svg{width:22px;height:22px;}
 .bnav-item span{font-size:10px;font-weight:700;}
-
-@media(max-width:768px){
-  .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}
-  .overlay.open{display:block;}
-  .board-wrap{display:none;}.list-wrap{display:block;}
-  .detail-panel{width:100%;border-left:none;top:auto;height:93vh;border-radius:20px 20px 0 0;transform:translateY(100%);box-shadow:0 -8px 40px rgba(0,0,0,0.15);}
-  .detail-panel.open{transform:translateY(0);}
-  .filter-drawer,.stages-drawer{width:100%;border-left:none;top:auto;height:86vh;border-radius:20px 20px 0 0;transform:translateY(100%);}
-  .filter-drawer.open,.stages-drawer.open{transform:translateY(0);}
-  .field-row{grid-template-columns:1fr;gap:0;}
-  .btn-ghost-hide{display:none;}
-  .sum-cell{padding:13px 16px;min-width:130px;}
-  .sum-value{font-size:19px;}
-  .confirm-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
-  .confirm-box{border-radius:20px 20px 0 0;width:100%;max-width:100%;padding:28px 22px 36px;}
-}
-@media(min-width:769px){
-  .topbar{padding:18px 28px;}.topbar-title{font-size:22px;}
-  .board-wrap{padding:22px 26px;}
-}
-  @media(min-width:769px){
-  .topbar{padding:18px 28px;}.topbar-title{font-size:22px;}
-  .board-wrap{padding:22px 26px;}
-}
-
-/* Per-job scheduling pane */
 .no-dates{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);padding:40px 24px;text-align:center;}
 .no-dates svg{opacity:0.15;}
 .no-dates p{font-size:16px;font-weight:800;color:var(--dark);}
@@ -398,13 +330,30 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
 .df-ta{resize:vertical;min-height:58px;line-height:1.5;}
 .df-input:focus,.df-ta:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-dim);}
 .df-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;}
-@media(max-width:768px){.df-row{grid-template-columns:1fr;gap:10px;}}
+@media(max-width:768px){
+  .sidebar{display:none;}.menu-btn{display:flex;}.bottom-nav{display:block;}
+  .overlay.open{display:block;}
+  .board-wrap{display:none;}.list-wrap{display:block;}
+  .detail-panel{width:100%;border-left:none;top:auto;height:93vh;border-radius:20px 20px 0 0;transform:translateY(100%);box-shadow:0 -8px 40px rgba(0,0,0,0.15);}
+  .detail-panel.open{transform:translateY(0);}
+  .filter-drawer,.stages-drawer{width:100%;border-left:none;top:auto;height:86vh;border-radius:20px 20px 0 0;transform:translateY(100%);}
+  .filter-drawer.open,.stages-drawer.open{transform:translateY(0);}
+  .field-row{grid-template-columns:1fr;gap:0;}
+  .df-row{grid-template-columns:1fr;gap:10px;}
+  .btn-ghost-hide{display:none;}
+  .sum-cell{padding:13px 16px;min-width:130px;}
+  .sum-value{font-size:19px;}
+  .confirm-bg{align-items:flex-end;padding:0;backdrop-filter:none;}
+  .confirm-box{border-radius:20px 20px 0 0;width:100%;max-width:100%;padding:28px 22px 36px;}
+}
+@media(min-width:769px){
+  .topbar{padding:18px 28px;}.topbar-title{font-size:22px;}
+  .board-wrap{padding:22px 26px;}
+}
 </style>
 </head>
 <body>
 <div class="app">
-
-<!-- Sidebar -->
 <aside class="sidebar">
   <div class="logo"><div class="logo-mark"><img src="https://i.postimg.cc/WzrXfwJ9/DRCLOGO.png" alt="DRC"></div><div><div class="logo-text">DRC Admin</div><div class="logo-sub">Command Center</div></div></div>
   <nav class="nav">
@@ -418,8 +367,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
   </nav>
   <div class="sidebar-footer"><div class="user-chip"><div class="user-avatar">DR</div><div><div class="user-name">DRC Admin</div><div class="user-role">Owner view</div></div></div></div>
 </aside>
-
-<!-- Mobile overlay + drawer -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <button class="drawer-close" onclick="closeDrawer()"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
@@ -454,19 +401,13 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
       </button>
     </div>
   </div>
-
-  <!-- Summary strip -->
   <div class="summary-strip" id="summaryStrip"></div>
-
-  <!-- Desktop kanban -->
   <div class="board-wrap" id="boardWrap">
     <div class="col" style="opacity:0.5;">
       <div class="col-head"><div class="col-title-wrap"><div class="skeleton" style="width:80px;height:14px;"></div></div></div>
       <div class="col-cards"><div class="skeleton" style="height:100px;border-radius:10px;"></div><div class="skeleton" style="height:80px;border-radius:10px;margin-top:8px;"></div></div>
     </div>
   </div>
-
-  <!-- Mobile list -->
   <div class="list-wrap" id="listWrap">
     <div style="display:flex;gap:8px;margin-bottom:14px;">
       <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;" onclick="openStages()">
@@ -482,8 +423,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <div id="mobileList"><div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;">Loading...</div></div>
   </div>
 </div>
-
-<!-- Detail panel -->
 <div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
 <div class="detail-panel" id="detailPanel">
   <div class="panel-head">
@@ -499,7 +438,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <div class="ptab" onclick="switchTab('notes')">Notes <span id="noteCountBadge" style="background:var(--orange-dim);color:var(--orange);font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;margin-left:4px;">0</span></div>
   </div>
   <div class="panel-body">
-    <!-- Details tab -->
     <div class="tab-pane active" id="tab-details">
       <div class="field-group">
         <label class="field-label">Stage</label>
@@ -525,7 +463,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
       </div>
       <div class="field-group"><label class="field-label">Job city</label><input class="field-input" id="pCity" placeholder="West Jordan"></div>
       <div class="field-group"><label class="field-label">Description</label><input class="field-input" id="pDesc" placeholder="Brief description of scope..."></div>
-
       <span class="field-divider">Customer</span>
       <div class="field-group">
         <label class="field-label">Link to customer *</label>
@@ -539,8 +476,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
           <span class="cust-chip-name" id="custChipName"></span>
           <button class="cust-chip-clear" onclick="clearCustomer()"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-
-        <!-- Inline new customer form -->
         <div id="newCustForm" class="new-cust-form" style="display:none;">
           <div class="new-cust-title">
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
@@ -562,7 +497,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
         </div>
       </div>
       <input type="hidden" id="pCustomerId">
-
       <div id="customerCard" class="contact-block" style="display:none;">
         <span class="contact-block-title">Customer</span>
         <div class="contact-name" id="ccName"></div>
@@ -570,13 +504,9 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
         <div class="contact-row" id="ccEmail" style="display:none;"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg><a id="ccEmailLink" href="#"></a></div>
       </div>
     </div>
-
-    <!-- Schedule tab -->
     <div class="tab-pane" id="tab-schedule">
       <div id="schedDays"></div>
     </div>
-
-    <!-- Notes tab -->
     <div class="tab-pane" id="tab-notes">
       <div class="add-note-box">
         <textarea class="add-note-ta" id="newNoteText" placeholder="Add a note..."></textarea>
@@ -596,8 +526,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <button class="btn btn-primary" id="savePanelBtn" onclick="saveJob()">Save job</button>
   </div>
 </div>
-
-<!-- Filter drawer -->
 <div class="filter-overlay" id="filterOverlay" onclick="closeFilter()"></div>
 <div class="filter-drawer" id="filterDrawer">
   <div class="filter-head">
@@ -634,8 +562,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <button class="btn btn-primary" onclick="closeFilter()">Apply</button>
   </div>
 </div>
-
-<!-- Stages manager drawer -->
 <div class="filter-overlay" id="stagesOverlay" onclick="closeStages()"></div>
 <div class="stages-drawer" id="stagesDrawer">
   <div class="filter-head">
@@ -657,8 +583,6 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <button class="btn btn-primary" id="saveStagesBtn" onclick="saveStages()">Save changes</button>
   </div>
 </div>
-
-<!-- Confirm dialog -->
 <div class="confirm-bg" id="confirmBg">
   <div class="confirm-box">
     <div class="confirm-title" id="confirmTitle">Are you sure?</div>
@@ -669,10 +593,7 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
-<!-- Bottom nav -->
 <nav class="bottom-nav">
   <div class="bnav-inner">
     <div class="bnav-item" onclick="location.href='drc-schedule.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Schedule</span></div>
@@ -682,982 +603,4 @@ html,body{height:100%;background:var(--page-bg);color:var(--text);font-family:'P
     <div class="bnav-item" onclick="location.href='drc-oncall.html'"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg><span>On-Call</span></div>
   </div>
 </nav>
-
 </div>
-
-<script>
-const SUPABASE_URL = 'https://xjnqpbhtnpxcratpzblb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbnFwYmh0bnB4Y3JhdHB6YmxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODk3NjUsImV4cCI6MjA4ODE2NTc2NX0.HYszpuRxdZ9g4wtPYDR9arR-nK5As7k87o2wdTijgCA';
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ── State ─────────────────────────────────────────────────
-let allJobs         = [];
-let allCustomers    = [];
-let stages          = [];    // loaded from job_stages table
-let currentJobId    = null;
-let custHighlight   = -1;
-let mobileStageFilter = 'all';
-let editableStages  = [];    // working copy for stage editor
-let confirmCallback = null;
-let employees = [], crews = [], schedMap = {}, openDays = new Set(), jobsById = {};
-
-const TYPE_LABEL = {water_damage:'Water',fire_restoration:'Fire',mold_remediation:'Mold',inspection:'Insp',other:'Other'};
-const TYPE_CLASS = {water_damage:'type-water',fire_restoration:'type-fire',mold_remediation:'type-mold',inspection:'type-insp',other:'type-other'};
-
-const DEFAULT_NEW_STAGE_COLOR = '#8B95A5';
-
-// ── Helpers ───────────────────────────────────────────────
-function fmt(val){ return val ? '$'+Number(val).toLocaleString() : '—'; }
-function daysAgo(ts){ return Math.floor((Date.now()-new Date(ts))/86400000); }
-function fmtDate(d){ if(!d) return '—'; return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
-function custName(c){ if(!c) return '—'; return [c.first_name,c.last_name].filter(Boolean).join(' '); }
-function custLabel(c){ return custName(c)+(c.company_name?' · '+c.company_name:''); }
-function slugify(s){ return (s||'').toLowerCase().trim().replace(/[^a-z0-9_]+/g,'_').replace(/^_+|_+$/g,''); }
-function hexToTint(hex,alpha){
-  const h=hex.replace('#','');
-  const r=parseInt(h.substring(0,2),16), g=parseInt(h.substring(2,4),16), b=parseInt(h.substring(4,6),16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-function stageByKey(key){ return stages.find(s=>s.key===key); }
-
-function showToast(msg, isErr){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(isErr?' error':'')+' show';
-  setTimeout(()=>t.className='toast',2800);
-}
-function setBtn(id, loading, label){
-  const b=document.getElementById(id); if(!b)return;
-  b.disabled=loading; b.innerHTML=loading?'<span class="spinner"></span>':label;
-}
-
-// ── Confirm ───────────────────────────────────────────────
-function openConfirm(title, msg, onYes){
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent   = msg;
-  confirmCallback = onYes;
-  document.getElementById('confirmBg').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeConfirm(){
-  document.getElementById('confirmBg').classList.remove('open');
-  document.body.style.overflow = '';
-  confirmCallback = null;
-}
-document.getElementById('confirmYesBtn').addEventListener('click',()=>{
-  const cb = confirmCallback; closeConfirm(); if(cb) cb();
-});
-
-// ── Load ──────────────────────────────────────────────────
-async function loadAll(){
-  const [sr, jr, cr, er, tr, schr] = await Promise.all([
-    db.from('job_stages').select('*').eq('is_active',true).order('sort_order'),
-    db.from('jobs')
-      .select('*, customers(id,first_name,last_name,company_name,phone,email)')
-      .eq('is_active', true)
-      .order('created_at', {ascending:false}),
-    db.from('customers')
-      .select('id,first_name,last_name,company_name,phone,email')
-      .eq('is_active', true)
-      .order('first_name'),
-    db.from('employees').select('id,first_name,last_name,role,team').eq('is_active',true).order('first_name'),
-    db.from('teams').select('id,name,color').eq('is_active',true).order('sort_order').order('name'),
-    db.from('job_schedule').select('*')
-  ]);
-
-  if(sr.error){
-    showToast('Error loading stages: '+sr.error.message, true);
-    return;
-  }
-  if(jr.error){
-    showToast('Error loading jobs: '+jr.error.message, true);
-    document.getElementById('boardWrap').innerHTML =
-      '<div style="padding:40px;color:var(--muted);font-size:13px;">Could not load pipeline.</div>';
-    return;
-  }
-
-  stages       = sr.data || [];
-  allJobs      = jr.data || [];
-  allCustomers = cr.data || [];
-  employees    = er.data || [];
-  crews        = tr.data || [];
-  jobsById     = {}; allJobs.forEach(j => jobsById[j.id] = j);
-  schedMap     = {};
-  (schr.data||[]).forEach(r=>{
-    if(r.date_key==='__meta__')return;
-    if(!schedMap[r.job_id])schedMap[r.job_id]={work_days:{}};
-    schedMap[r.job_id].work_days[r.date_key]={
-      is_workday:r.is_workday===true,
-      assigned:Array.isArray(r.assigned_employee_ids)?r.assigned_employee_ids:[],
-      note:r.note||null, arrival_time:r.arrival_time||null, site_address:r.site_address||null,
-      day_instructions:r.day_instructions||null, equipment:r.equipment||null
-    };
-  });
-
-  populateStatusDropdown();
-  renderMobileStagePills();
-  renderSummaryStrip();
-  updateSummary();
-  renderBoard();
-  renderMobileList();
-}
-
-function populateStatusDropdown(){
-  const sel = document.getElementById('pStatus');
-  const currentVal = sel.value;
-  sel.innerHTML = stages.map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
-  if(currentVal && stages.find(s=>s.key===currentVal)) sel.value = currentVal;
-}
-
-function renderMobileStagePills(){
-  const wrap = document.getElementById('stagePills');
-  const pills = [
-    `<div class="stage-pill ${mobileStageFilter==='all'?'active':''}" onclick="filterStage('all',this)">All</div>`,
-    ...stages.map(s=>`<div class="stage-pill ${mobileStageFilter===s.key?'active':''}" onclick="filterStage('${s.key}',this)">${s.label}</div>`)
-  ].join('');
-  wrap.innerHTML = pills;
-}
-
-function renderSummaryStrip(){
-  // Keep summary strip stable — show Total, first few stages, and featured "Won MTD" if a "won" stage exists
-  const wonStage = stages.find(s=>s.key==='won') || stages[stages.length-1];
-  const topStages = stages.filter(s=>s.key!==wonStage?.key).slice(0,3);
-  const cells = [
-    `<div class="sum-cell"><div class="sum-label">Total pipeline</div><div class="sum-value" id="sumTotal">—</div><div class="sum-count" id="sumTotalCount">—</div></div>`,
-    ...topStages.map(s=>`<div class="sum-cell"><div class="sum-label">${s.label}</div><div class="sum-value" id="sumStage_${s.key}">—</div><div class="sum-count" id="sumStage_${s.key}_count">—</div></div>`),
-    wonStage ? `<div class="sum-cell featured"><div class="sum-label">${wonStage.label} (MTD)</div><div class="sum-value" id="sumWon">—</div><div class="sum-count" id="sumWonCount">—</div></div>` : ''
-  ].join('');
-  document.getElementById('summaryStrip').innerHTML = cells;
-}
-
-// ── Summary strip values ──────────────────────────────────
-function updateSummary(){
-  const closedKeys = ['won','lost']; // considered closed if they exist by these keys
-  const active  = allJobs.filter(j=>!closedKeys.includes(j.status));
-  const total   = active.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0);
-
-  document.getElementById('sumTotal').textContent      = fmt(total);
-  document.getElementById('sumTotalCount').textContent = active.length+' active';
-
-  const wonStage = stages.find(s=>s.key==='won') || stages[stages.length-1];
-  const topStages = stages.filter(s=>s.key!==wonStage?.key).slice(0,3);
-
-  topStages.forEach(s=>{
-    const jobs = allJobs.filter(j=>j.status===s.key);
-    const v = jobs.reduce((sum,j)=>sum+(parseFloat(j.estimated_value)||0),0);
-    const valEl = document.getElementById('sumStage_'+s.key);
-    const cntEl = document.getElementById('sumStage_'+s.key+'_count');
-    if(valEl) valEl.textContent = fmt(v);
-    if(cntEl) cntEl.textContent = jobs.length+' job'+(jobs.length!==1?'s':'');
-  });
-
-  if(wonStage){
-    const now = new Date();
-    const won = allJobs.filter(j=>{
-      if(j.status!==wonStage.key) return false;
-      const d = new Date(j.updated_at);
-      return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
-    });
-    document.getElementById('sumWon').textContent      = fmt(won.reduce((s,j)=>s+(parseFloat(j.estimated_value)||0),0));
-    document.getElementById('sumWonCount').textContent = won.length+' closed MTD';
-  }
-
-  document.getElementById('topbarMeta').textContent = allJobs.length+' jobs · '+fmt(total)+' in play';
-  document.getElementById('sidebarBadge').textContent = active.length;
-}
-
-// ── Board render ──────────────────────────────────────────
-function renderBoard(){
-  const activeTypes = [...document.querySelectorAll('.filter-chip.on')].map(c=>c.dataset.val);
-  const dateFrom    = document.getElementById('dateFrom').value;
-  const dateTo      = document.getElementById('dateTo').value;
-
-  const filtered = allJobs.filter(j=>{
-    if(activeTypes.length && !activeTypes.includes(j.job_type)) return false;
-    if(dateFrom && j.created_at < dateFrom) return false;
-    if(dateTo   && j.created_at.slice(0,10) > dateTo) return false;
-    return true;
-  });
-
-  document.getElementById('boardWrap').innerHTML = stages.map(s=>{
-    const jobs = filtered.filter(j=>j.status===s.key);
-    const cards = jobs.length
-      ? jobs.map(j=>jobCardHtml(j,s)).join('')
-      : `<div class="col-empty">No ${s.label.toLowerCase()} jobs</div>`;
-    return `<div class="col">
-      <div class="col-head">
-        <div class="col-title-wrap">
-          <div class="col-dot" style="background:${s.color}"></div>
-          <span class="col-title">${s.label}</span>
-          <span class="col-count" style="background:${hexToTint(s.color,0.12)};color:${s.color}">${jobs.length}</span>
-        </div>
-        <button class="col-add" onclick="openPanel(null,'${s.key}')">+</button>
-      </div>
-      <div class="col-cards" data-stage="${s.key}"
-           ondragover="onColDragOver(event)"
-           ondragleave="onColDragLeave(event)"
-           ondrop="onColDrop(event,'${s.key}')">${cards}</div>
-    </div>`;
-  }).join('');
-
-  // Also render any "orphan" jobs whose stage no longer exists
-  const orphans = filtered.filter(j=>!stages.find(s=>s.key===j.status));
-  if(orphans.length){
-    const cards = orphans.map(j=>jobCardHtml(j,{color:'#999',label:'Unknown'})).join('');
-    const html = `<div class="col">
-      <div class="col-head">
-        <div class="col-title-wrap">
-          <div class="col-dot" style="background:#999"></div>
-          <span class="col-title" style="color:var(--muted)">Unassigned</span>
-          <span class="col-count" style="background:rgba(0,0,0,0.06);color:var(--muted2)">${orphans.length}</span>
-        </div>
-      </div>
-      <div class="col-cards">${cards}</div>
-    </div>`;
-    document.getElementById('boardWrap').insertAdjacentHTML('beforeend', html);
-  }
-}
-
-function jobCardHtml(j, s){
-  const c    = j.customers;
-  const name = c ? custName(c) : (j.title||'—');
-  const tc   = TYPE_CLASS[j.job_type]||'type-other';
-  const tl   = TYPE_LABEL[j.job_type]||'Other';
-  const age  = daysAgo(j.created_at);
-  const loc  = [j.job_city, j.job_state].filter(Boolean).join(', ');
-  const dateLabel = j.job_date
-    ? fmtDate(j.job_date)+((j.job_end_date && j.job_end_date!==j.job_date) ? ' – '+fmtDate(j.job_end_date) : '')
-    : '';
-  return `<div class="job-card" data-job-id="${j.id}" draggable="true"
-       ondragstart="onCardDragStart(event,'${j.id}')"
-       ondragend="onCardDragEnd(event)"
-       onclick="onCardClick(event,'${j.id}')" style="border-left:0;">
-    <div class="job-card-bar" style="background:${s.color||'#999'}"></div>
-    <div class="job-card-body">
-      <div class="jc-top">
-        <div class="jc-customer">${name}</div>
-        <span class="jc-type ${tc}">${tl}</span>
-      </div>
-      <div class="jc-value">${fmt(j.estimated_value)}</div>
-      <div class="jc-meta">
-        ${j.title&&c?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>${j.title}</div>`:''}
-        ${loc?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>${loc}</div>`:''}
-        ${dateLabel?`<div class="jc-row"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${dateLabel}</div>`:''}
-      </div>
-      <div class="jc-footer">
-        <span class="jc-link">Open <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></span>
-        <span class="jc-age">${age===0?'Today':age+'d ago'}</span>
-      </div>
-    </div>
-  </div>`;
-}
-
-// ── Drag & drop ───────────────────────────────────────────
-let dragState = { jobId: null, dragged: false };
-
-function onCardDragStart(e, jobId){
-  dragState.jobId = jobId;
-  dragState.dragged = true;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', jobId); // required by Firefox
-  e.currentTarget.classList.add('dragging');
-}
-
-function onCardDragEnd(e){
-  e.currentTarget.classList.remove('dragging');
-  // Clear any lingering hover states
-  document.querySelectorAll('.col-cards.drop-hover').forEach(el=>el.classList.remove('drop-hover'));
-  // Reset dragState.dragged on next tick so click handler can see it
-  setTimeout(()=>{ dragState.jobId=null; dragState.dragged=false; }, 0);
-}
-
-function onColDragOver(e){
-  e.preventDefault(); // required to allow drop
-  e.dataTransfer.dropEffect = 'move';
-  e.currentTarget.classList.add('drop-hover');
-}
-
-function onColDragLeave(e){
-  // Only clear if we've actually left this element (not entered a child)
-  if(!e.currentTarget.contains(e.relatedTarget)){
-    e.currentTarget.classList.remove('drop-hover');
-  }
-}
-
-async function onColDrop(e, newStage){
-  e.preventDefault();
-  e.currentTarget.classList.remove('drop-hover');
-  const jobId = dragState.jobId;
-  if(!jobId) return;
-
-  const job = allJobs.find(j=>j.id===jobId);
-  if(!job) return;
-  if(job.status === newStage) return; // dropped back in same column
-
-  const oldStage = job.status;
-
-  // Optimistic update
-  job.status = newStage;
-  renderBoard();
-  renderMobileList();
-  updateSummary();
-
-  const {error} = await db.from('jobs').update({status: newStage}).eq('id', jobId);
-  if(error){
-    // Roll back
-    job.status = oldStage;
-    renderBoard();
-    renderMobileList();
-    updateSummary();
-    showToast('Error moving job: '+error.message, true);
-    return;
-  }
-  const stageLabel = stageByKey(newStage)?.label || newStage;
-  showToast(`Moved to ${stageLabel}`);
-}
-
-function onCardClick(e, jobId){
-  // Don't open panel if this was the end of a drag
-  if(dragState.dragged) return;
-  openPanel(jobId);
-}
-
-// ── Mobile list render ────────────────────────────────────
-function renderMobileList(){
-  const stagesToShow = mobileStageFilter==='all' ? stages : stages.filter(s=>s.key===mobileStageFilter);
-  document.getElementById('mobileList').innerHTML = stagesToShow.map(s=>{
-    const jobs = allJobs.filter(j=>j.status===s.key);
-    const cards = jobs.length
-      ? jobs.map(j=>{
-          const c    = j.customers;
-          const name = c ? custName(c) : (j.title||'—');
-          const tc   = TYPE_CLASS[j.job_type]||'type-other';
-          const tl   = TYPE_LABEL[j.job_type]||'Other';
-          const loc  = [j.job_city, j.job_state].filter(Boolean).join(', ');
-          const dlabel = j.job_date ? fmtDate(j.job_date)+((j.job_end_date&&j.job_end_date!==j.job_date)?' – '+fmtDate(j.job_end_date):'') : '';
-          return `<div class="list-card" onclick="openPanel('${j.id}')">
-            <div class="list-card-bar" style="background:${s.color}"></div>
-            <div class="list-card-body">
-              <div class="list-card-top"><div class="list-card-name">${name}</div><div class="list-card-value">${fmt(j.estimated_value)}</div></div>
-              <div class="list-card-sub"><span class="list-card-type ${tc}">${tl}</span><span class="list-card-loc">${loc}${dlabel?' · '+dlabel:''}</span></div>
-            </div>
-            <div class="list-card-arrow"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></div>
-          </div>`;
-        }).join('')
-      : `<div style="text-align:center;font-size:12px;color:var(--muted);padding:16px;border:1.5px dashed var(--border2);border-radius:8px;">No ${s.label.toLowerCase()} jobs</div>`;
-    return `<div class="stage-group" data-stage="${s.key}">
-      <div class="stage-group-head">
-        <div class="stage-group-dot" style="background:${s.color}"></div>
-        <span class="stage-group-title">${s.label}</span>
-        <span class="stage-group-count" style="background:${hexToTint(s.color,0.12)};color:${s.color}">${jobs.length}</span>
-        <button class="stage-group-add" onclick="openPanel(null,'${s.key}')">+ Add</button>
-      </div>
-      ${cards}
-    </div>`;
-  }).join('');
-}
-
-function filterStage(stage, el){
-  document.querySelectorAll('.stage-pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  mobileStageFilter = stage;
-  renderMobileList();
-}
-
-// ── Customer search ───────────────────────────────────────
-function filteredCustomers(q){
-  if(!q) return allCustomers.slice(0,12);
-  const lq = q.toLowerCase();
-  return allCustomers.filter(c=>
-    custName(c).toLowerCase().includes(lq)||
-    (c.company_name||'').toLowerCase().includes(lq)||
-    (c.email||'').toLowerCase().includes(lq)
-  ).slice(0,12);
-}
-
-function renderCustDropdown(q){
-  const dd      = document.getElementById('custDropdown');
-  const results = filteredCustomers(q);
-  custHighlight = -1;
-  let html = '';
-  if(results.length){
-    html = results.map((c,i)=>`
-      <div class="cust-option" data-id="${c.id}" data-idx="${i}" onmousedown="selectCustomer('${c.id}')">
-        <div class="cust-option-name">${custName(c)}</div>
-        ${c.company_name||c.phone?`<div class="cust-option-sub">${[c.company_name,c.phone].filter(Boolean).join(' · ')}</div>`:''}
-      </div>`).join('');
-  } else {
-    html = '<div class="cust-no-results">No matching customers</div>';
-  }
-  // Always append "create new customer" option
-  html += `<div class="cust-option cust-option-new" onmousedown="showNewCustForm('${(q||'').replace(/'/g,"\\'")}')">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-    + Create new customer${q?` "${q}"`:''}
-  </div>`;
-  dd.innerHTML = html;
-  dd.classList.add('open');
-}
-
-function onCustSearch(){ renderCustDropdown(document.getElementById('custSearchInput').value); }
-function onCustFocus(){ renderCustDropdown(document.getElementById('custSearchInput').value); }
-
-function onCustKeydown(e){
-  const dd    = document.getElementById('custDropdown');
-  const items = dd.querySelectorAll('.cust-option:not(.cust-option-new)');
-  if(e.key==='ArrowDown'){ e.preventDefault(); custHighlight=Math.min(custHighlight+1,items.length-1); items.forEach((el,i)=>el.classList.toggle('hl',i===custHighlight)); }
-  else if(e.key==='ArrowUp'){ e.preventDefault(); custHighlight=Math.max(custHighlight-1,0); items.forEach((el,i)=>el.classList.toggle('hl',i===custHighlight)); }
-  else if(e.key==='Enter'&&custHighlight>=0){ e.preventDefault(); selectCustomer(items[custHighlight].dataset.id); }
-  else if(e.key==='Escape'){ dd.classList.remove('open'); }
-}
-
-function selectCustomer(id){
-  const c = allCustomers.find(x=>x.id===id);
-  if(!c) return;
-  document.getElementById('pCustomerId').value = id;
-  document.getElementById('custSearchInput').value = '';
-  document.getElementById('custDropdown').classList.remove('open');
-  document.getElementById('custSearchWrap').style.display = 'none';
-  document.getElementById('custChip').style.display = 'flex';
-  document.getElementById('custChipName').textContent = custLabel(c);
-  showCustomerCard(c);
-}
-
-function clearCustomer(){
-  document.getElementById('pCustomerId').value = '';
-  document.getElementById('custSearchInput').value = '';
-  document.getElementById('custDropdown').classList.remove('open');
-  document.getElementById('custSearchWrap').style.display = '';
-  document.getElementById('custChip').style.display = 'none';
-  document.getElementById('customerCard').style.display = 'none';
-  document.getElementById('newCustForm').style.display = 'none';
-}
-
-function showCustomerCard(c){
-  document.getElementById('customerCard').style.display = 'block';
-  document.getElementById('ccName').textContent = custLabel(c);
-  const ph = document.getElementById('ccPhone');
-  if(c.phone){ ph.style.display='flex'; document.getElementById('ccPhoneLink').textContent=c.phone; document.getElementById('ccPhoneLink').href='tel:'+c.phone; }
-  else ph.style.display='none';
-  const em = document.getElementById('ccEmail');
-  if(c.email){ em.style.display='flex'; document.getElementById('ccEmailLink').textContent=c.email; document.getElementById('ccEmailLink').href='mailto:'+c.email; }
-  else em.style.display='none';
-}
-
-// ── New customer inline form ──────────────────────────────
-function showNewCustForm(prefill){
-  document.getElementById('custDropdown').classList.remove('open');
-  document.getElementById('custSearchWrap').style.display = 'none';
-  document.getElementById('newCustForm').style.display = 'block';
-
-  // Try to parse "First Last" if there's a space
-  const q = (prefill||'').trim();
-  let first = q, last = '';
-  if(q.includes(' ')){
-    const parts = q.split(/\s+/);
-    first = parts[0];
-    last  = parts.slice(1).join(' ');
-  }
-  document.getElementById('ncFirst').value   = first;
-  document.getElementById('ncLast').value    = last;
-  document.getElementById('ncCompany').value = '';
-  document.getElementById('ncPhone').value   = '';
-  document.getElementById('ncEmail').value   = '';
-  setTimeout(()=>document.getElementById('ncFirst').focus(),80);
-}
-
-function cancelNewCust(){
-  document.getElementById('newCustForm').style.display = 'none';
-  document.getElementById('custSearchWrap').style.display = '';
-  document.getElementById('custSearchInput').focus();
-}
-
-async function createNewCustomer(){
-  const first = document.getElementById('ncFirst').value.trim();
-  if(!first){
-    document.getElementById('ncFirst').classList.add('err');
-    document.getElementById('ncFirst').focus();
-    return;
-  }
-  document.getElementById('ncFirst').classList.remove('err');
-  setBtn('createCustBtn', true, 'Create customer');
-
-  const payload = {
-    first_name:   first,
-    last_name:    document.getElementById('ncLast').value.trim()||null,
-    company_name: document.getElementById('ncCompany').value.trim()||null,
-    phone:        document.getElementById('ncPhone').value.trim()||null,
-    email:        document.getElementById('ncEmail').value.trim()||null,
-    customer_type:'homeowner',
-    status:       'prospect',
-    lead_source:  'other',
-    is_active:    true
-  };
-
-  const {data, error} = await db.from('customers').insert([payload]).select().single();
-  setBtn('createCustBtn', false, 'Create customer');
-
-  if(error){ showToast('Error: '+error.message, true); return; }
-
-  // Add to local list, hide the form, select the new customer
-  allCustomers.push(data);
-  allCustomers.sort((a,b)=>(a.first_name||'').localeCompare(b.first_name||''));
-  document.getElementById('newCustForm').style.display = 'none';
-  selectCustomer(data.id);
-  showToast('Customer created');
-}
-
-document.addEventListener('click', e=>{
-  if(!document.getElementById('custSearchWrap').contains(e.target))
-    document.getElementById('custDropdown').classList.remove('open');
-});
-
-// ── Panel open/close ──────────────────────────────────────
-async function openPanel(jobId, defaultStatus){
-  currentJobId = jobId || null;
-  const j = jobId ? allJobs.find(l=>l.id===jobId)||null : null;
-
-  // Reset form
-  populateStatusDropdown();
-  const desiredStatus = j ? j.status : (defaultStatus || stages[0]?.key || '');
-  document.getElementById('pStatus').value  = desiredStatus;
-  document.getElementById('pTitle').value   = j ? (j.title||'') : '';
-  document.getElementById('pJobType').value = j ? (j.job_type||'water_damage') : 'water_damage';
-  document.getElementById('pValue').value   = j ? (j.estimated_value||'') : '';
-  document.getElementById('pCity').value    = j ? (j.job_city||'') : '';
-  document.getElementById('pJobDate').value = j ? (j.job_date||'') : '';
-  document.getElementById('pEndDate').value = j ? (j.job_end_date||'') : '';
-  document.getElementById('pDesc').value    = j ? (j.description||'') : '';
-  document.getElementById('pTitle').classList.remove('err');
-
-  // Reset customer widget
-  clearCustomer();
-  document.getElementById('custSearchWrap').style.display = '';
-
-  if(j && j.customer_id){
-    const c = allCustomers.find(x=>x.id===j.customer_id) || j.customers;
-    if(c) selectCustomer(c.id);
-  }
-
-  // Panel header
-  const c = j?.customers;
-  const stageLabel = stageByKey(j?.status)?.label || '';
-  document.getElementById('panelTitle').textContent    = j ? (custName(c)||j.title||'Job') : 'New Job';
-  document.getElementById('panelSubtitle').textContent = j ? stageLabel + (j.job_type?' · '+TYPE_LABEL[j.job_type]:'') : '';
-  document.getElementById('savePanelBtn').textContent  = j ? 'Save changes' : 'Save job';
-  document.getElementById('deleteJobBtn').style.display = j ? 'inline-flex' : 'none';
-
-  // Notes
-  document.getElementById('notesList').innerHTML = '';
-  document.getElementById('noteCountBadge').textContent = '0';
-  if(j) await loadNotes(j.id);
-
-  openDays = new Set();
-  renderSchedDays();
-  switchTab('details');
-  document.getElementById('panelOverlay').classList.add('open');
-  document.getElementById('detailPanel').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closePanel(){
-  document.getElementById('panelOverlay').classList.remove('open');
-  document.getElementById('detailPanel').classList.remove('open');
-  document.body.style.overflow = '';
-  currentJobId = null;
-}
-
-function switchTab(name){
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-}
-
-// ── Save job ──────────────────────────────────────────────
-async function saveJob(){
-  const title = document.getElementById('pTitle').value.trim();
-  if(!title){
-    document.getElementById('pTitle').classList.add('err');
-    document.getElementById('pTitle').focus();
-    return;
-  }
-  document.getElementById('pTitle').classList.remove('err');
-
-  const customerId = document.getElementById('pCustomerId').value||null;
-  if(!customerId){ showToast('Please link a customer', true); return; }
-
-  const startD = document.getElementById('pJobDate').value;
-  const endD   = document.getElementById('pEndDate').value;
-  if(startD && endD && endD < startD){ showToast('End date must be on or after the start date', true); return; }
-
-  setBtn('savePanelBtn', true, 'Saving...');
-
-  const payload = {
-    customer_id:     customerId,
-    title,
-    job_type:        document.getElementById('pJobType').value,
-    status:          document.getElementById('pStatus').value,
-    estimated_value: parseFloat(document.getElementById('pValue').value)||null,
-    job_city:        document.getElementById('pCity').value.trim()||null,
-    job_state:       'UT',
-    job_date:        startD||null,
-    job_end_date:    endD||null,
-    description:     document.getElementById('pDesc').value.trim()||null,
-    is_active:       true
-  };
-
-  let error;
-  if(currentJobId){
-    ({error} = await db.from('jobs').update(payload).eq('id', currentJobId));
-  } else {
-    ({error} = await db.from('jobs').insert([payload]));
-  }
-
-  setBtn('savePanelBtn', false, currentJobId?'Save changes':'Save job');
-
-  if(error){ showToast('Error: '+error.message, true); return; }
-  showToast(currentJobId?'Job updated':'Job added');
-  const _id = currentJobId;
-  await loadAll();
-  if(_id){ openPanel(_id); } else { closePanel(); }
-}
-
-function confirmDeleteJob(){
-  if(!currentJobId) return;
-  const j = allJobs.find(x=>x.id===currentJobId);
-  const name = j ? (custName(j.customers)||j.title||'this job') : 'this job';
-  openConfirm(
-    'Delete job?',
-    `This will permanently remove ${name}. Notes attached to this job will also be deleted. This can't be undone.`,
-    doDeleteJob
-  );
-}
-
-async function doDeleteJob(){
-  if(!currentJobId) return;
-  const {error} = await db.from('jobs').update({is_active:false}).eq('id', currentJobId);
-  if(error){ showToast('Error deleting job: '+error.message, true); return; }
-  showToast('Job deleted');
-  closePanel();
-  await loadAll();
-}
-
-// ── Notes ─────────────────────────────────────────────────
-async function loadNotes(jobId){
-  const {data,error} = await db.from('job_notes').select('*').eq('job_id',jobId).order('created_at',{ascending:false});
-  if(error) return;
-  const notes = data||[];
-  document.getElementById('noteCountBadge').textContent = notes.length;
-  document.getElementById('notesList').innerHTML = notes.length
-    ? notes.map(n=>noteHtml(n.id,n.created_at,n.note_text)).join('')
-    : '<div style="font-size:13px;color:var(--muted);">No notes yet.</div>';
-}
-
-async function addNote(){
-  if(!currentJobId){ showToast('Save the job first', true); return; }
-  const text = (document.getElementById('newNoteText').value||'').trim();
-  if(!text) return;
-  const {data,error} = await db.from('job_notes').insert([{job_id:currentJobId,note_text:text}]).select().single();
-  if(error){ showToast('Error saving note', true); return; }
-  document.getElementById('newNoteText').value = '';
-  const list = document.getElementById('notesList');
-  if(list.querySelector('[style*="No notes"]')) list.innerHTML = '';
-  list.insertAdjacentHTML('afterbegin', noteHtml(data.id,data.created_at,data.note_text));
-  const badge = document.getElementById('noteCountBadge');
-  badge.textContent = parseInt(badge.textContent||'0')+1;
-  showToast('Note saved');
-}
-
-function noteHtml(id, createdAt, text){
-  const d = new Date(createdAt);
-  const ds = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  const safe = (text||'').replace(/</g,'&lt;');
-  return `<div class="note-item" id="note-${id}">
-    <div class="note-meta"><span class="note-date">${ds}</span>
-    <div class="note-acts"><button class="nbtn edit" onclick="editNote('${id}')">Edit</button><button class="nbtn del" onclick="deleteNote('${id}')">Delete</button></div></div>
-    <div class="note-text" id="note-text-${id}">${safe}</div>
-    <div class="note-edit-wrap" id="note-edit-${id}">
-      <textarea class="note-edit-ta" id="note-ta-${id}">${safe}</textarea>
-      <div class="note-edit-foot"><button class="btn btn-ghost btn-sm" onclick="cancelEdit('${id}')">Cancel</button><button class="btn btn-primary btn-sm" onclick="saveNote('${id}')">Save</button></div>
-    </div>
-  </div>`;
-}
-
-function editNote(id){ document.getElementById('note-text-'+id).style.display='none'; const w=document.getElementById('note-edit-'+id); w.classList.add('open'); w.style.display='block'; document.getElementById('note-ta-'+id).focus(); }
-function cancelEdit(id){ document.getElementById('note-text-'+id).style.display=''; const w=document.getElementById('note-edit-'+id); w.classList.remove('open'); w.style.display='none'; }
-async function saveNote(id){ const txt=(document.getElementById('note-ta-'+id).value||'').trim(); if(!txt)return; const {error}=await db.from('job_notes').update({note_text:txt}).eq('id',id); if(error){showToast('Error',true);return;} document.getElementById('note-text-'+id).textContent=txt; cancelEdit(id); showToast('Note updated'); }
-async function deleteNote(id){ const {error}=await db.from('job_notes').delete().eq('id',id); if(error){showToast('Error',true);return;} const el=document.getElementById('note-'+id); if(el){el.style.transition='opacity 0.18s';el.style.opacity='0';setTimeout(()=>{el.remove(); const b=document.getElementById('noteCountBadge'); b.textContent=Math.max(0,parseInt(b.textContent||'0')-1);},200);} }
-
-// ── Filter drawer ─────────────────────────────────────────
-function openFilter(){ document.getElementById('filterDrawer').classList.add('open'); document.getElementById('filterOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeFilter(){ document.getElementById('filterDrawer').classList.remove('open'); document.getElementById('filterOverlay').classList.remove('open'); document.body.style.overflow=''; renderBoard(); }
-function toggleChip(el){ el.classList.toggle('on'); updateFilterDot(); }
-function setDatePreset(preset,el){
-  document.querySelectorAll('.date-preset').forEach(p=>p.classList.remove('on')); el.classList.toggle('on');
-  const t=new Date(); let from='',to=t.toISOString().split('T')[0];
-  if(preset==='this-month') from=new Date(t.getFullYear(),t.getMonth(),1).toISOString().split('T')[0];
-  else if(preset==='last-month'){ from=new Date(t.getFullYear(),t.getMonth()-1,1).toISOString().split('T')[0]; to=new Date(t.getFullYear(),t.getMonth(),0).toISOString().split('T')[0]; }
-  else if(preset==='last-30'){ const d=new Date(t); d.setDate(d.getDate()-30); from=d.toISOString().split('T')[0]; }
-  else if(preset==='last-90'){ const d=new Date(t); d.setDate(d.getDate()-90); from=d.toISOString().split('T')[0]; }
-  document.getElementById('dateFrom').value=from; document.getElementById('dateTo').value=to; updateFilterDot();
-}
-function clearFilters(){ document.querySelectorAll('.filter-chip,.date-preset').forEach(c=>c.classList.remove('on')); document.getElementById('dateFrom').value=''; document.getElementById('dateTo').value=''; updateFilterDot(); }
-function updateFilterDot(){ const any=document.querySelectorAll('.filter-chip.on,.date-preset.on').length>0||document.getElementById('dateFrom').value||document.getElementById('dateTo').value; document.getElementById('filterDot').classList.toggle('show',!!any); }
-
-// ── Stages manager ────────────────────────────────────────
-function openStages(){
-  // Deep copy current stages as editable
-  editableStages = stages.map(s=>({
-    id: s.id, key: s.key, label: s.label, color: s.color,
-    sort_order: s.sort_order, is_active: true,
-    _original: true
-  }));
-  renderStagesEditor();
-  document.getElementById('stagesDrawer').classList.add('open');
-  document.getElementById('stagesOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeStages(){
-  document.getElementById('stagesDrawer').classList.remove('open');
-  document.getElementById('stagesOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function renderStagesEditor(){
-  const wrap = document.getElementById('stagesList');
-  wrap.innerHTML = editableStages.map((s,idx)=>{
-    const jobsUsing = allJobs.filter(j=>j.status===s.key).length;
-    const canDelete = jobsUsing===0;
-    const delTitle = canDelete ? 'Delete stage' : `Can't delete: ${jobsUsing} job${jobsUsing!==1?'s':''} in this stage`;
-    return `<div class="stage-edit-row" data-idx="${idx}">
-      <label class="stage-color-swatch" style="background:${s.color}">
-        <input class="stage-color-input" type="color" value="${s.color}" oninput="updateStageField(${idx},'color',this.value);this.parentElement.style.background=this.value">
-      </label>
-      <input class="stage-label-input" value="${(s.label||'').replace(/"/g,'&quot;')}" oninput="updateStageField(${idx},'label',this.value)" placeholder="Stage name">
-      <span class="stage-count-pill">${jobsUsing} job${jobsUsing!==1?'s':''}</span>
-      <button class="stage-del-btn" onclick="deleteStageRow(${idx})" ${canDelete?'':'disabled'} title="${delTitle}">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-      </button>
-    </div>`;
-  }).join('');
-}
-
-function updateStageField(idx, field, value){
-  if(!editableStages[idx]) return;
-  editableStages[idx][field] = value;
-}
-
-function addStageRow(){
-  editableStages.push({
-    id: null, key: null, label: 'New stage',
-    color: DEFAULT_NEW_STAGE_COLOR,
-    sort_order: editableStages.length+1,
-    is_active: true,
-    _original: false
-  });
-  renderStagesEditor();
-  // Focus the new label input
-  setTimeout(()=>{
-    const inputs = document.querySelectorAll('.stage-label-input');
-    const last = inputs[inputs.length-1];
-    if(last){ last.focus(); last.select(); }
-  },30);
-}
-
-function deleteStageRow(idx){
-  const s = editableStages[idx];
-  if(!s) return;
-  const jobsUsing = allJobs.filter(j=>j.status===s.key).length;
-  if(jobsUsing>0){
-    showToast(`Can't delete — ${jobsUsing} job${jobsUsing!==1?'s':''} still use this stage`, true);
-    return;
-  }
-  editableStages.splice(idx,1);
-  renderStagesEditor();
-}
-
-async function saveStages(){
-  // Validate: every stage needs a label
-  for(let i=0;i<editableStages.length;i++){
-    if(!(editableStages[i].label||'').trim()){
-      showToast('Every stage needs a name', true);
-      return;
-    }
-  }
-  if(editableStages.length===0){
-    showToast('You need at least one stage', true);
-    return;
-  }
-
-  setBtn('saveStagesBtn', true, 'Save changes');
-
-  // Build set of ids we're keeping
-  const keptIds = editableStages.filter(s=>s.id).map(s=>s.id);
-
-  // Soft-delete stages that existed originally but were removed
-  const toRemove = stages.filter(s=>!keptIds.includes(s.id));
-  for(const s of toRemove){
-    const {error} = await db.from('job_stages').update({is_active:false}).eq('id',s.id);
-    if(error){ showToast('Error deleting stage: '+error.message,true); setBtn('saveStagesBtn',false,'Save changes'); return; }
-  }
-
-  // Upsert each stage
-  for(let i=0;i<editableStages.length;i++){
-    const s = editableStages[i];
-    const label = s.label.trim();
-    const payload = {
-      label,
-      color: s.color||DEFAULT_NEW_STAGE_COLOR,
-      sort_order: i+1,
-      is_active: true
-    };
-    if(s.id){
-      const {error} = await db.from('job_stages').update(payload).eq('id',s.id);
-      if(error){ showToast('Error saving "'+label+'": '+error.message,true); setBtn('saveStagesBtn',false,'Save changes'); return; }
-    } else {
-      // Generate a unique key from the label
-      let baseKey = slugify(label) || 'stage';
-      let key = baseKey;
-      let suffix = 2;
-      const existingKeys = new Set([
-        ...stages.map(x=>x.key),
-        ...editableStages.filter((_,j)=>j!==i && _.key).map(x=>x.key)
-      ]);
-      while(existingKeys.has(key)){ key = baseKey+'_'+suffix; suffix++; }
-      const {error} = await db.from('job_stages').insert([{...payload, key}]);
-      if(error){ showToast('Error adding "'+label+'": '+error.message,true); setBtn('saveStagesBtn',false,'Save changes'); return; }
-    }
-  }
-
-  setBtn('saveStagesBtn',false,'Save changes');
-  showToast('Stages saved');
-  closeStages();
-  await loadAll();
-}
-
-// ── Drawer (mobile sidebar) ───────────────────────────────
-function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
-
-// ── Escape key ────────────────────────────────────────────
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Escape') return;
-  if(document.getElementById('confirmBg').classList.contains('open')){ closeConfirm(); return; }
-  if(document.getElementById('stagesDrawer').classList.contains('open')){ closeStages(); return; }
-  if(document.getElementById('filterDrawer').classList.contains('open')){ closeFilter(); return; }
-  if(document.getElementById('detailPanel').classList.contains('open')){ closePanel(); return; }
-});
-
-// ── Boot ──────────────────────────────────────────────────
-loadAll().then(()=>{
-  // Handle ?newjob=<customerId> deep link from customer page
-  const params = new URLSearchParams(window.location.search);
-  const newJobCust = params.get('newjob');
-  if(newJobCust){
-    const url = new URL(window.location);
-    url.searchParams.delete('newjob');
-    window.history.replaceState({},'',url);
-    openPanel(null, stages[0]?.key).then(()=>{
-      const c = allCustomers.find(x=>x.id===newJobCust);
-      if(c) selectCustomer(c.id);
-    });
-  }
-});
-  });
-
-/* ===== Per-job scheduling: dates + workers (mirrors the Schedule page) ===== */
-const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const AVATAR_COLORS=['#2563EB','#16A066','#C07010','#D63B3B','#6D40D4','#E85A24'];
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function getRange(j){const start=(j&&j.job_date)||null;const end=(j&&(j.job_end_date||j.job_date))||null;return{start,end};}
-function fmtKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function fromKey(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);}
-function todayKey(){return fmtKey(new Date());}
-function getName(e){return [e.first_name,e.last_name].filter(Boolean).join(' ');}
-function getInits(e){return (((e.first_name||'')[0]||'')+((e.last_name||'')[0]||'')).toUpperCase();}
-function aColor(id){let s=0;for(const c of(id||''))s+=c.charCodeAt(0);return AVATAR_COLORS[s%AVATAR_COLORS.length];}
-function empColor(e){const c=crews.find(x=>x.name===e.team);return c?c.color:aColor(e.id);}
-function dayData(jobId,key){return (schedMap[jobId]&&schedMap[jobId].work_days[key])||null;}
-function ensureDay(jobId,key){if(!schedMap[jobId])schedMap[jobId]={work_days:{}};if(!schedMap[jobId].work_days[key])schedMap[jobId].work_days[key]={is_workday:false,assigned:[],note:null,arrival_time:null,site_address:null,day_instructions:null,equipment:null};return schedMap[jobId].work_days[key];}
-const SVG_CLOCK='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-const SVG_PIN='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>';
-const SVG_LIST='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>';
-const SVG_BOX='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
-const SVG_NOTE='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>';
-const SVG_CREW='<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
-function avatarStack(ids){const emps=(ids||[]).map(id=>employees.find(e=>e.id===id)).filter(Boolean);if(!emps.length)return '';return '<div class="av-stack">'+emps.slice(0,4).map(e=>'<span class="av" style="background:'+empColor(e)+'" title="'+esc(getName(e))+'">'+getInits(e)+'</span>').join('')+(emps.length>4?'<span class="av more">+'+(emps.length-4)+'</span>':'')+'</div>';}
-function renderSchedDays(){
-  const host=document.getElementById('schedDays');if(!host)return;
-  if(!currentJobId){host.innerHTML='<div class="no-dates"><svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p>Save the job first</p><small>Once the job exists you can set its dates and schedule crew here.</small><button class="btn btn-primary" onclick="switchTab(\'details\')">Go to Details</button></div>';return;}
-  const j=jobsById[currentJobId];if(!j){host.innerHTML='';return;}
-  const r=getRange(j);
-  if(!r.start){host.innerHTML='<div class="no-dates"><svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p>No dates set yet</p><small>Add a start and end date in the Details tab and save — then mark work days and assign crew here.</small><button class="btn btn-primary" onclick="switchTab(\'details\')">Go to Details</button></div>';return;}
-  const start=fromKey(r.start),end=fromKey(r.end),days=[];
-  for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1))days.push({date:new Date(d),key:fmtKey(d)});
-  const weeks={};
-  days.forEach(day=>{const dt=new Date(day.date);const mon=new Date(dt);mon.setDate(dt.getDate()-((dt.getDay()+6)%7));const wk=fmtKey(mon);if(!weeks[wk])weeks[wk]={label:mon.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' week',days:[]};weeks[wk].days.push(day);});
-  host.innerHTML=Object.values(weeks).map(w=>'<div class="week-label">'+w.label+'</div>'+w.days.map(d=>dayRow(j.id,d)).join('')).join('');
-}
-function dayRow(jobId,day){
-  const dd=dayData(jobId,day.key)||{is_workday:false,assigned:[],note:null,arrival_time:null,site_address:null,day_instructions:null,equipment:null};
-  const isWork=dd.is_workday===true,isOpen=openDays.has(day.key),isToday=day.key===todayKey();
-  const assignedEmps=(dd.assigned||[]).map(id=>employees.find(e=>e.id===id)).filter(Boolean);
-  let summary='';
-  if(isWork){
-    summary=assignedEmps.length?'<div class="dr-summary">'+assignedEmps.map(e=>e.first_name).join(', ')+'</div>':'<div class="dr-summary-empty">No one assigned — tap to assign</div>';
-    const m=[];if(dd.arrival_time)m.push(esc(dd.arrival_time));if(dd.site_address)m.push(esc(dd.site_address));
-    if(m.length)summary+='<div class="dr-meta-preview">'+m.join(' · ')+'</div>';
-  }
-  const avatars=(isWork&&assignedEmps.length)?'<div class="dr-avatars">'+avatarStack(dd.assigned)+'</div>':'';
-  let expand='<div class="dr-expand"></div>';
-  if(isOpen)expand='<div class="dr-expand open"><div class="dr-expand-inner">'+assignSection(jobId,day.key,dd)+detailFieldsSection(jobId,day.key,dd)+'</div></div>';
-  return '<div class="day-row'+(isWork?' is-work':'')+(isToday?' is-today':'')+'">'
-    +'<div class="dr-top" onclick="toggleExpand(\''+jobId+'\',\''+day.key+'\')">'
-    +'<div class="dr-date"><div class="dr-dayname">'+DAY_NAMES[day.date.getDay()]+'</div><div class="dr-num">'+day.date.getDate()+'</div></div>'
-    +'<div class="dr-mid"><div class="dr-toggle-row" onclick="event.stopPropagation()"><label class="tog"><input type="checkbox" '+(isWork?'checked':'')+' onchange="toggleWorkday(\''+jobId+'\',\''+day.key+'\',this.checked)"><div class="tog-sl"></div></label><span style="font-size:14px;font-weight:600;color:'+(isWork?'var(--text)':'var(--muted)')+';">'+(isWork?'Work day':'Off')+'</span></div>'+summary+'</div>'
-    +avatars
-    +(isWork?'<div class="dr-chevron'+(isOpen?' open':'')+'"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div>':'')
-    +'</div>'+expand+'</div>';
-}
-function assignSection(jobId,key,dd){
-  const assigned=dd.assigned||[];
-  let crewBtns='';
-  if(crews.length){
-    crewBtns='<div class="crew-btns">'+crews.map(cr=>{
-      const members=employees.filter(e=>e.team===cr.name);
-      const allOn=members.length&&members.every(e=>assigned.includes(e.id));
-      const style='border:2px solid '+(allOn?cr.color:'var(--border2)')+';background:'+(allOn?cr.color+'18':'var(--card)')+';color:'+(allOn?cr.color:'var(--muted2)')+';';
-      return '<button class="crew-btn" style="'+style+'" onclick="assignCrew(\''+jobId+'\',\''+key+'\',\''+esc(cr.name).replace(/'/g,"\\'")+'\')"><span class="cdot" style="background:'+cr.color+'"></span>'+esc(cr.name)+'</button>';
-    }).join('')+'<button class="crew-btn clear" onclick="clearAllPeople(\''+jobId+'\',\''+key+'\')">Clear all</button></div>';
-  }
-  const grid=employees.length?employees.map(e=>{
-    const on=assigned.includes(e.id);
-    return '<div class="pr'+(on?' on':'')+'" onclick="togglePerson(\''+jobId+'\',\''+key+'\',\''+e.id+'\')"><div class="pr-av" style="background:'+empColor(e)+'">'+getInits(e)+'</div><div class="pr-name">'+esc(getName(e))+'<span class="role">'+esc(e.team||e.role||'')+'</span></div><div class="pr-check">'+(on?'<svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>':'')+'</div></div>';
-  }).join(''):'<div class="no-employees">No employees found — add some in Team.</div>';
-  return '<div class="exp-section"><div class="exp-title">Assign people</div>'+crewBtns+'<div class="people-grid">'+grid+'</div></div>';
-}
-function detailFieldsSection(jobId,key,dd){
-  const p='df_'+jobId+'_'+key;
-  return '<div class="exp-section"><div class="exp-title">Day details</div><div class="df-grid">'
-    +'<div class="df-row"><div class="df-group"><label class="df-label">'+SVG_CLOCK+'Arrival / start time</label><input class="df-input" id="'+p+'_arr" placeholder="7:00 AM" value="'+esc(dd.arrival_time)+'"></div>'
-    +'<div class="df-group"><label class="df-label">'+SVG_PIN+'Site address</label><input class="df-input" id="'+p+'_site" placeholder="Where they\'re going" value="'+esc(dd.site_address)+'"></div></div>'
-    +'<div class="df-group"><label class="df-label">'+SVG_LIST+'Instructions / scope</label><textarea class="df-ta" id="'+p+'_instr" placeholder="What to do today…">'+esc(dd.day_instructions)+'</textarea></div>'
-    +'<div class="df-group"><label class="df-label">'+SVG_BOX+'Equipment / materials</label><textarea class="df-ta" id="'+p+'_equip" placeholder="What to bring…">'+esc(dd.equipment)+'</textarea></div>'
-    +'<div class="df-group"><label class="df-label">'+SVG_NOTE+'Other notes</label><textarea class="df-ta" id="'+p+'_note" placeholder="Anything else…">'+esc(dd.note)+'</textarea></div>'
-    +'</div><div class="df-foot"><button class="btn btn-primary btn-sm" onclick="saveDayDetails(\''+jobId+'\',\''+key+'\')">Save day details</button></div></div>';
-}
-async function upsertDay(jobId,key){
-  const dd=schedMap[jobId].work_days[key];const r=getRange(jobsById[jobId]);
-  const {error}=await db.from('job_schedule').upsert([{job_id:jobId,date_key:key,start_date:r.start,end_date:r.end,is_workday:dd.is_workday,assigned_employee_ids:dd.assigned||[],note:dd.note||null,arrival_time:dd.arrival_time||null,site_address:dd.site_address||null,day_instructions:dd.day_instructions||null,equipment:dd.equipment||null}],{onConflict:'job_id,date_key'});
-  return error;
-}
-async function toggleWorkday(jobId,key,isWork){const dd=ensureDay(jobId,key);dd.is_workday=isWork;if(!isWork)openDays.delete(key);else openDays.add(key);const err=await upsertDay(jobId,key);if(err)showToast('Error saving: '+err.message,true);renderSchedDays();}
-function toggleExpand(jobId,key){const dd=dayData(jobId,key);if(!dd||!dd.is_workday)return;if(openDays.has(key))openDays.delete(key);else openDays.add(key);renderSchedDays();}
-async function togglePerson(jobId,key,empId){const dd=ensureDay(jobId,key);dd.is_workday=true;const a=dd.assigned||[];const i=a.indexOf(empId);if(i===-1)a.push(empId);else a.splice(i,1);dd.assigned=a;const err=await upsertDay(jobId,key);if(err){showToast('Error saving: '+err.message,true);return;}renderSchedDays();}
-async function assignCrew(jobId,key,crewName){const dd=ensureDay(jobId,key);dd.is_workday=true;const members=employees.filter(e=>e.team===crewName).map(e=>e.id);const allOn=members.length&&members.every(id=>dd.assigned.includes(id));if(allOn)dd.assigned=dd.assigned.filter(id=>!members.includes(id));else members.forEach(id=>{if(!dd.assigned.includes(id))dd.assigned.push(id);});const err=await upsertDay(jobId,key);if(err){showToast('Error saving: '+err.message,true);return;}showToast(allOn?crewName+' removed':crewName+' assigned');renderSchedDays();}
-async function clearAllPeople(jobId,key){const dd=ensureDay(jobId,key);dd.assigned=[];const err=await upsertDay(jobId,key);if(err){showToast('Error saving: '+err.message,true);return;}showToast('Crew cleared');renderSchedDays();}
-async function saveDayDetails(jobId,key){const dd=ensureDay(jobId,key);dd.is_workday=true;const p='df_'+jobId+'_'+key;const v=id=>{const el=document.getElementById(id);return el&&el.value.trim()?el.value.trim():null;};dd.arrival_time=v(p+'_arr');dd.site_address=v(p+'_site');dd.day_instructions=v(p+'_instr');dd.equipment=v(p+'_equip');dd.note=v(p+'_note');const err=await upsertDay(jobId,key);if(err){showToast('Error saving details: '+err.message,true);return;}showToast('Day details saved');renderSchedDays();}
-</script>
-</script>
-</body>
-</html>
